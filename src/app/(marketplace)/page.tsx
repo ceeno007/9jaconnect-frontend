@@ -49,12 +49,12 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="grid auto-rows-fr grid-cols-2 items-stretch gap-4 sm:grid-cols-4">
           {categoriesLoading
             ? Array.from({ length: 8 }).map((_, index) => (
                 <div
                   key={index}
-                  className="ui-card flex flex-col items-center gap-3 px-5 py-7"
+                  className="ui-card flex h-full min-h-[148px] flex-col items-center justify-center gap-3 px-5 py-7"
                 >
                   <div className="h-10 w-10 animate-pulse rounded-full bg-[#e8e6e4]" />
                   <div className="h-4 w-24 animate-pulse rounded-[8px] bg-[#e8e6e4]" />
@@ -66,10 +66,12 @@ export default function HomePage() {
                   <Link
                     key={category.id}
                     href={`/find?category=${category.id}`}
-                    className="ui-card flex flex-col items-center gap-3 px-5 py-7 text-center"
+                    className="ui-card flex h-full min-h-[148px] flex-col items-center justify-center gap-3 px-5 py-7 text-center"
                   >
-                    <Icon size={40} weight="duotone" className="text-black" />
-                    <span className="text-base font-bold">{category.name}</span>
+                    <Icon size={40} weight="duotone" className="shrink-0 text-black" />
+                    <span className="line-clamp-2 text-base font-bold leading-snug">
+                      {category.name}
+                    </span>
                   </Link>
                 );
               })}

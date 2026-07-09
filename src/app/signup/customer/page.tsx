@@ -65,6 +65,17 @@ export default function CustomerSignupPage() {
           {error ? (
             <p className="text-base font-semibold text-danger">{error}</p>
           ) : null}
+          <p className="text-sm font-medium text-muted">
+            By creating an account you agree to our{" "}
+            <Link href="/terms" className="font-bold text-black underline">
+              Terms
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="font-bold text-black underline">
+              Privacy Policy
+            </Link>
+            .
+          </p>
           <Button type="submit" className="w-full" size="lg" disabled={pending}>
             {pending ? "Creating account…" : "Create customer account"}
           </Button>

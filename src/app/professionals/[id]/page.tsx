@@ -8,14 +8,14 @@ import {
   ArrowLeft,
   BadgeCheck,
   MapPin,
-  MessageSquare,
-  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge, EmptyState } from "@/components/ui/primitives";
 import { ImageLightbox } from "@/components/ui/image-lightbox";
+import { RatingScore, RatingStars } from "@/components/ui/rating";
+import { ProfessionalProfileSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/auth-provider";
 import { getProfessional } from "@/lib/api";
 import {
@@ -101,11 +101,7 @@ export default function ProfessionalProfilePage() {
   }
 
   if (loading) {
-    return (
-      <div className="mx-auto max-w-7xl px-4 py-16 lg:px-6">
-        <div className="h-40 animate-pulse rounded-[16px] bg-[#f3f2f1]" />
-      </div>
-    );
+    return <ProfessionalProfileSkeleton />;
   }
 
   if (missing || !professional) {
@@ -144,8 +140,11 @@ export default function ProfessionalProfilePage() {
                 </Badge>
               ) : null}
               <Badge className="bg-white text-black">
-                <Star className="mr-1.5 h-4 w-4 fill-black text-black" />
-                {professional.rating} · {professional.reviews} reviews
+                <RatingScore
+                  value={professional.rating}
+                  reviews={professional.reviews}
+                  showReviews
+                />
               </Badge>
             </div>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
@@ -233,15 +232,8 @@ export default function ProfessionalProfilePage() {
                     key={review.id}
                     className="rounded-[var(--radius-lg)] bg-neutral-100 p-5"
                   >
-                    <div className="mb-3 flex items-center gap-1 text-black">
-                      {Array.from({
-                        length: Math.max(
-                          0,
-                          Math.min(5, Number(review.rating || 0)),
-                        ),
-                      }).map((_, index) => (
-                        <Star key={index} className="h-4 w-4 fill-current" />
-                      ))}
+                    <div className="mb-3">
+                      <RatingStars value={Number(review.rating || 0)} />
                     </div>
                     <p className="text-base font-medium text-muted">
                       {review.comment || "No comment provided."}
@@ -260,12 +252,9 @@ export default function ProfessionalProfilePage() {
 
         <aside className="h-fit lg:sticky lg:top-32">
           <div className="ui-card p-7 sm:p-8">
-            <div className="mb-2 flex items-center gap-3 text-black">
-              <MessageSquare className="h-6 w-6" />
-              <h2 className="text-2xl font-bold text-foreground">
-                Request Service
-              </h2>
-            </div>
+            <h2 className="mb-2 text-2xl font-bold text-foreground">
+              Request Service
+            </h2>
             <p className="text-base font-medium text-muted">
               {isAuthenticated
                 ? `Signed in as ${user?.full_name || user?.email}`

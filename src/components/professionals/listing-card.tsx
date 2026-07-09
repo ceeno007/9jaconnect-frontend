@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, MapPin, Star } from "lucide-react";
+import { BadgeCheck, MapPin } from "lucide-react";
+import { RatingScore } from "@/components/ui/rating";
 import type { Professional } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -56,10 +57,11 @@ export function ListingCard({
             <h3 className="text-lg font-bold leading-snug text-black group-hover:opacity-70">
               {professional.tradeName}
             </h3>
-            <span className="inline-flex shrink-0 items-center gap-1 text-sm font-bold text-black">
-              <Star className="h-3.5 w-3.5 fill-black text-black" />
-              {professional.rating}
-            </span>
+            <RatingScore
+              value={professional.rating}
+              size="sm"
+              className="shrink-0"
+            />
           </div>
           <p className="mt-1 text-sm font-semibold text-muted">
             {professional.category} · {professional.name}
@@ -129,10 +131,12 @@ export function ListingCardCompact({
               <span className="text-sm font-bold text-muted">Rate on request</span>
             )}
           </p>
-          <p className="inline-flex items-center gap-1 text-sm font-semibold text-muted">
-            <Star className="h-4 w-4 fill-black text-black" />
-            {professional.rating} · {professional.reviews}
-          </p>
+          <RatingScore
+            value={professional.rating}
+            reviews={professional.reviews}
+            showReviews
+            size="sm"
+          />
         </div>
       </div>
     </Link>

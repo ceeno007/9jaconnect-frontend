@@ -212,6 +212,24 @@ export default function ProfessionalSignupPage() {
                 {error}
               </p>
             ) : null}
+            <p className="sm:col-span-2 text-sm font-medium text-muted">
+              By creating an account you agree to our{" "}
+              <Link href="/terms" className="font-bold text-black underline">
+                Terms
+              </Link>
+              ,{" "}
+              <Link href="/privacy" className="font-bold text-black underline">
+                Privacy Policy
+              </Link>
+              , and{" "}
+              <Link
+                href="/listing-guidelines"
+                className="font-bold text-black underline"
+              >
+                Listing Guidelines
+              </Link>
+              .
+            </p>
             <div className="sm:col-span-2">
               <Button
                 type="submit"

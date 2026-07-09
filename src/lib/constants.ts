@@ -1,5 +1,6 @@
 export const SITE = {
   name: "9jaconnect",
+  legalName: "9jaconnect",
   tagline: "Hire faster. Work smarter.",
   email: "hello@9jaconnect.com",
   phone: "+234 800 000 0000",

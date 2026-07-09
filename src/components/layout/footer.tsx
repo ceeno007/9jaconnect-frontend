@@ -14,9 +14,9 @@ const platformLinks = [
 ];
 
 const legalLinks = [
-  { href: "#", label: "Terms" },
-  { href: "#", label: "Privacy" },
-  { href: "#", label: "Listing Guidelines" },
+  { href: "/terms", label: "Terms" },
+  { href: "/privacy", label: "Privacy" },
+  { href: "/listing-guidelines", label: "Listing Guidelines" },
 ];
 
 export function Footer() {
