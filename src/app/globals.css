@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #111111;
+  --muted: #5f6368;
+  --card: #f3f2f1;
+  --border: #e4e2e0;
+  --divider: #e4e2e0;
+  --ring: #111111;
+  --danger: #d93025;
+  --success: #111111;
+  --surface: #f3f2f1;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-divider: var(--divider);
+  --color-ring: var(--ring);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-surface: var(--surface);
+
+  /* Map old green tokens to black/gray so leftover classes stay monochrome */
+  --color-green-950: #111111;
+  --color-green-900: #111111;
+  --color-green-800: #1a1a1a;
+  --color-green-700: #222222;
+  --color-green-600: #111111;
+  --color-green-500: #111111;
+  --color-green-400: #666666;
+  --color-green-300: #999999;
+  --color-green-200: #e5e5e5;
+  --color-green-100: #f5f5f5;
+  --color-green-50: #fafafa;
+
+  --font-sans: var(--font-body);
+  --font-display: var(--font-body);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-pill: var(--radius-pill);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), "Google Sans", Roboto, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  font-weight: 500;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-body), "Google Sans", Roboto, Arial, sans-serif;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+p,
+span,
+label,
+li,
+dd,
+dt {
+  font-weight: 500;
+}
+
+::selection {
+  background: #111111;
+  color: #ffffff;
+}
+
+/* Uniform cards — soft filled panels, never outlined white boxes */
+.ui-card,
+.listing-card,
+.flat-panel {
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  filter: none !important;
+  background: #f3f2f1 !important;
+  border-radius: 16px !important;
+  text-decoration: none;
+  color: inherit;
+}
+
+.listing-card {
+  transition: background-color 0.15s ease;
+}
+
+.listing-card:hover,
+.ui-card:hover {
+  background-color: #ebe9e8 !important;
+}
+
+.listing-card:focus-visible,
+.ui-card:focus-visible {
+  outline: 2px solid #111111 !important;
+  outline-offset: 2px;
+}
+
+.marketplace-search {
+  box-shadow: none !important;
+}
+
+.field-surface {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #ffffff !important;
+  border: 1px solid #6f6f6f !important;
+  box-shadow: none !important;
+  outline: none;
+  min-height: 56px !important;
+  height: 56px !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  border-radius: 8px !important;
+}
+
+textarea.field-surface {
+  height: auto !important;
+  min-height: 11rem !important;
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.field-surface:focus,
+.field-surface:focus-within {
+  border-color: #111111 !important;
+  box-shadow: 0 0 0 1px #111111 !important;
+}
+
+.site-divider {
+  border-color: #111111;
+}
