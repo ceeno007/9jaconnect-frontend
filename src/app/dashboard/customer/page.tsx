@@ -80,12 +80,11 @@ export default function CustomerDashboardPage() {
         <EmptyState
           title="Sign in required"
           description="Log in as a customer to see tickets and pending reviews."
-        />
-        <div className="mt-4">
+        >
           <Link href="/login?next=/dashboard/customer">
             <Button>Login</Button>
           </Link>
-        </div>
+        </EmptyState>
       </PageShell>
     );
   }

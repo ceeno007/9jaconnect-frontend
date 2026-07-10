@@ -89,7 +89,7 @@ export default function FindPageClient() {
             <div className="mt-2 h-5 w-40 animate-pulse rounded-[8px] bg-[#f3f2f1]" />
           )}
         </div>
-        <div className="inline-flex overflow-hidden rounded-full border border-[#e4e2e0] bg-white">
+        <div className="inline-flex overflow-hidden rounded-[8px] border border-[#e4e2e0] bg-white">
           <button
             type="button"
             aria-label="Grid view"

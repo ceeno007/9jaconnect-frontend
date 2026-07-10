@@ -5,6 +5,20 @@ import { RatingScore } from "@/components/ui/rating";
 import type { Professional } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
+function VerifiedBadge({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center gap-1 rounded-[6px] bg-[#0f9d58] px-1.5 py-0.5 text-[11px] font-bold leading-none text-white",
+        className,
+      )}
+    >
+      <BadgeCheck className="h-3 w-3" />
+      Verified
+    </span>
+  );
+}
+
 export function ListingCard({
   professional,
   className,
@@ -28,18 +42,13 @@ export function ListingCard({
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover transition duration-300 group-hover:scale-[1.03]"
         />
-        <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-          {professional.verified ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#0f9d58] px-2.5 py-1 text-xs font-bold text-white">
-              <BadgeCheck className="h-3.5 w-3.5" />
-              Verified
-            </span>
-          ) : null}
-          <span className="rounded-full bg-black/55 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
+        <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1.5">
+          {professional.verified ? <VerifiedBadge /> : null}
+          <span className="rounded-[6px] bg-black/55 px-1.5 py-0.5 text-[11px] font-bold leading-none text-white backdrop-blur-sm">
             {professional.years}+ yrs
           </span>
         </div>
-        <div className="absolute bottom-3 right-3 rounded-full bg-white px-3 py-1.5 text-sm font-black text-black">
+        <div className="absolute bottom-2.5 right-2.5 rounded-[6px] bg-white px-2 py-1 text-sm font-black text-black">
           {professional.hourlyRate > 0 ? (
             <>
               ₦{professional.hourlyRate.toLocaleString()}
@@ -94,49 +103,58 @@ export function ListingCardCompact({
   return (
     <Link
       href={`/professionals/${professional.id}`}
-      className="listing-card flex gap-4 overflow-hidden p-3"
+      className="listing-card flex gap-3 overflow-hidden p-3"
     >
-      <div className="relative h-28 w-36 shrink-0 overflow-hidden rounded-[12px] bg-[#e8e6e4]">
+      <div className="relative h-[84px] w-[84px] shrink-0 overflow-hidden rounded-[10px] bg-[#e8e6e4]">
         <Image
           src={professional.coverImage}
           alt={`${professional.tradeName} work`}
           fill
-          sizes="144px"
+          sizes="84px"
           className="object-cover"
         />
+        {professional.verified ? (
+          <span className="absolute left-1 top-1 inline-flex items-center gap-0.5 rounded-[5px] bg-[#0f9d58] px-1 py-0.5 text-[10px] font-bold leading-none text-white">
+            <BadgeCheck className="h-2.5 w-2.5" />
+            Verified
+          </span>
+        ) : null}
       </div>
-      <div className="min-w-0 flex-1 py-0.5">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="text-lg font-bold text-black">
-            {professional.tradeName}
-          </h3>
-          {professional.verified ? (
-            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#0f9d58] px-2 py-0.5 text-xs font-bold text-white">
-              <BadgeCheck className="h-3.5 w-3.5" />
-              Verified
-            </span>
-          ) : null}
-        </div>
-        <p className="mt-1 text-sm font-semibold text-muted">
-          {professional.category} · {professional.state}, {professional.lga}
+
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <h3 className="line-clamp-1 text-[15px] font-bold leading-snug text-black">
+          {professional.tradeName}
+        </h3>
+        <p className="line-clamp-1 text-xs font-semibold text-muted">
+          {professional.category}
         </p>
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <p className="text-lg font-black text-black">
+        <p className="line-clamp-1 text-xs font-medium text-muted">
+          {professional.state}, {professional.lga}
+        </p>
+        <div className="flex items-center justify-between gap-2 pt-0.5">
+          <p className="min-w-0 truncate text-sm font-black text-black">
             {professional.hourlyRate > 0 ? (
               <>
                 ₦{professional.hourlyRate.toLocaleString()}
                 <span className="font-bold text-muted"> /hr</span>
               </>
             ) : (
-              <span className="text-sm font-bold text-muted">Rate on request</span>
+              <span className="text-xs font-bold text-muted">Rate on request</span>
             )}
           </p>
-          <RatingScore
-            value={professional.rating}
-            reviews={professional.reviews}
-            showReviews
-            size="sm"
-          />
+          <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold tabular-nums text-[#8a8f96]">
+            <svg
+              viewBox="0 0 16 16"
+              aria-hidden
+              className="h-3.5 w-3.5"
+            >
+              <path
+                fill="currentColor"
+                d="M8 1.2 9.7 5.4l4.5.4-3.4 2.9 1 4.4L8 11.2l-3.8 2 1-4.4-3.4-2.9 4.5-.4L8 1.2Z"
+              />
+            </svg>
+            {Number(professional.rating || 0).toFixed(1)}
+          </span>
         </div>
       </div>
     </Link>

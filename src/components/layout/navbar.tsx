@@ -1,10 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bell, MessageSquare, UserRound } from "lucide-react";
+import { MessageSquare, UserRound } from "lucide-react";
 import { Logo } from "@/components/layout/logo";
 import { NotificationsMenu } from "@/components/layout/notifications-menu";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -53,6 +54,36 @@ const itemVariants = {
   },
 };
 
+function AccountAvatar({
+  photoUrl,
+  name,
+  size = "md",
+}: {
+  photoUrl?: string | null;
+  name?: string | null;
+  size?: "sm" | "md";
+}) {
+  const dim = size === "sm" ? 20 : 32;
+  const className =
+    size === "sm"
+      ? "h-5 w-5 rounded-full object-cover"
+      : "h-8 w-8 rounded-full object-cover ring-1 ring-[#e4e2e0]";
+
+  if (photoUrl) {
+    return (
+      <Image
+        src={photoUrl}
+        alt={name ? `${name} profile` : "Profile"}
+        width={dim}
+        height={dim}
+        className={className}
+      />
+    );
+  }
+
+  return <UserRound className="h-5 w-5" />;
+}
+
 export function Navbar() {
   const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuth();
@@ -65,6 +96,8 @@ export function Navbar() {
       : user?.user_type === "admin"
         ? "/admin/dashboard"
         : "/dashboard/customer";
+
+  const photoUrl = isAuthenticated ? user?.profile_photo_url : null;
 
   useEffect(() => {
     setOpen(false);
@@ -130,7 +163,7 @@ export function Navbar() {
             className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#2d2d2d] hover:bg-[#f3f2f1]"
             aria-label="Account"
           >
-            <UserRound className="h-5 w-5" />
+            <AccountAvatar photoUrl={photoUrl} name={user?.full_name} />
           </Link>
 
           <span className="mx-2 h-6 w-px bg-[#e4e2e0]" />
@@ -246,7 +279,11 @@ export function Navbar() {
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-3 border-b border-[#f0eeec] py-4 text-[17px] font-bold text-black"
                     >
-                      <UserRound className="h-5 w-5" />
+                      <AccountAvatar
+                        photoUrl={photoUrl}
+                        name={user?.full_name}
+                        size="sm"
+                      />
                       {isAuthenticated ? "Account" : "Login"}
                     </Link>
                   </motion.div>

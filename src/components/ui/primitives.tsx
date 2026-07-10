@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export function Card({
@@ -56,9 +56,11 @@ export function SectionHeading({
 export function EmptyState({
   title,
   description,
+  children,
 }: {
   title: string;
   description?: string;
+  children?: ReactNode;
 }) {
   return (
     <div className="ui-card px-8 py-16 text-center">
@@ -68,6 +70,7 @@ export function EmptyState({
           {description}
         </p>
       ) : null}
+      {children ? <div className="mt-6 flex justify-center">{children}</div> : null}
     </div>
   );
 }
@@ -80,8 +83,8 @@ export function PageShell({
 }: {
   title: string;
   description?: string;
-  children: React.ReactNode;
-  actions?: React.ReactNode;
+  children: ReactNode;
+  actions?: ReactNode;
 }) {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
