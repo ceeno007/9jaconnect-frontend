@@ -26,7 +26,6 @@ import {
 } from "@/lib/api";
 import type {
   AuthSessionPayload,
-  ProfessionalCreateRequest,
   RegisterRequest,
   User,
   UserType,
@@ -35,7 +34,6 @@ import { ApiError } from "@/lib/api/types";
 
 type GoogleAuthOptions = {
   user_type?: UserType;
-  professional_profile?: ProfessionalCreateRequest | null;
 };
 
 type AuthContextValue = {

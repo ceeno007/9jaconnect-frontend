@@ -7,7 +7,6 @@ import type {
   DirectoryProfessional,
   Lga,
   Pagination,
-  ProfessionalCreateRequest,
   ProfessionalDetail,
   RegisterRequest,
   State,
@@ -55,7 +54,6 @@ export async function googleOAuthRequest(
   idToken: string,
   options?: {
     user_type?: UserType;
-    professional_profile?: ProfessionalCreateRequest | null;
   },
 ) {
   return httpRequest<AuthSessionPayload>("/api/v1/auth/oauth/google", {
@@ -63,9 +61,6 @@ export async function googleOAuthRequest(
     body: {
       id_token: idToken,
       ...(options?.user_type ? { user_type: options.user_type } : {}),
-      ...(options?.professional_profile
-        ? { professional_profile: options.professional_profile }
-        : {}),
     },
   });
 }

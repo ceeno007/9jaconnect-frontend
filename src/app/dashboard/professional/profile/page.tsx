@@ -685,10 +685,10 @@ export default function ProfessionalProfileEditPage() {
               Add specific services customers can request from your listing.
             </p>
             <form
-              className="mt-4 flex flex-col gap-3 sm:flex-row"
+              className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end"
               onSubmit={onAddService}
             >
-              <div className="flex-1">
+              <div className="min-w-0 flex-1">
                 <Input
                   label="Service name"
                   name="serviceName"
@@ -698,11 +698,14 @@ export default function ProfessionalProfileEditPage() {
                   required
                 />
               </div>
-              <div className="sm:pt-8">
-                <Button type="submit" disabled={servicesPending || !professionalId}>
-                  {servicesPending ? "Saving…" : "Add service"}
-                </Button>
-              </div>
+              <Button
+                type="submit"
+                size="lg"
+                className="shrink-0 sm:w-auto"
+                disabled={servicesPending || !professionalId}
+              >
+                {servicesPending ? "Saving…" : "Add service"}
+              </Button>
             </form>
             <div className="mt-4 space-y-2">
               {services.length === 0 ? (

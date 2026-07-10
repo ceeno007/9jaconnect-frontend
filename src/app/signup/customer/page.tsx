@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { PageShell } from "@/components/ui/primitives";
 import { useAuth } from "@/components/providers/auth-provider";
 import { ApiError } from "@/lib/api/types";
-import { promptGoogleIdToken, isGoogleAuthConfigured } from "@/lib/google-auth";
+import { isGoogleAuthConfigured } from "@/lib/google-auth";
 
 export default function CustomerSignupPage() {
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function CustomerSignupPage() {
       await register({
         full_name: String(form.get("fullName") || "").trim(),
         email: String(form.get("email") || "").trim(),
-        phone: String(form.get("phone") || "").trim(),
+        phone: String(form.get("phone") || "").trim() || null,
         password,
         user_type: "customer",
       });
@@ -50,11 +50,10 @@ export default function CustomerSignupPage() {
     }
   }
 
-  async function onGoogleClick() {
+  async function onGoogleCredential(idToken: string) {
     setError("");
     setPending(true);
     try {
-      const idToken = await promptGoogleIdToken();
       const user = await loginWithGoogle(idToken, { user_type: "customer" });
       if (user?.user_type === "professional") {
         router.push("/dashboard/professional");
@@ -80,8 +79,8 @@ export default function CustomerSignupPage() {
         {isGoogleAuthConfigured() ? (
           <>
             <GoogleSignInButton
-              label="Sign up with Google"
-              onClick={onGoogleClick}
+              text="signup_with"
+              onCredential={onGoogleCredential}
               disabled={pending}
             />
             <div className="my-6 flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
@@ -94,7 +93,7 @@ export default function CustomerSignupPage() {
         <form className="space-y-4" onSubmit={onSubmit}>
           <Input label="Full name" name="fullName" required />
           <Input label="Email" name="email" type="email" required />
-          <Input label="Phone" name="phone" required />
+          <Input label="Phone" name="phone" />
           <Input label="Password" name="password" type="password" required />
           <Input
             label="Confirm password"

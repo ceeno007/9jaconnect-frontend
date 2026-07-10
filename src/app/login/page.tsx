@@ -9,7 +9,23 @@ import { Input } from "@/components/ui/input";
 import { PageShell } from "@/components/ui/primitives";
 import { useAuth } from "@/components/providers/auth-provider";
 import { ApiError } from "@/lib/api/types";
-import { promptGoogleIdToken, isGoogleAuthConfigured } from "@/lib/google-auth";
+import { isGoogleAuthConfigured } from "@/lib/google-auth";
+
+function redirectAfterAuth(
+  router: ReturnType<typeof useRouter>,
+  userType?: string | null,
+) {
+  const next = new URLSearchParams(window.location.search).get("next");
+  if (next?.startsWith("/")) {
+    router.push(next);
+    return;
+  }
+  if (userType === "professional") {
+    router.push("/dashboard/professional");
+    return;
+  }
+  router.push("/dashboard/customer");
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,14 +43,7 @@ export default function LoginPage() {
 
     try {
       const user = await login(email, password);
-      const next = new URLSearchParams(window.location.search).get("next");
-      if (next?.startsWith("/")) {
-        router.push(next);
-      } else if (user?.user_type === "professional") {
-        router.push("/dashboard/professional");
-      } else {
-        router.push("/dashboard/customer");
-      }
+      redirectAfterAuth(router, user?.user_type);
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.code === "auth_email_not_verified") {
@@ -52,20 +61,12 @@ export default function LoginPage() {
     }
   }
 
-  async function onGoogleClick() {
+  async function onGoogleCredential(idToken: string) {
     setError("");
     setPending(true);
     try {
-      const idToken = await promptGoogleIdToken();
       const user = await loginWithGoogle(idToken);
-      const next = new URLSearchParams(window.location.search).get("next");
-      if (next?.startsWith("/")) {
-        router.push(next);
-      } else if (user?.user_type === "professional") {
-        router.push("/dashboard/professional");
-      } else {
-        router.push("/dashboard/customer");
-      }
+      redirectAfterAuth(router, user?.user_type);
     } catch (err) {
       setError(
         err instanceof ApiError
@@ -82,6 +83,20 @@ export default function LoginPage() {
   return (
     <PageShell title="Login">
       <div className="mx-auto max-w-lg ui-card p-8 sm:p-10">
+        {isGoogleAuthConfigured() ? (
+          <>
+            <GoogleSignInButton
+              text="signin_with"
+              onCredential={onGoogleCredential}
+              disabled={pending}
+            />
+            <div className="my-8 flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
+              <span className="h-px flex-1 bg-[#dadce0]" />
+              or
+              <span className="h-px flex-1 bg-[#dadce0]" />
+            </div>
+          </>
+        ) : null}
         <form className="space-y-5" onSubmit={onSubmit}>
           <Input label="Email" name="email" type="email" required />
           <Input label="Password" name="password" type="password" required />
@@ -100,14 +115,6 @@ export default function LoginPage() {
             {pending ? "Logging in…" : "Login"}
           </Button>
         </form>
-        <div className="my-8 flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
-          <span className="h-px flex-1 bg-[#dadce0]" />
-          or
-          <span className="h-px flex-1 bg-[#dadce0]" />
-        </div>
-        {isGoogleAuthConfigured() ? (
-          <GoogleSignInButton onClick={onGoogleClick} disabled={pending} />
-        ) : null}
         <p className="mt-8 text-center text-base font-medium text-muted">
           New here?{" "}
           <Link href="/signup/customer" className="font-bold text-black">

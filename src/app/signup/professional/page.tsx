@@ -24,7 +24,8 @@ import type {
 } from "@/lib/api/types";
 import { ApiError } from "@/lib/api/types";
 import { nairaToKobo } from "@/lib/api/mappers";
-import { promptGoogleIdToken, isGoogleAuthConfigured } from "@/lib/google-auth";
+import { createProfessional } from "@/lib/api/auth-client";
+import { isGoogleAuthConfigured } from "@/lib/google-auth";
 import { formatMoneyInput, parseMoneyInput } from "@/lib/utils";
 
 function readProfessionalProfile(
@@ -150,7 +151,7 @@ export default function ProfessionalSignupPage() {
     }
   }
 
-  async function onGoogleClick() {
+  async function onGoogleCredential(idToken: string) {
     setError("");
     const form = formRef.current;
     if (!form) return;
@@ -165,11 +166,14 @@ export default function ProfessionalSignupPage() {
 
     setPending(true);
     try {
-      const idToken = await promptGoogleIdToken();
-      await loginWithGoogle(idToken, {
-        user_type: "professional",
-        professional_profile: profile,
-      });
+      // Auth API accepts id_token + user_type only; create the listing next.
+      await loginWithGoogle(idToken, { user_type: "professional" });
+      try {
+        await createProfessional(profile);
+      } catch (err) {
+        // Profile may already exist for returning Google professionals.
+        if (!(err instanceof ApiError)) throw err;
+      }
       router.push("/dashboard/professional");
     } catch (err) {
       setError(
@@ -338,8 +342,8 @@ export default function ProfessionalSignupPage() {
                     <span className="h-px flex-1 bg-[#dadce0]" />
                   </div>
                   <GoogleSignInButton
-                    label="Sign up with Google"
-                    onClick={onGoogleClick}
+                    text="signup_with"
+                    onCredential={onGoogleCredential}
                     disabled={pending}
                   />
                   <p className="text-center text-sm font-medium text-muted">
