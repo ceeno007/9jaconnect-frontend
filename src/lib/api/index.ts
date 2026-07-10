@@ -1,4 +1,5 @@
 import { httpRequest, unwrapList } from "@/lib/api/http";
+import { ApiError } from "@/lib/api/types";
 import type {
   AuthSessionPayload,
   Category,
@@ -147,6 +148,30 @@ export async function listProfessionals(query: DirectoryQuery = {}) {
       total_pages: 1,
     },
   };
+}
+
+/** Falls back to filter-only search when prod API rejects `q=`. */
+export async function listProfessionalsForSearch(query: DirectoryQuery = {}) {
+  const keyword = query.q?.trim();
+  if (!keyword) {
+    const data = await listProfessionals(query);
+    return { ...data, keywordSearchUnavailable: false };
+  }
+
+  try {
+    const data = await listProfessionals(query);
+    return { ...data, keywordSearchUnavailable: false };
+  } catch (err) {
+    if (
+      err instanceof ApiError &&
+      err.code === "directory_search_invalid_params"
+    ) {
+      const { q: _q, ...withoutKeyword } = query;
+      const data = await listProfessionals(withoutKeyword);
+      return { ...data, keywordSearchUnavailable: true };
+    }
+    throw err;
+  }
 }
 
 export async function getProfessional(id: string) {

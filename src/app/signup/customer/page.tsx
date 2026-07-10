@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { PageShell } from "@/components/ui/primitives";
 import { useAuth } from "@/components/providers/auth-provider";
 import { ApiError } from "@/lib/api/types";
-import { promptGoogleIdToken } from "@/lib/google-auth";
+import { promptGoogleIdToken, isGoogleAuthConfigured } from "@/lib/google-auth";
 
 export default function CustomerSignupPage() {
   const router = useRouter();
@@ -77,16 +77,20 @@ export default function CustomerSignupPage() {
   return (
     <PageShell title="Sign Up as Customer">
       <div className="mx-auto max-w-lg ui-card p-6 sm:p-8">
-        <GoogleSignInButton
-          label="Sign up with Google"
-          onClick={onGoogleClick}
-          disabled={pending}
-        />
-        <div className="my-6 flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
-          <span className="h-px flex-1 bg-[#dadce0]" />
-          or
-          <span className="h-px flex-1 bg-[#dadce0]" />
-        </div>
+        {isGoogleAuthConfigured() ? (
+          <>
+            <GoogleSignInButton
+              label="Sign up with Google"
+              onClick={onGoogleClick}
+              disabled={pending}
+            />
+            <div className="my-6 flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
+              <span className="h-px flex-1 bg-[#dadce0]" />
+              or
+              <span className="h-px flex-1 bg-[#dadce0]" />
+            </div>
+          </>
+        ) : null}
         <form className="space-y-4" onSubmit={onSubmit}>
           <Input label="Full name" name="fullName" required />
           <Input label="Email" name="email" type="email" required />

@@ -24,7 +24,7 @@ import type {
 } from "@/lib/api/types";
 import { ApiError } from "@/lib/api/types";
 import { nairaToKobo } from "@/lib/api/mappers";
-import { promptGoogleIdToken } from "@/lib/google-auth";
+import { promptGoogleIdToken, isGoogleAuthConfigured } from "@/lib/google-auth";
 import { formatMoneyInput, parseMoneyInput } from "@/lib/utils";
 
 function readProfessionalProfile(
@@ -330,20 +330,24 @@ export default function ProfessionalSignupPage() {
               >
                 {pending ? "Creating account…" : "Create professional account"}
               </Button>
-              <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
-                <span className="h-px flex-1 bg-[#dadce0]" />
-                or
-                <span className="h-px flex-1 bg-[#dadce0]" />
-              </div>
-              <GoogleSignInButton
-                label="Sign up with Google"
-                onClick={onGoogleClick}
-                disabled={pending}
-              />
-              <p className="text-center text-sm font-medium text-muted">
-                Fill business and location details above, then use Google to
-                skip password setup.
-              </p>
+              {isGoogleAuthConfigured() ? (
+                <>
+                  <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
+                    <span className="h-px flex-1 bg-[#dadce0]" />
+                    or
+                    <span className="h-px flex-1 bg-[#dadce0]" />
+                  </div>
+                  <GoogleSignInButton
+                    label="Sign up with Google"
+                    onClick={onGoogleClick}
+                    disabled={pending}
+                  />
+                  <p className="text-center text-sm font-medium text-muted">
+                    Fill business and location details above, then use Google to
+                    skip password setup.
+                  </p>
+                </>
+              ) : null}
             </div>
           </form>
         </section>

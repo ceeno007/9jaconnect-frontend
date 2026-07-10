@@ -158,15 +158,20 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     return item.id;
   }, []);
 
-  const api = useMemo<ToastApi>(() => {
-    const toast = ((input: ToastInput | string) => push(input)) as ToastApi;
-    toast.success = (title, description) =>
-      push({ title, description, variant: "success" });
-    toast.error = (title, description) =>
-      push({ title, description, variant: "error" });
-    toast.dismiss = dismiss;
-    return toast;
-  }, [dismiss, push]);
+  const api = useMemo<ToastApi>(
+    () =>
+      Object.assign(
+        (input: ToastInput | string) => push(input),
+        {
+          success: (title: string, description?: string) =>
+            push({ title, description, variant: "success" }),
+          error: (title: string, description?: string) =>
+            push({ title, description, variant: "error" }),
+          dismiss,
+        },
+      ) as ToastApi,
+    [dismiss, push],
+  );
 
   return (
     <ToastContext.Provider value={api}>

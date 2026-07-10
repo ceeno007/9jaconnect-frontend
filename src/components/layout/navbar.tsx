@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { MessageSquare, UserRound } from "lucide-react";
 import { Logo } from "@/components/layout/logo";
 import { NotificationsMenu } from "@/components/layout/notifications-menu";
@@ -17,13 +17,13 @@ const navLinks = [
   { href: "/find", label: "Find Professionals" },
 ];
 
-const panelVariants = {
+const panelVariants: Variants = {
   closed: {
     x: "100%",
     transition: {
       duration: 0.28,
-      ease: [0.4, 0, 0.2, 1],
-      when: "afterChildren" as const,
+      ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+      when: "afterChildren",
       staggerChildren: 0.03,
       staggerDirection: -1,
     },
@@ -32,15 +32,15 @@ const panelVariants = {
     x: 0,
     transition: {
       duration: 0.34,
-      ease: [0.22, 1, 0.36, 1],
-      when: "beforeChildren" as const,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      when: "beforeChildren",
       staggerChildren: 0.05,
       delayChildren: 0.06,
     },
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   closed: {
     opacity: 0,
     x: 18,
@@ -50,7 +50,10 @@ const itemVariants = {
     opacity: 1,
     x: 0,
     filter: "blur(0px)",
-    transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
+    transition: {
+      duration: 0.28,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    },
   },
 };
 
@@ -96,6 +99,12 @@ export function Navbar() {
       : user?.user_type === "admin"
         ? "/admin/dashboard"
         : "/dashboard/customer";
+
+  const messagesHref = !isAuthenticated
+    ? "/login?next=/dashboard/customer/tickets"
+    : user?.user_type === "professional"
+      ? "/dashboard/professional/tickets"
+      : "/dashboard/customer/tickets";
 
   const photoUrl = isAuthenticated ? user?.profile_photo_url : null;
 
@@ -151,7 +160,7 @@ export function Navbar() {
 
         <div className="ml-auto hidden items-center gap-1 md:flex">
           <Link
-            href="/dashboard/customer"
+            href={messagesHref}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#2d2d2d] hover:bg-[#f3f2f1]"
             aria-label="Messages"
           >
@@ -314,7 +323,7 @@ export function Navbar() {
 
                   <motion.div variants={itemVariants}>
                     <Link
-                      href="/dashboard/customer"
+                      href={messagesHref}
                       onClick={() => setOpen(false)}
                       className="flex items-center gap-3 border-b border-[#f0eeec] py-4 text-[17px] font-bold text-black"
                     >

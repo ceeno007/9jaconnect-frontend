@@ -9,7 +9,7 @@ import {
   ListingCardCompact,
 } from "@/components/professionals/listing-card";
 import { EmptyState } from "@/components/ui/primitives";
-import { listProfessionals } from "@/lib/api";
+import { listProfessionalsForSearch } from "@/lib/api";
 import { mapDirectoryProfessional } from "@/lib/api/mappers";
 import type { Professional } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -25,13 +25,15 @@ export default function FindPageClient() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [searchNotice, setSearchNotice] = useState("");
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
     setError("");
+    setSearchNotice("");
 
-    void listProfessionals({
+    void listProfessionalsForSearch({
       q: keyword || undefined,
       state_id: stateId || undefined,
       lga_id: lgaId || undefined,
@@ -44,6 +46,11 @@ export default function FindPageClient() {
         const mapped = data.professionals.map(mapDirectoryProfessional);
         setResults(mapped);
         setTotal(data.pagination.total);
+        if (data.keywordSearchUnavailable && keyword) {
+          setSearchNotice(
+            `Keyword search is not live yet. Showing results for your location and category filters.`,
+          );
+        }
       })
       .catch(() => {
         if (cancelled) return;
@@ -108,6 +115,12 @@ export default function FindPageClient() {
           </button>
         </div>
       </div>
+
+      {searchNotice ? (
+        <p className="mb-4 rounded-[12px] bg-[#fafafa] px-4 py-3 text-sm font-medium text-muted">
+          {searchNotice}
+        </p>
+      ) : null}
 
       {error ? (
         <EmptyState title="Something went wrong" description={error} />

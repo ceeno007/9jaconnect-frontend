@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { PageShell } from "@/components/ui/primitives";
 import { useAuth } from "@/components/providers/auth-provider";
 import { ApiError } from "@/lib/api/types";
-import { promptGoogleIdToken } from "@/lib/google-auth";
+import { promptGoogleIdToken, isGoogleAuthConfigured } from "@/lib/google-auth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -60,8 +60,13 @@ export default function LoginPage() {
     try {
       const idToken = await promptGoogleIdToken();
       const user = await loginWithGoogle(idToken);
-      if (user?.user_type === "professional") {
+      const next = new URLSearchParams(window.location.search).get("next");
+      if (next?.startsWith("/")) {
+        router.push(next);
+      } else if (user?.user_type === "professional") {
         router.push("/dashboard/professional");
+      } else if (user?.user_type === "admin") {
+        router.push("/admin/dashboard");
       } else {
         router.push("/dashboard/customer");
       }
@@ -104,7 +109,9 @@ export default function LoginPage() {
           or
           <span className="h-px flex-1 bg-[#dadce0]" />
         </div>
-        <GoogleSignInButton onClick={onGoogleClick} disabled={pending} />
+        {isGoogleAuthConfigured() ? (
+          <GoogleSignInButton onClick={onGoogleClick} disabled={pending} />
+        ) : null}
         <p className="mt-8 text-center text-base font-medium text-muted">
           New here?{" "}
           <Link href="/signup/customer" className="font-bold text-black">
