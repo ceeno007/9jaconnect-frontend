@@ -3,7 +3,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { MapPin, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { listCategories, listLgas, listStates } from "@/lib/api";
 import type { Category, Lga, State } from "@/lib/api/types";
@@ -104,8 +103,7 @@ export function IndeedStyleSearch({
         className,
       )}
     >
-      <label className="col-span-2 flex h-12 items-center gap-2.5 border-b border-[#e4e2e0] px-3 sm:h-auto sm:min-h-[56px] sm:flex-1 sm:gap-3 sm:border-b-0 sm:px-4">
-        <Search className="h-4 w-4 shrink-0 text-[#595959] sm:h-5 sm:w-5" />
+      <label className="col-span-2 flex h-12 items-center border-b border-[#e4e2e0] px-3 sm:h-auto sm:min-h-[56px] sm:flex-1 sm:border-b-0 sm:px-4">
         <div className="min-w-0 flex-1">
           <span className="hidden text-xs font-bold text-[#595959] sm:block">
             What
@@ -122,8 +120,7 @@ export function IndeedStyleSearch({
 
       <span className="hidden w-px self-stretch bg-[#e4e2e0] sm:block" />
 
-      <label className="flex h-12 items-center gap-2 border-b border-r border-[#e4e2e0] px-3 sm:h-auto sm:min-h-[56px] sm:flex-1 sm:gap-3 sm:border-b-0 sm:border-r-0 sm:px-4">
-        <MapPin className="h-4 w-4 shrink-0 text-[#595959] sm:h-5 sm:w-5" />
+      <label className="flex h-12 items-center border-b border-r border-[#e4e2e0] px-3 sm:h-auto sm:min-h-[56px] sm:flex-1 sm:border-b-0 sm:border-r-0 sm:px-4">
         <div className="min-w-0 flex-1">
           <span className="hidden text-xs font-bold text-[#595959] sm:block">
             State
