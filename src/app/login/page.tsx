@@ -32,8 +32,6 @@ export default function LoginPage() {
         router.push(next);
       } else if (user?.user_type === "professional") {
         router.push("/dashboard/professional");
-      } else if (user?.user_type === "admin") {
-        router.push("/admin/dashboard");
       } else {
         router.push("/dashboard/customer");
       }
@@ -65,8 +63,6 @@ export default function LoginPage() {
         router.push(next);
       } else if (user?.user_type === "professional") {
         router.push("/dashboard/professional");
-      } else if (user?.user_type === "admin") {
-        router.push("/admin/dashboard");
       } else {
         router.push("/dashboard/customer");
       }

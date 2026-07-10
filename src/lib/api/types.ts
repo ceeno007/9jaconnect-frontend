@@ -143,6 +143,60 @@ export type ProfessionalCreateRequest = {
   referred_by_code?: string | null;
 };
 
+export type ProfessionalServiceCreateRequest = {
+  service_name: string;
+};
+
+export type ProfessionalService = {
+  id: string;
+  service_name?: string;
+  name?: string;
+  [key: string]: unknown;
+};
+
+export type ProfessionalArrangement = {
+  id: string;
+  status?: string;
+  title?: string;
+  customer_name?: string;
+  professional_id?: string;
+  professional_name?: string;
+  business_name?: string;
+  service_name?: string;
+  service_summary?: string;
+  service_description?: string;
+  review_interval?: string;
+  start_date?: string;
+  conversation_id?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  [key: string]: unknown;
+};
+
+export type RecurringArrangementCreateRequest = {
+  professional_id: string;
+  service_summary: string;
+  service_description: string;
+  review_interval: string;
+  start_date: string;
+};
+
+export type RecurringArrangementIntervalUpdateRequest = {
+  review_interval: string;
+};
+
+export type AdSlot = {
+  id?: string;
+  ad_slot_id?: string;
+  page_context?: string | null;
+  adsense_slot_id?: string | null;
+  is_active?: boolean;
+  display_order?: number;
+  category_id?: string | null;
+  state_id?: string | null;
+  [key: string]: unknown;
+};
+
 export type ServiceTicketCreateRequest = {
   professional_id: string;
   issue_summary: string;

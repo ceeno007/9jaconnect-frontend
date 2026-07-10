@@ -28,6 +28,18 @@ function coverUrl(
   return explicit || gallery[0] || null;
 }
 
+function serviceNames(pro: DirectoryProfessional | ProfessionalDetail) {
+  if (!Array.isArray(pro.services)) return [] as string[];
+  return pro.services
+    .map((item) => {
+      if (typeof item === "string") return item.trim();
+      if (!item || typeof item !== "object") return "";
+      const record = item as { service_name?: string; name?: string };
+      return String(record.service_name || record.name || "").trim();
+    })
+    .filter(Boolean);
+}
+
 export function mapDirectoryProfessional(
   pro: DirectoryProfessional | ProfessionalDetail,
 ): Professional {
@@ -53,6 +65,7 @@ export function mapDirectoryProfessional(
     verified: Boolean(pro.is_verified),
     years: pro.years_of_experience ?? 0,
     description: pro.service_description || "",
+    services: serviceNames(pro),
   };
 }
 

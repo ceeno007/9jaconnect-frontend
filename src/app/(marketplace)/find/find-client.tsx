@@ -8,11 +8,18 @@ import {
   ListingCard,
   ListingCardCompact,
 } from "@/components/professionals/listing-card";
+import { MarketplaceAds } from "@/components/ads/marketplace-ads";
 import { EmptyState } from "@/components/ui/primitives";
-import { listProfessionalsForSearch } from "@/lib/api";
+import { listProfessionalsForSearch, type DirectorySort } from "@/lib/api";
 import { mapDirectoryProfessional } from "@/lib/api/mappers";
 import type { Professional } from "@/lib/types";
 import { cn } from "@/lib/utils";
+
+const SORT_OPTIONS: { label: string; value: DirectorySort }[] = [
+  { label: "Recommended", value: "recommended" },
+  { label: "Highest rated", value: "rating" },
+  { label: "Newest", value: "recency" },
+];
 
 export default function FindPageClient() {
   const searchParams = useSearchParams();
@@ -21,6 +28,7 @@ export default function FindPageClient() {
   const categoryId = searchParams.get("category") ?? "";
   const keyword = (searchParams.get("keyword") ?? "").trim();
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [sort, setSort] = useState<DirectorySort>("recommended");
   const [results, setResults] = useState<Professional[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -34,10 +42,11 @@ export default function FindPageClient() {
     setSearchNotice("");
 
     void listProfessionalsForSearch({
-      q: keyword || undefined,
+      query: keyword || undefined,
       state_id: stateId || undefined,
       lga_id: lgaId || undefined,
       category_id: categoryId || undefined,
+      sort,
       page: 1,
       page_size: 48,
     })
@@ -65,7 +74,7 @@ export default function FindPageClient() {
     return () => {
       cancelled = true;
     };
-  }, [stateId, lgaId, categoryId, keyword]);
+  }, [stateId, lgaId, categoryId, keyword, sort]);
 
   const countLabel = useMemo(() => {
     if (loading) return null;
@@ -79,7 +88,7 @@ export default function FindPageClient() {
       transition={{ duration: 0.28, ease: "easeOut" }}
       className="mx-auto max-w-7xl px-4 py-8 lg:px-6"
     >
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-black sm:text-4xl">
             Find Professionals
@@ -90,29 +99,46 @@ export default function FindPageClient() {
             <div className="mt-2 h-5 w-40 animate-pulse rounded-[8px] bg-[#f3f2f1]" />
           )}
         </div>
-        <div className="inline-flex overflow-hidden rounded-[8px] border border-[#e4e2e0] bg-white">
-          <button
-            type="button"
-            aria-label="Grid view"
-            onClick={() => setView("grid")}
-            className={cn(
-              "inline-flex h-10 w-10 items-center justify-center",
-              view === "grid" ? "bg-[#f3f2f1] text-black" : "text-muted",
-            )}
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            aria-label="List view"
-            onClick={() => setView("list")}
-            className={cn(
-              "inline-flex h-10 w-10 items-center justify-center border-l border-[#e4e2e0]",
-              view === "list" ? "bg-[#f3f2f1] text-black" : "text-muted",
-            )}
-          >
-            <List className="h-4 w-4" />
-          </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="inline-flex items-center gap-2 text-sm font-bold text-muted">
+            Sort
+            <select
+              name="sort"
+              value={sort}
+              onChange={(e) => setSort(e.target.value as DirectorySort)}
+              className="h-10 rounded-[8px] border border-[#e4e2e0] bg-white px-3 text-sm font-bold text-black outline-none"
+            >
+              {SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="inline-flex overflow-hidden rounded-[8px] border border-[#e4e2e0] bg-white">
+            <button
+              type="button"
+              aria-label="Grid view"
+              onClick={() => setView("grid")}
+              className={cn(
+                "inline-flex h-10 w-10 items-center justify-center",
+                view === "grid" ? "bg-[#f3f2f1] text-black" : "text-muted",
+              )}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="List view"
+              onClick={() => setView("list")}
+              className={cn(
+                "inline-flex h-10 w-10 items-center justify-center border-l border-[#e4e2e0]",
+                view === "list" ? "bg-[#f3f2f1] text-black" : "text-muted",
+              )}
+            >
+              <List className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -121,6 +147,8 @@ export default function FindPageClient() {
           {searchNotice}
         </p>
       ) : null}
+
+      <MarketplaceAds pageContext="find" className="mb-6 space-y-3" />
 
       {error ? (
         <EmptyState title="Something went wrong" description={error} />

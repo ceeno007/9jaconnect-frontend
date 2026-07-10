@@ -10,6 +10,7 @@ import { Logo } from "@/components/layout/logo";
 import { NotificationsMenu } from "@/components/layout/notifications-menu";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
+import { isAdminAreaPath, isAdminAuthPath } from "@/lib/admin-paths";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -92,13 +93,13 @@ export function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
   const [open, setOpen] = useState(false);
 
+  if (isAdminAreaPath(pathname) || isAdminAuthPath(pathname)) return null;
+
   const accountHref = !isAuthenticated
     ? "/login"
     : user?.user_type === "professional"
       ? "/dashboard/professional"
-      : user?.user_type === "admin"
-        ? "/admin/dashboard"
-        : "/dashboard/customer";
+      : "/dashboard/customer";
 
   const messagesHref = !isAuthenticated
     ? "/login?next=/dashboard/customer/tickets"

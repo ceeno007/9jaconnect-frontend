@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge, EmptyState } from "@/components/ui/primitives";
 import { ImageLightbox } from "@/components/ui/image-lightbox";
@@ -19,14 +20,24 @@ import { ProfessionalProfileSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/auth-provider";
 import { getProfessional } from "@/lib/api";
 import {
+  createArrangement,
   createServiceTicket,
   listProfessionalReviews,
+  listProfessionalServices,
+  serviceDisplayName,
 } from "@/lib/api/auth-client";
 import { mapDirectoryProfessional } from "@/lib/api/mappers";
 import { ApiError } from "@/lib/api/types";
-import type { Review } from "@/lib/api/types";
+import type { ProfessionalService, Review } from "@/lib/api/types";
 import { galleryUrlsFromCache } from "@/lib/gallery-cache";
 import type { Professional } from "@/lib/types";
+
+const REVIEW_INTERVALS = [
+  { label: "Weekly", value: "weekly" },
+  { label: "Biweekly", value: "biweekly" },
+  { label: "Monthly", value: "monthly" },
+  { label: "Quarterly", value: "quarterly" },
+];
 
 export default function ProfessionalProfilePage() {
   const params = useParams<{ id: string }>();
@@ -35,11 +46,15 @@ export default function ProfessionalProfilePage() {
   const { isAuthenticated, user } = useAuth();
   const [professional, setProfessional] = useState<Professional | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [services, setServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [missing, setMissing] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [pending, setPending] = useState(false);
+  const [requestMode, setRequestMode] = useState<"one_off" | "recurring">(
+    "one_off",
+  );
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -48,11 +63,17 @@ export default function ProfessionalProfilePage() {
     void Promise.all([
       getProfessional(id),
       listProfessionalReviews(id).catch(() => [] as Review[]),
+      listProfessionalServices(id).catch(() => [] as ProfessionalService[]),
     ])
-      .then(([data, nextReviews]) => {
+      .then(([data, nextReviews, nextServices]) => {
         if (cancelled) return;
-        setProfessional(mapDirectoryProfessional(data));
+        const mapped = mapDirectoryProfessional(data);
+        setProfessional(mapped);
         setReviews(nextReviews);
+        const fromEndpoint = nextServices
+          .map(serviceDisplayName)
+          .filter(Boolean);
+        setServices(fromEndpoint.length ? fromEndpoint : mapped.services);
       })
       .catch(() => {
         if (cancelled) return;
@@ -82,14 +103,36 @@ export default function ProfessionalProfilePage() {
 
     setPending(true);
     try {
-      await createServiceTicket({
-        professional_id: id,
-        issue_summary:
-          summary || `Service request for ${professional?.tradeName}`,
-        issue_description: message,
-      });
-      setSuccess("Request sent. Track it from your customer dashboard.");
-      event.currentTarget.reset();
+      if (requestMode === "recurring") {
+        const reviewInterval = String(form.get("reviewInterval") || "monthly");
+        const startDate =
+          String(form.get("startDate") || "").trim() ||
+          new Date().toISOString().slice(0, 10);
+        const arrangement = await createArrangement({
+          professional_id: id,
+          service_summary:
+            summary || `Recurring work with ${professional?.tradeName}`,
+          service_description: message,
+          review_interval: reviewInterval,
+          start_date: startDate,
+        });
+        const arrangementId = String(arrangement?.id || "");
+        setSuccess("Recurring arrangement created.");
+        event.currentTarget.reset();
+        if (arrangementId) {
+          router.push(`/arrangements/${arrangementId}`);
+          return;
+        }
+      } else {
+        await createServiceTicket({
+          professional_id: id,
+          issue_summary:
+            summary || `Service request for ${professional?.tradeName}`,
+          issue_description: message,
+        });
+        setSuccess("Request sent. Track it from your customer dashboard.");
+        event.currentTarget.reset();
+      }
     } catch (err) {
       setError(
         err instanceof ApiError
@@ -243,6 +286,22 @@ export default function ProfessionalProfilePage() {
             </p>
           </section>
 
+          {services.length > 0 ? (
+            <section className="ui-card p-7 sm:p-8">
+              <h2 className="text-2xl font-bold">Services offered</h2>
+              <ul className="mt-4 space-y-2">
+                {services.map((service) => (
+                  <li
+                    key={service}
+                    className="rounded-[12px] bg-neutral-100 px-4 py-3 text-base font-bold text-black"
+                  >
+                    {service}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
           <section className="ui-card p-7 sm:p-8">
             <h2 className="text-2xl font-bold">Your rates</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-3">
@@ -298,6 +357,30 @@ export default function ProfessionalProfilePage() {
                 ? `From ₦${professional.hourlyRate.toLocaleString()} /hr`
                 : "Rate on request"}
             </div>
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setRequestMode("one_off")}
+                className={`rounded-[8px] px-3 py-2 text-sm font-bold ${
+                  requestMode === "one_off"
+                    ? "bg-black text-white"
+                    : "bg-[#f3f2f1] text-black"
+                }`}
+              >
+                One-off
+              </button>
+              <button
+                type="button"
+                onClick={() => setRequestMode("recurring")}
+                className={`rounded-[8px] px-3 py-2 text-sm font-bold ${
+                  requestMode === "recurring"
+                    ? "bg-black text-white"
+                    : "bg-[#f3f2f1] text-black"
+                }`}
+              >
+                Recurring
+              </button>
+            </div>
             <form className="mt-6 space-y-5" onSubmit={onRequestService}>
               <Input
                 label="Summary"
@@ -311,6 +394,24 @@ export default function ProfessionalProfilePage() {
                 required
                 placeholder="Describe what you need..."
               />
+              {requestMode === "recurring" ? (
+                <>
+                  <Select
+                    label="Review interval"
+                    name="reviewInterval"
+                    required
+                    defaultValue="monthly"
+                    options={REVIEW_INTERVALS}
+                  />
+                  <Input
+                    label="Start date"
+                    name="startDate"
+                    type="date"
+                    required
+                    defaultValue={new Date().toISOString().slice(0, 10)}
+                  />
+                </>
+              ) : null}
               {error ? (
                 <p className="text-base font-semibold text-danger">{error}</p>
               ) : null}
@@ -325,9 +426,11 @@ export default function ProfessionalProfilePage() {
               >
                 {pending
                   ? "Sending…"
-                  : isAuthenticated
-                    ? "Request Service"
-                    : "Login to request"}
+                  : !isAuthenticated
+                    ? "Login to request"
+                    : requestMode === "recurring"
+                      ? "Start arrangement"
+                      : "Request Service"}
               </Button>
             </form>
           </div>

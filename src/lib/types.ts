@@ -16,4 +16,5 @@ export type Professional = {
   verified: boolean;
   years: number;
   description: string;
+  services: string[];
 };

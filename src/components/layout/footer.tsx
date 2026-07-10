@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { isAdminAreaPath, isAdminAuthPath } from "@/lib/admin-paths";
 import { SITE } from "@/lib/constants";
 import { listCategories } from "@/lib/api";
 import type { Category } from "@/lib/api/types";
@@ -20,13 +22,18 @@ const legalLinks = [
 ];
 
 export function Footer() {
+  const pathname = usePathname();
   const [categories, setCategories] = useState<Category[]>([]);
+  const hideChrome = isAdminAreaPath(pathname) || isAdminAuthPath(pathname);
 
   useEffect(() => {
+    if (hideChrome) return;
     void listCategories()
       .then((items) => setCategories(items.slice(0, 6)))
       .catch(() => setCategories([]));
-  }, []);
+  }, [hideChrome]);
+
+  if (hideChrome) return null;
 
   return (
     <footer className="mt-auto border-t border-[#e4e2e0] bg-white">

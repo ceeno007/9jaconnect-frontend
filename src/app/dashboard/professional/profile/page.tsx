@@ -18,8 +18,12 @@ import {
   listSubcategories,
 } from "@/lib/api";
 import {
+  createProfessionalService,
   deleteProfessionalGalleryImage,
+  deleteProfessionalService,
   getMyProfessional,
+  listProfessionalServices,
+  serviceDisplayName,
   updateProfessional,
   uploadProfessionalGalleryImage,
 } from "@/lib/api/auth-client";
@@ -32,7 +36,13 @@ import {
   type CachedGalleryItem,
 } from "@/lib/gallery-cache";
 import { nairaToKobo } from "@/lib/api/mappers";
-import type { Category, Lga, State, Subcategory } from "@/lib/api/types";
+import type {
+  Category,
+  Lga,
+  ProfessionalService,
+  State,
+  Subcategory,
+} from "@/lib/api/types";
 import { ApiError } from "@/lib/api/types";
 import { formatMoneyInput, parseMoneyInput } from "@/lib/utils";
 
@@ -155,6 +165,9 @@ export default function ProfessionalProfileEditPage() {
   const [pending, setPending] = useState(false);
   const [galleryPending, setGalleryPending] = useState(false);
   const [serverGalleryFull, setServerGalleryFull] = useState(false);
+  const [services, setServices] = useState<ProfessionalService[]>([]);
+  const [serviceName, setServiceName] = useState("");
+  const [servicesPending, setServicesPending] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadingUrlsRef = useRef<string[]>([]);
   const gallerySlotsLeft = serverGalleryFull
@@ -208,7 +221,7 @@ export default function ProfessionalProfileEditPage() {
     }
     let cancelled = false;
     void getMyProfessional()
-      .then((pro) => {
+      .then(async (pro) => {
         if (cancelled) return;
         setProfessionalId(pro.id);
         setBusinessName(pro.business_name || "");
@@ -241,6 +254,12 @@ export default function ProfessionalProfileEditPage() {
         setGallery(
           mergeGalleryItems(readGallery(pro), readCachedGallery(pro.id)),
         );
+        try {
+          const nextServices = await listProfessionalServices(pro.id);
+          if (!cancelled) setServices(nextServices);
+        } catch {
+          if (!cancelled) setServices([]);
+        }
       })
       .catch(() => {
         if (!cancelled) toast.error("Could not load professional profile.");
@@ -252,6 +271,43 @@ export default function ProfessionalProfileEditPage() {
       cancelled = true;
     };
   }, [authLoading, isAuthenticated]);
+
+  async function onAddService(event: FormEvent) {
+    event.preventDefault();
+    if (!professionalId) return;
+    const name = serviceName.trim();
+    if (!name) return;
+    setServicesPending(true);
+    try {
+      await createProfessionalService(professionalId, { service_name: name });
+      const next = await listProfessionalServices(professionalId);
+      setServices(next);
+      setServiceName("");
+      toast.success("Service added");
+    } catch (err) {
+      toast.error(
+        err instanceof ApiError ? err.message : "Could not add service.",
+      );
+    } finally {
+      setServicesPending(false);
+    }
+  }
+
+  async function onRemoveService(serviceId: string) {
+    if (!professionalId) return;
+    setServicesPending(true);
+    try {
+      await deleteProfessionalService(professionalId, serviceId);
+      setServices((current) => current.filter((item) => item.id !== serviceId));
+      toast.success("Service removed");
+    } catch (err) {
+      toast.error(
+        err instanceof ApiError ? err.message : "Could not remove service.",
+      );
+    } finally {
+      setServicesPending(false);
+    }
+  }
 
   async function refreshGallery() {
     const pro = await getMyProfessional();
@@ -621,6 +677,59 @@ export default function ProfessionalProfileEditPage() {
                 No photos yet. Use Add photos to upload your first ones.
               </p>
             ) : null}
+          </section>
+
+          <section className="ui-card p-6">
+            <h2 className="text-2xl text-black">Services offered</h2>
+            <p className="mt-2 text-sm font-medium text-muted">
+              Add specific services customers can request from your listing.
+            </p>
+            <form
+              className="mt-4 flex flex-col gap-3 sm:flex-row"
+              onSubmit={onAddService}
+            >
+              <div className="flex-1">
+                <Input
+                  label="Service name"
+                  name="serviceName"
+                  value={serviceName}
+                  onChange={(e) => setServiceName(e.target.value)}
+                  placeholder="e.g. Kitchen rewiring"
+                  required
+                />
+              </div>
+              <div className="sm:pt-8">
+                <Button type="submit" disabled={servicesPending || !professionalId}>
+                  {servicesPending ? "Saving…" : "Add service"}
+                </Button>
+              </div>
+            </form>
+            <div className="mt-4 space-y-2">
+              {services.length === 0 ? (
+                <p className="text-sm font-medium text-muted">
+                  No services listed yet.
+                </p>
+              ) : (
+                services.map((service) => (
+                  <div
+                    key={service.id}
+                    className="flex items-center justify-between gap-3 rounded-[12px] bg-[#fafafa] px-4 py-3"
+                  >
+                    <p className="text-base font-bold text-black">
+                      {serviceDisplayName(service)}
+                    </p>
+                    <button
+                      type="button"
+                      disabled={servicesPending}
+                      onClick={() => void onRemoveService(service.id)}
+                      className="text-sm font-bold text-muted hover:text-black disabled:opacity-60"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
           </section>
 
           <form className="space-y-6" onSubmit={onSubmit}>

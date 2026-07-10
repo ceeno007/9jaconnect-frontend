@@ -78,31 +78,32 @@ Errors:
 
 ### 2) Directory keyword search
 
-**Problem:** `GET /api/v1/professionals?q=cleaning` returns `422` with `directory_search_invalid_params` on production today.
+**Problem:** Keyword search was returning `422` with `directory_search_invalid_params` on production.
 
-**Required:** Accept `q` (or document the exact param name if different) on:
+**Required:** Accept `query` (preferred) and `q` alias on:
 
 `GET /api/v1/professionals`
 
-**Search fields:** `business_name`, `service_description`, `category_name`, `subcategory_name` (and subcategory slug if useful).
+**Also support:** `sort=recency|rating|recommended`, `min_rating`, `page`, `page_size`.
 
-**Keep existing filters:** `state_id`, `lga_id`, `category_id`, `subcategory_id`, `page`, `page_size`.
+**Search fields:** `business_name`, `service_description`, and services (plus category/subcategory if useful).
+
+**Keep existing filters:** `state_id`, `lga_id`, `category_id`, `subcategory_id`.
 
 **Example:**
 
 ```
-GET /api/v1/professionals?q=solar&state_id=...&page=1&page_size=20
+GET /api/v1/professionals?query=solar&state_id=...&sort=recommended&page=1&page_size=20
 ```
 
 **Response:** same list shape as today (`data.items[]` + `data.pagination`).
 
+Frontend now sends `query=` (not `q=`).
 ---
 
 ### 3) Notifications API
 
-**Problem:** `GET /api/v1/notifications/unread-count` returns **404** on production. Navbar bell is wired but empty.
-
-**Deploy:**
+**Status:** Documented in Customer API. Frontend is wired. Confirm these are live on production (previously 404).
 
 | Method | Path | Auth |
 |--------|------|------|
@@ -140,7 +141,7 @@ Frontend also accepts: `message`, `notification_type`, `read`, `read_at`, nested
 
 ### 4) `PATCH /api/v1/auth/me`
 
-**Problem:** Account settings and pro settings call this; confirm it is live on production with the same auth as other endpoints.
+**Status:** Documented in Customer API as `UpdateProfileRequest`. Frontend account settings already call this. Confirm it is live on production.
 
 **Request body (partial update):**
 
@@ -171,32 +172,7 @@ Return the updated `user` object (same fields as login `user`).
 
 ### 5) Pending reviews for customer dashboard
 
-**Problem:** `GET /api/v1/reviews/pending` returns **405** on production.
-
-**Required:**
-
-`GET /api/v1/reviews/pending` (Bearer, customer)
-
-**Response:** list of tickets (or review stubs) the customer can still review:
-
-```json
-{
-  "success": true,
-  "data": {
-    "items": [
-      {
-        "id": "ticket-uuid",
-        "issue_summary": "Fix wiring",
-        "professional_id": "uuid",
-        "status": "completed"
-      }
-    ]
-  }
-}
-```
-
-Frontend accepts `data.items`, `data.tickets`, `data.pending_reviews`, or a bare array in `data`.
-
+**Status:** Documented in Customer API. Frontend customer dashboard calls `GET /api/v1/reviews/pending`. Confirm it is live (previously 405 on production).
 ---
 
 ## P1 — Strongly recommended

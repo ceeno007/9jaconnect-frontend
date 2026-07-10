@@ -7,10 +7,14 @@ import { EmptyState, PageShell } from "@/components/ui/primitives";
 import { TicketListSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
+  listCustomerArrangements,
   listCustomerTickets,
   listPendingReviews,
 } from "@/lib/api/auth-client";
-import type { ServiceTicket } from "@/lib/api/types";
+import type {
+  ProfessionalArrangement,
+  ServiceTicket,
+} from "@/lib/api/types";
 
 function ticketTitle(ticket: ServiceTicket) {
   return (
@@ -23,16 +27,27 @@ function ticketTitle(ticket: ServiceTicket) {
 
 function ticketId(ticket: ServiceTicket) {
   return String(
-    ticket.id ||
-      ticket.ticket_id ||
-      ticket.service_ticket_id ||
-      "",
+    ticket.id || ticket.ticket_id || ticket.service_ticket_id || "",
+  );
+}
+
+function arrangementTitle(item: ProfessionalArrangement) {
+  return (
+    item.service_summary ||
+    item.title ||
+    item.service_name ||
+    item.business_name ||
+    item.professional_name ||
+    `Arrangement ${String(item.id || "").slice(0, 8)}`
   );
 }
 
 export default function CustomerDashboardPage() {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
   const [tickets, setTickets] = useState<ServiceTicket[]>([]);
+  const [arrangements, setArrangements] = useState<ProfessionalArrangement[]>(
+    [],
+  );
   const [pendingReview, setPendingReview] = useState<ServiceTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -49,10 +64,14 @@ export default function CustomerDashboardPage() {
     void Promise.all([
       listCustomerTickets(user.id),
       listPendingReviews().catch(() => [] as ServiceTicket[]),
+      listCustomerArrangements(user.id).catch(
+        () => [] as ProfessionalArrangement[],
+      ),
     ])
-      .then(([ticketItems, pendingItems]) => {
+      .then(([ticketItems, pendingItems, arrangementItems]) => {
         if (cancelled) return;
         setTickets(ticketItems);
+        setArrangements(arrangementItems);
         setPendingReview(
           pendingItems.length > 0
             ? pendingItems
@@ -179,6 +198,42 @@ export default function CustomerDashboardPage() {
                     </div>
                     <span className="rounded-full bg-[#f3f2f1] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
                       {String(ticket.status || "open").replaceAll("_", " ")}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-2xl text-black">Recurring arrangements</h2>
+          <div className="mt-4">
+            {arrangements.length === 0 ? (
+              <EmptyState
+                title="No arrangements yet"
+                description="Start a recurring arrangement from a professional profile when you need ongoing work."
+              />
+            ) : (
+              <div className="space-y-3">
+                {arrangements.slice(0, 5).map((item) => (
+                  <Link
+                    key={item.id}
+                    href={`/arrangements/${item.id}`}
+                    className="ui-card flex items-center justify-between gap-4 p-5 transition hover:bg-[#fafafa]"
+                  >
+                    <div>
+                      <p className="text-lg font-bold text-black">
+                        {arrangementTitle(item)}
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-muted">
+                        {item.business_name ||
+                          item.professional_name ||
+                          "Recurring service"}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-[#f3f2f1] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
+                      {String(item.status || "active").replaceAll("_", " ")}
                     </span>
                   </Link>
                 ))}

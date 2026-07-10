@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { AdminAreaClient } from "./admin-area-client";
+import { AdminAuthProvider } from "@/components/providers/admin-auth-provider";
 
 export const metadata: Metadata = {
-  title: "Console",
+  title: "Sign in",
   robots: {
     index: false,
     follow: false,
@@ -15,10 +15,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AdminLayout({
+export default function AdminGateLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AdminAreaClient>{children}</AdminAreaClient>;
+  return <AdminAuthProvider>{children}</AdminAuthProvider>;
 }

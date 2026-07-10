@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
 
-export default function GoneAdminResetPasswordPage() {
+export default function GoneAdminLoginPage() {
   notFound();
 }

@@ -8,7 +8,11 @@ import type {
   CustomerPreferencesRequest,
   DirectoryProfessional,
   InAppNotification,
+  ProfessionalArrangement,
   ProfessionalCreateRequest,
+  ProfessionalService,
+  ProfessionalServiceCreateRequest,
+  RecurringArrangementCreateRequest,
   RequestDeletionRequest,
   Review,
   ServiceTicket,
@@ -50,7 +54,7 @@ export async function getMe() {
 }
 
 export type UpdateMePayload = {
-  full_name?: string;
+  full_name: string;
   phone?: string | null;
   whatsapp_number?: string | null;
   home_state_id?: string | null;
@@ -219,6 +223,16 @@ export async function sendTicketMessage(ticketId: string, body: string) {
   );
 }
 
+export async function sendArrangementMessage(
+  arrangementId: string,
+  body: string,
+) {
+  return apiRequest<unknown>(
+    `/api/v1/conversations/by-arrangement/${arrangementId}/messages`,
+    { method: "POST", body: { body } },
+  );
+}
+
 export async function markConversationRead(conversationId: string) {
   return apiRequest<unknown>(
     `/api/v1/conversations/${conversationId}/read`,
@@ -273,6 +287,158 @@ export async function getMyProfessional() {
     (record.professional as DirectoryProfessional) ||
     (data as DirectoryProfessional)
   );
+}
+
+export async function createProfessional(payload: ProfessionalCreateRequest) {
+  const data = await apiRequest<unknown>("/api/v1/professionals", {
+    method: "POST",
+    body: payload,
+  });
+  const record = asRecord(data);
+  return (
+    (record.professional as DirectoryProfessional) ||
+    (data as DirectoryProfessional)
+  );
+}
+
+export async function listProfessionalServices(professionalId: string) {
+  const data = await apiRequest<unknown>(
+    `/api/v1/professionals/${professionalId}/services`,
+  );
+  return asList<ProfessionalService>(data, ["services", "items"]);
+}
+
+export async function createProfessionalService(
+  professionalId: string,
+  payload: ProfessionalServiceCreateRequest,
+) {
+  return apiRequest<unknown>(
+    `/api/v1/professionals/${professionalId}/services`,
+    { method: "POST", body: payload },
+  );
+}
+
+export async function deleteProfessionalService(
+  professionalId: string,
+  serviceId: string,
+) {
+  return apiRequest<unknown>(
+    `/api/v1/professionals/${professionalId}/services/${serviceId}`,
+    { method: "DELETE" },
+  );
+}
+
+export async function listProfessionalArrangements(professionalId: string) {
+  const data = await apiRequest<unknown>(
+    `/api/v1/arrangements/professional/${professionalId}`,
+  );
+  return asList<ProfessionalArrangement>(data, [
+    "arrangements",
+    "items",
+    "history",
+  ]);
+}
+
+export async function listCustomerArrangements(customerId: string) {
+  const data = await apiRequest<unknown>(
+    `/api/v1/arrangements/customer/${customerId}`,
+  );
+  return asList<ProfessionalArrangement>(data, [
+    "arrangements",
+    "items",
+    "history",
+  ]);
+}
+
+export async function getArrangement(arrangementId: string) {
+  const data = await apiRequest<unknown>(
+    `/api/v1/arrangements/${arrangementId}`,
+  );
+  const record = asRecord(data);
+  return (
+    (record.arrangement as ProfessionalArrangement) ||
+    (data as ProfessionalArrangement)
+  );
+}
+
+export async function createArrangement(
+  payload: RecurringArrangementCreateRequest,
+) {
+  const data = await apiRequest<unknown>("/api/v1/arrangements", {
+    method: "POST",
+    body: payload,
+  });
+  const record = asRecord(data);
+  return (
+    (record.arrangement as ProfessionalArrangement) ||
+    (data as ProfessionalArrangement)
+  );
+}
+
+export async function updateArrangementInterval(
+  arrangementId: string,
+  reviewInterval: string,
+) {
+  return apiRequest<unknown>(
+    `/api/v1/arrangements/${arrangementId}/interval`,
+    {
+      method: "PUT",
+      body: { review_interval: reviewInterval },
+    },
+  );
+}
+
+export async function endArrangement(arrangementId: string) {
+  return apiRequest<unknown>(`/api/v1/arrangements/${arrangementId}/end`, {
+    method: "PUT",
+  });
+}
+
+export async function createRecurringReview(input: {
+  arrangementId: string;
+  rating: number;
+  comment: string;
+  proof?: File | null;
+}) {
+  const form = new FormData();
+  form.append("arrangement_id", input.arrangementId);
+  form.append("rating", String(input.rating));
+  form.append("comment", input.comment);
+  if (input.proof) form.append("proof", input.proof);
+  return apiRequest<unknown>("/api/v1/reviews/recurring", {
+    method: "POST",
+    formData: form,
+  });
+}
+
+export async function amendReview(
+  reviewId: string,
+  input: {
+    rating?: number;
+    comment?: string;
+    proof?: File | null;
+  },
+) {
+  const form = new FormData();
+  if (input.rating != null) form.append("rating", String(input.rating));
+  if (input.comment != null) form.append("comment", input.comment);
+  if (input.proof) form.append("proof", input.proof);
+  return apiRequest<unknown>(`/api/v1/reviews/${reviewId}`, {
+    method: "PUT",
+    formData: form,
+  });
+}
+
+export function reviewProofUrl(reviewId: string) {
+  return `${getApiBaseUrl()}/api/v1/reviews/${reviewId}/proof`;
+}
+
+export function privateFileAccessUrl(token: string) {
+  return `${getApiBaseUrl()}/api/v1/files/private-access?token=${encodeURIComponent(token)}`;
+}
+
+export function serviceDisplayName(service: ProfessionalService) {
+  return String(service.service_name || service.name || "Service").trim();
 }
 
 export async function uploadProfessionalGalleryImage(

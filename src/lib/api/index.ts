@@ -2,6 +2,7 @@ import { httpRequest, unwrapList } from "@/lib/api/http";
 import { ApiError } from "@/lib/api/types";
 import type {
   AuthSessionPayload,
+  AdSlot,
   Category,
   DirectoryProfessional,
   Lga,
@@ -106,24 +107,51 @@ export async function listLgas(stateId: string) {
   return unwrapList(data, "lgas");
 }
 
+export type DirectorySort = "recency" | "rating" | "recommended";
+
 export type DirectoryQuery = {
+  /** Preferred keyword param per Professional API docs. */
+  query?: string;
+  /** Alias accepted by the API; mapped to `query` when building the request. */
   q?: string;
   state_id?: string;
   lga_id?: string;
   category_id?: string;
   subcategory_id?: string;
-  min_rating?: number;
+  min_rating?: number | string;
+  sort?: DirectorySort | string;
   page?: number;
   page_size?: number;
 };
 
-export async function listProfessionals(query: DirectoryQuery = {}) {
+function buildDirectoryParams(query: DirectoryQuery) {
   const params = new URLSearchParams();
-  Object.entries(query).forEach(([key, value]) => {
+  const keyword = (query.query ?? query.q)?.trim();
+  if (keyword) params.set("query", keyword);
+
+  (
+    [
+      "state_id",
+      "lga_id",
+      "category_id",
+      "subcategory_id",
+      "min_rating",
+      "sort",
+      "page",
+      "page_size",
+    ] as const
+  ).forEach((key) => {
+    const value = query[key];
     if (value !== undefined && value !== null && value !== "") {
       params.set(key, String(value));
     }
   });
+
+  return params;
+}
+
+export async function listProfessionals(query: DirectoryQuery = {}) {
+  const params = buildDirectoryParams(query);
   const qs = params.toString();
   const data = await httpRequest<{
     professionals?: DirectoryProfessional[];
@@ -150,9 +178,9 @@ export async function listProfessionals(query: DirectoryQuery = {}) {
   };
 }
 
-/** Falls back to filter-only search when prod API rejects `q=`. */
+/** Falls back to filter-only search when keyword search is rejected. */
 export async function listProfessionalsForSearch(query: DirectoryQuery = {}) {
-  const keyword = query.q?.trim();
+  const keyword = (query.query ?? query.q)?.trim();
   if (!keyword) {
     const data = await listProfessionals(query);
     return { ...data, keywordSearchUnavailable: false };
@@ -166,7 +194,7 @@ export async function listProfessionalsForSearch(query: DirectoryQuery = {}) {
       err instanceof ApiError &&
       err.code === "directory_search_invalid_params"
     ) {
-      const { q: _q, ...withoutKeyword } = query;
+      const { q: _q, query: _query, ...withoutKeyword } = query;
       const data = await listProfessionals(withoutKeyword);
       return { ...data, keywordSearchUnavailable: true };
     }
@@ -181,4 +209,18 @@ export async function getProfessional(id: string) {
     next: { revalidate: 60 },
   });
   return data.professional;
+}
+
+export async function listAds() {
+  const data = await httpRequest<unknown>("/api/v1/ads", {
+    next: { revalidate: 120 },
+  });
+  if (Array.isArray(data)) return data as AdSlot[];
+  if (data && typeof data === "object") {
+    const record = data as Record<string, unknown>;
+    for (const key of ["ads", "items", "slots"]) {
+      if (Array.isArray(record[key])) return record[key] as AdSlot[];
+    }
+  }
+  return [] as AdSlot[];
 }

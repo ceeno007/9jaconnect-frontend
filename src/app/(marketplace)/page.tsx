@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { iconForCategory } from "@/components/home/category-icons";
+import { MarketplaceAds } from "@/components/ads/marketplace-ads";
 import { ListingCard } from "@/components/professionals/listing-card";
 import { Button } from "@/components/ui/button";
 import { listCategories, listProfessionals } from "@/lib/api";
@@ -77,6 +78,11 @@ export default function HomePage() {
               })}
         </div>
       </section>
+
+      <MarketplaceAds
+        pageContext="home"
+        className="mx-auto max-w-7xl space-y-3 px-4 py-8 lg:px-6"
+      />
 
       <section className="border-b border-[#e4e2e0] bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16 lg:px-6">

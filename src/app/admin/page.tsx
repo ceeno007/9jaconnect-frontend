@@ -1,5 +1,6 @@
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 export default function AdminIndexPage() {
-  redirect("/admin/dashboard");
+  // Authenticated users are redirected by the admin gate; others 404.
+  notFound();
 }
