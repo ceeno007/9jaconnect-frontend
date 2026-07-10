@@ -1,4 +1,5 @@
 import type { DirectoryProfessional, ProfessionalDetail } from "@/lib/api/types";
+import { resolveMediaUrl } from "@/lib/gallery-cache";
 import type { Professional } from "@/lib/types";
 
 function koboToNaira(kobo: number | null | undefined) {
@@ -10,10 +11,10 @@ function galleryUrls(pro: DirectoryProfessional | ProfessionalDetail) {
   if (!("gallery" in pro) || !Array.isArray(pro.gallery)) return [] as string[];
   return pro.gallery
     .map((item) => {
-      if (typeof item === "string") return item;
+      if (typeof item === "string") return resolveMediaUrl(item);
       if (!item || typeof item !== "object") return null;
       const record = item as { url?: string; image_url?: string };
-      return record.url || record.image_url || null;
+      return resolveMediaUrl(record.url || record.image_url);
     })
     .filter((url): url is string => Boolean(url));
 }
@@ -23,7 +24,7 @@ function coverUrl(
   gallery: string[],
 ) {
   const explicit =
-    ("cover_image_url" in pro && pro.cover_image_url) || null;
+    ("cover_image_url" in pro && resolveMediaUrl(pro.cover_image_url)) || null;
   return explicit || gallery[0] || null;
 }
 

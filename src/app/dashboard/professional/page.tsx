@@ -73,15 +73,7 @@ export default function ProfessionalDashboardPage() {
       }
     >
       <section>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-2xl text-black">Service tickets</h2>
-          <Link
-            href="/dashboard/professional/tickets"
-            className="text-sm font-medium text-black hover:underline"
-          >
-            View all
-          </Link>
-        </div>
+        <h2 className="mb-4 text-2xl text-black">Service tickets</h2>
         {error ? (
           <EmptyState title="Something went wrong" description={error} />
         ) : loading ? (

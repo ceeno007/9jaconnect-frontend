@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { MotionProvider } from "@/components/providers/motion-provider";
+import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -32,9 +33,11 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col antialiased">
         <MotionProvider>
           <AuthProvider>
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            <ToastProvider>
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </ToastProvider>
           </AuthProvider>
         </MotionProvider>
       </body>

@@ -27,6 +27,29 @@ export function MediaFrame({
   emptyLabel?: string;
 }) {
   if (src) {
+    const isBrowserObjectUrl =
+      src.startsWith("blob:") || src.startsWith("data:");
+
+    if (isBrowserObjectUrl) {
+      return (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={alt}
+          className={cn(
+            "object-cover",
+            fill ? "absolute inset-0 h-full w-full" : null,
+            imageClassName,
+          )}
+          style={
+            fill
+              ? undefined
+              : { width: width ?? 120, height: height ?? 120 }
+          }
+        />
+      );
+    }
+
     if (fill) {
       return (
         <Image
@@ -35,6 +58,7 @@ export function MediaFrame({
           fill
           sizes={sizes}
           priority={priority}
+          unoptimized={src.includes("api.9jaconnet.com")}
           className={cn("object-cover", imageClassName)}
         />
       );
@@ -47,6 +71,7 @@ export function MediaFrame({
         height={height ?? 120}
         sizes={sizes}
         priority={priority}
+        unoptimized={src.includes("api.9jaconnet.com")}
         className={cn("object-cover", imageClassName)}
       />
     );

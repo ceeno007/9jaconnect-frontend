@@ -25,6 +25,7 @@ import {
 import { mapDirectoryProfessional } from "@/lib/api/mappers";
 import { ApiError } from "@/lib/api/types";
 import type { Review } from "@/lib/api/types";
+import { galleryUrlsFromCache } from "@/lib/gallery-cache";
 import type { Professional } from "@/lib/types";
 
 export default function ProfessionalProfilePage() {
@@ -101,10 +102,29 @@ export default function ProfessionalProfilePage() {
   }
 
   const galleryImages = useMemo(() => {
-    if (professional?.galleryImages?.length) return professional.galleryImages;
-    if (professional?.coverImage) return [professional.coverImage];
-    return [] as string[];
-  }, [professional]);
+    const fromApi = professional?.galleryImages?.length
+      ? professional.galleryImages
+      : professional?.coverImage
+        ? [professional.coverImage]
+        : [];
+
+    // API currently omits gallery on public detail. If you own this listing,
+    // show photos cached from your recent uploads in this browser.
+    const isOwner = Boolean(user?.professional_id && user.professional_id === id);
+    if (!isOwner) return fromApi;
+
+    const cached = galleryUrlsFromCache(id);
+    if (!cached.length) return fromApi;
+
+    const seen = new Set(fromApi);
+    const merged = [...fromApi];
+    for (const url of cached) {
+      if (!url || seen.has(url)) continue;
+      seen.add(url);
+      merged.push(url);
+    }
+    return merged;
+  }, [professional, user?.professional_id, id]);
 
   if (loading) {
     return <ProfessionalProfileSkeleton />;

@@ -1,14 +1,15 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
-import Image from "next/image";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { EmptyState, PageShell } from "@/components/ui/primitives";
 import { FormSkeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/toast";
 import { useAuth } from "@/components/providers/auth-provider";
 import {
   listCategories,
@@ -22,15 +23,30 @@ import {
   updateProfessional,
   uploadProfessionalGalleryImage,
 } from "@/lib/api/auth-client";
+import {
+  isGalleryImageId,
+  mergeGalleryItems,
+  readCachedGallery,
+  resolveMediaUrl,
+  syncCachedGallery,
+  type CachedGalleryItem,
+} from "@/lib/gallery-cache";
 import { nairaToKobo } from "@/lib/api/mappers";
 import type { Category, Lga, State, Subcategory } from "@/lib/api/types";
 import { ApiError } from "@/lib/api/types";
 import { formatMoneyInput, parseMoneyInput } from "@/lib/utils";
 
-type GalleryItem = { id: string; url: string };
+type GalleryItem = CachedGalleryItem;
+type UploadingItem = {
+  id: string;
+  url: string;
+  name: string;
+  progress: number;
+};
 
 const MAX_GALLERY_IMAGE_MB = 5;
 const MAX_GALLERY_IMAGE_BYTES = MAX_GALLERY_IMAGE_MB * 1024 * 1024;
+const MAX_GALLERY_ITEMS = 5;
 const ACCEPTED_IMAGE_TYPES = new Set([
   "image/jpeg",
   "image/jpg",
@@ -39,24 +55,82 @@ const ACCEPTED_IMAGE_TYPES = new Set([
   "image/gif",
 ]);
 
+function isGalleryLimitError(err: unknown) {
+  if (!(err instanceof ApiError)) return false;
+  const haystack = `${err.code || ""} ${err.message || ""}`.toLowerCase();
+  return haystack.includes("limit") || haystack.includes("only have 5");
+}
+
+function galleryFields(record: Record<string, unknown>) {
+  const id =
+    (typeof record.id === "string" && record.id) ||
+    (typeof record.image_id === "string" && record.image_id) ||
+    (typeof record.gallery_image_id === "string" && record.gallery_image_id) ||
+    null;
+  const url = resolveMediaUrl(
+    record.url ||
+      record.image_url ||
+      record.file_url ||
+      record.public_url ||
+      record.cdn_url ||
+      record.path ||
+      record.storage_path,
+  );
+  return { id, url };
+}
+
 function readGallery(pro: unknown): GalleryItem[] {
   if (!pro || typeof pro !== "object") return [];
   const gallery = (pro as { gallery?: unknown }).gallery;
   if (!Array.isArray(gallery)) return [];
   return gallery
-    .map((item) => {
+    .map((item, index) => {
+      if (typeof item === "string") {
+        const url = resolveMediaUrl(item);
+        return url ? { id: `gallery-${index}`, url } : null;
+      }
       if (!item || typeof item !== "object") return null;
-      const record = item as { id?: string; url?: string; image_url?: string };
-      const id = record.id;
-      const url = record.url || record.image_url;
-      if (!id || !url) return null;
-      return { id, url };
+      const { id, url } = galleryFields(item as Record<string, unknown>);
+      if (!id && !url) return null;
+      return { id: id || `gallery-${index}`, url: url || "" };
     })
     .filter((item): item is GalleryItem => Boolean(item));
 }
 
+function parseUploadResult(
+  data: unknown,
+  fallbackUrl: string,
+  fallbackId: string,
+): GalleryItem {
+  const root =
+    data && typeof data === "object" ? (data as Record<string, unknown>) : {};
+  const candidates: Record<string, unknown>[] = [root];
+  for (const key of ["gallery_image", "image", "file", "item", "data"]) {
+    const value = root[key];
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      candidates.push(value as Record<string, unknown>);
+    }
+  }
+
+  for (const candidate of candidates) {
+    const { id, url } = galleryFields(candidate);
+    if (id || url) {
+      return {
+        id: id || fallbackId,
+        url: url || fallbackUrl,
+      };
+    }
+  }
+
+  return {
+    id: fallbackId,
+    url: fallbackUrl,
+  };
+}
+
 export default function ProfessionalProfileEditPage() {
   const { isAuthenticated, loading: authLoading, user } = useAuth();
+  const toast = useToast();
   const [professionalId, setProfessionalId] = useState(
     user?.professional_id || "",
   );
@@ -76,20 +150,31 @@ export default function ProfessionalProfileEditPage() {
   const [daily, setDaily] = useState("");
   const [monthly, setMonthly] = useState("");
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [previewName, setPreviewName] = useState("");
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploading, setUploading] = useState<UploadingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [pending, setPending] = useState(false);
   const [galleryPending, setGalleryPending] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [serverGalleryFull, setServerGalleryFull] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadingUrlsRef = useRef<string[]>([]);
+  const gallerySlotsLeft = serverGalleryFull
+    ? 0
+    : Math.max(0, MAX_GALLERY_ITEMS - gallery.length);
+
+  useEffect(() => {
+    uploadingUrlsRef.current = uploading.map((item) => item.url);
+  }, [uploading]);
 
   useEffect(() => {
     return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      uploadingUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [previewUrl]);
+  }, []);
+
+  useEffect(() => {
+    if (!professionalId || loading) return;
+    syncCachedGallery(professionalId, gallery);
+  }, [professionalId, gallery, loading]);
 
   useEffect(() => {
     void Promise.all([listStates(), listCategories()]).then(
@@ -153,10 +238,12 @@ export default function ProfessionalProfileEditPage() {
             ? formatMoneyInput(Math.round(pro.monthly_rate_kobo / 100))
             : "",
         );
-        setGallery(readGallery(pro));
+        setGallery(
+          mergeGalleryItems(readGallery(pro), readCachedGallery(pro.id)),
+        );
       })
       .catch(() => {
-        if (!cancelled) setError("Could not load professional profile.");
+        if (!cancelled) toast.error("Could not load professional profile.");
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -168,95 +255,202 @@ export default function ProfessionalProfileEditPage() {
 
   async function refreshGallery() {
     const pro = await getMyProfessional();
-    setGallery(readGallery(pro));
+    const fromServer = readGallery(pro);
+    const cached = readCachedGallery(professionalId || pro.id);
+    if (fromServer.length > 0) {
+      setGallery(mergeGalleryItems(fromServer, cached));
+      setServerGalleryFull(fromServer.length >= MAX_GALLERY_ITEMS);
+      return;
+    }
+    // /professionals/me often omits gallery; keep local + cached items.
+    if (cached.length > 0) {
+      setGallery((current) => mergeGalleryItems(current, cached));
+    }
   }
 
-  function clearPreview() {
-    setPreviewUrl((current) => {
-      if (current) URL.revokeObjectURL(current);
-      return null;
-    });
-    setPreviewName("");
-  }
-
-  function onPickGalleryFile(file: File | null) {
-    setError("");
-    setSuccess("");
-    clearPreview();
-    if (!file) return;
-
-    if (!file.type.startsWith("image/") || !ACCEPTED_IMAGE_TYPES.has(file.type)) {
-      setError("Only image files are allowed (JPG, PNG, WEBP, or GIF).");
-      return;
-    }
-    if (file.size > MAX_GALLERY_IMAGE_BYTES) {
-      setError(`Image must be ${MAX_GALLERY_IMAGE_MB}MB or smaller.`);
-      return;
-    }
-
-    setPreviewName(file.name);
-    setPreviewUrl(URL.createObjectURL(file));
-  }
-
-  async function onUploadGallery(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!professionalId) {
-      setError("Professional profile not found on this account.");
-      return;
-    }
-    setError("");
-    setSuccess("");
-    const form = event.currentTarget;
-    const fileInput = form.elements.namedItem("gallery");
-    const file =
-      fileInput instanceof HTMLInputElement ? fileInput.files?.[0] : null;
-    if (!(file instanceof File) || !file.size) {
-      setError("Choose an image to upload.");
-      return;
-    }
-    if (!file.type.startsWith("image/")) {
-      setError("Only image files are allowed.");
-      return;
-    }
-    if (file.size > MAX_GALLERY_IMAGE_BYTES) {
-      setError(`Image must be ${MAX_GALLERY_IMAGE_MB}MB or smaller.`);
-      return;
-    }
-
-    if (!previewUrl) {
-      setPreviewName(file.name);
-      setPreviewUrl(URL.createObjectURL(file));
-    }
-
-    setGalleryPending(true);
-    setUploadProgress(0);
-    try {
-      await uploadProfessionalGalleryImage(professionalId, file, (percent) => {
-        setUploadProgress(percent);
+  function clearUploading(keepUrls: Set<string> = new Set()) {
+    setUploading((current) => {
+      current.forEach((item) => {
+        if (!keepUrls.has(item.url)) URL.revokeObjectURL(item.url);
       });
-      await refreshGallery();
-      form.reset();
-      clearPreview();
-      setUploadProgress(0);
-      setSuccess("Gallery image uploaded.");
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Gallery upload failed.");
+      return [];
+    });
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function uploadGalleryFiles(fileList: FileList | File[]) {
+    if (!professionalId) {
+      toast.error("Professional profile not found on this account.");
+      return;
+    }
+
+    if (gallerySlotsLeft <= 0) {
+      toast.error(
+        `Gallery is full (${MAX_GALLERY_ITEMS} photos max). Remove a photo before adding more.`,
+      );
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    const files = Array.from(fileList);
+    if (files.length === 0) return;
+
+
+    const valid: File[] = [];
+    let skippedType = 0;
+    let skippedSize = 0;
+    for (const file of files) {
+      if (
+        !file.type.startsWith("image/") ||
+        !ACCEPTED_IMAGE_TYPES.has(file.type)
+      ) {
+        skippedType += 1;
+        continue;
+      }
+      if (file.size > MAX_GALLERY_IMAGE_BYTES) {
+        skippedSize += 1;
+        continue;
+      }
+      valid.push(file);
+    }
+
+    if (valid.length === 0) {
+      const parts: string[] = [];
+      if (skippedType)
+        parts.push("only JPG, PNG, WEBP, or GIF images are allowed");
+      if (skippedSize)
+        parts.push(`each image must be ${MAX_GALLERY_IMAGE_MB}MB or smaller`);
+      toast.error(parts.join(". ") || "No valid images selected.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    const capped = valid.slice(0, gallerySlotsLeft);
+    const skippedForLimit = valid.length - capped.length;
+
+    const batch = capped.map((file, index) => ({
+      id: `upload-${Date.now()}-${index}`,
+      url: URL.createObjectURL(file),
+      name: file.name,
+      progress: 0,
+      file,
+    }));
+
+    setUploading(
+      batch.map(({ id, url, name, progress }) => ({ id, url, name, progress })),
+    );
+    setGalleryPending(true);
+
+    let uploaded = 0;
+    const failures: string[] = [];
+    const keptPreviewUrls = new Set<string>();
+    let hitLimit = false;
+
+    try {
+      for (const item of batch) {
+        try {
+          const result = await uploadProfessionalGalleryImage(
+            professionalId,
+            item.file,
+            (percent) => {
+              setUploading((current) =>
+                current.map((row) =>
+                  row.id === item.id ? { ...row, progress: percent } : row,
+                ),
+              );
+            },
+          );
+          const saved = parseUploadResult(result, item.url, item.id);
+          if (saved.url === item.url) keptPreviewUrls.add(item.url);
+          setGallery((current) => {
+            if (current.some((row) => row.id === saved.id)) return current;
+            return [...current, saved];
+          });
+          setUploading((current) =>
+            current.filter((row) => row.id !== item.id),
+          );
+          uploaded += 1;
+        } catch (err) {
+          if (isGalleryLimitError(err)) {
+            hitLimit = true;
+            setServerGalleryFull(true);
+            failures.push("__limit__");
+            break;
+          }
+          failures.push(
+            err instanceof ApiError ? err.message : item.name,
+          );
+        }
+      }
+
+      try {
+        await refreshGallery();
+      } catch {
+        // Keep optimistic gallery if refresh fails.
+      }
+
+      if (hitLimit && uploaded === 0) {
+        toast.error(
+          "Gallery is full",
+          `Max ${MAX_GALLERY_ITEMS} photos. Remove one to add another.`,
+        );
+      } else if (failures.length && uploaded === 0) {
+        toast.error(failures[0] || "Gallery upload failed.");
+      } else if (failures.length || skippedForLimit) {
+        if (hitLimit) {
+          toast.error(
+            `${uploaded} uploaded, gallery full`,
+            `Max ${MAX_GALLERY_ITEMS} photos. Remove one to add another.`,
+          );
+        } else {
+          const bits = [
+            uploaded ? `${uploaded} uploaded` : null,
+            failures.length ? `${failures.length} failed` : null,
+            skippedForLimit
+              ? `${skippedForLimit} skipped (max ${MAX_GALLERY_ITEMS})`
+              : null,
+            skippedType || skippedSize ? "some files were invalid" : null,
+          ].filter(Boolean);
+          toast.error(bits.join(". ") + ".");
+        }
+      } else {
+        const skipNote =
+          skippedType || skippedSize
+            ? ` · ${skippedType + skippedSize} skipped`
+            : "";
+        toast.success(
+          uploaded === 1
+            ? `Photo added${skipNote}`
+            : `${uploaded} photos added${skipNote}`,
+        );
+      }
     } finally {
+      clearUploading(keptPreviewUrls);
       setGalleryPending(false);
     }
   }
 
   async function onRemoveGallery(imageId: string) {
     if (!professionalId) return;
-    setError("");
-    setSuccess("");
+    const removing = gallery.find((item) => item.id === imageId);
     setGalleryPending(true);
     try {
-      await deleteProfessionalGalleryImage(professionalId, imageId);
-      setGallery((current) => current.filter((item) => item.id !== imageId));
-      setSuccess("Gallery image removed.");
+      // Local-only preview ids are not on the server yet.
+      if (isGalleryImageId(imageId)) {
+        await deleteProfessionalGalleryImage(professionalId, imageId);
+        setServerGalleryFull(false);
+      }
+      setGallery((current) => {
+        const next = current.filter((item) => item.id !== imageId);
+        syncCachedGallery(professionalId, next);
+        return next;
+      });
+      if (removing?.url.startsWith("blob:")) {
+        URL.revokeObjectURL(removing.url);
+      }
+      toast.success("Photo removed");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not remove image.");
+      toast.error(err instanceof ApiError ? err.message : "Could not remove image.");
     } finally {
       setGalleryPending(false);
     }
@@ -265,8 +459,6 @@ export default function ProfessionalProfileEditPage() {
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     if (!professionalId) return;
-    setError("");
-    setSuccess("");
     setPending(true);
     try {
       await updateProfessional(professionalId, {
@@ -288,9 +480,9 @@ export default function ProfessionalProfileEditPage() {
           ? nairaToKobo(Number(parseMoneyInput(monthly)))
           : null,
       });
-      setSuccess("Profile saved.");
+      toast.success("Profile saved", "Your public listing is up to date.");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not save profile.");
+      toast.error(err instanceof ApiError ? err.message : "Could not save profile.");
     } finally {
       setPending(false);
     }
@@ -318,119 +510,117 @@ export default function ProfessionalProfileEditPage() {
         <FormSkeleton />
       ) : (
         <div className="mx-auto max-w-2xl space-y-6">
-          {error ? (
-            <p className="text-base font-semibold text-danger">{error}</p>
-          ) : null}
-          {success ? (
-            <p className="text-base font-semibold text-black">{success}</p>
-          ) : null}
-
           <section className="ui-card p-6">
             <h2 className="text-2xl text-black">Work photos</h2>
             <p className="mt-2 text-sm font-medium text-muted">
-              Upload photos of your work. The first image becomes your listing
-              cover. Images only, max {MAX_GALLERY_IMAGE_MB}MB each.
+              Tap Add photos to choose one or more images. They upload right
+              away. First photo is your listing cover. Up to {MAX_GALLERY_ITEMS}{" "}
+              photos, images only, max {MAX_GALLERY_IMAGE_MB}MB each.
             </p>
-            {gallery.length > 0 ? (
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {gallery.map((item) => (
-                  <div
-                    key={item.id}
-                    className="relative aspect-square overflow-hidden rounded-[12px] bg-[#e8e6e4]"
-                  >
-                    <Image
+            <p className="mt-1 text-sm font-bold text-black">
+              {Math.min(gallery.length, MAX_GALLERY_ITEMS)} of{" "}
+              {MAX_GALLERY_ITEMS} photos
+              {serverGalleryFull && gallery.length < MAX_GALLERY_ITEMS
+                ? " (account is full on the server; remove a photo to free a slot)"
+                : ""}
+            </p>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              multiple
+              className="sr-only"
+              tabIndex={-1}
+              disabled={galleryPending || gallerySlotsLeft <= 0}
+              onChange={(event) => {
+                const files = event.target.files;
+                if (files?.length) void uploadGalleryFiles(files);
+              }}
+            />
+
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {gallery.map((item, index) => (
+                <div
+                  key={item.id}
+                  className="relative aspect-square overflow-hidden rounded-[12px] bg-[#e8e6e4]"
+                >
+                  {item.url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
                       src={item.url}
                       alt=""
-                      fill
-                      sizes="180px"
-                      className="object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => void onRemoveGallery(item.id)}
-                      disabled={galleryPending}
-                      className="absolute right-2 top-2 rounded-[6px] bg-black/70 px-2 py-1 text-xs font-bold text-white"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="mt-4 text-sm font-medium text-muted">
-                No photos yet.
-              </p>
-            )}
-
-            {previewUrl ? (
-              <div className="mt-4 overflow-hidden rounded-[12px] border border-[#e4e2e0] bg-[#fafafa] p-3">
-                <div className="flex items-start gap-3">
-                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[10px] bg-[#e8e6e4]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={previewUrl}
-                      alt="Selected preview"
                       className="h-full w-full object-cover"
                     />
-                    {galleryPending ? (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/45">
-                        <span className="text-xs font-bold text-white">
-                          {uploadProgress}%
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-black">
-                      {previewName || "Selected image"}
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center px-3 text-center text-sm font-bold text-muted">
+                      Saved photo
+                    </div>
+                  )}
+                  {index === 0 ? (
+                    <span className="absolute left-2 top-2 rounded-[6px] bg-black/70 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+                      Cover
+                    </span>
+                  ) : null}
+                  <button
+                    type="button"
+                    onClick={() => void onRemoveGallery(item.id)}
+                    disabled={galleryPending}
+                    className="absolute right-2 top-2 rounded-[6px] bg-black/70 px-2 py-1 text-xs font-bold text-white"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+
+              {uploading.map((item) => (
+                <div
+                  key={item.id}
+                  className="relative aspect-square overflow-hidden rounded-[12px] bg-[#e8e6e4]"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.url}
+                    alt={item.name || "Uploading preview"}
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/50 px-3">
+                    <p className="text-sm font-bold text-white">
+                      Uploading {item.progress}%
                     </p>
-                    <p className="mt-1 text-xs font-medium text-muted">
-                      {galleryPending
-                        ? "Uploading…"
-                        : "Ready to upload"}
-                    </p>
-                    {galleryPending ? (
-                      <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#e8e6e4]">
-                        <div
-                          className="h-full rounded-full bg-black transition-[width] duration-150"
-                          style={{ width: `${uploadProgress}%` }}
-                        />
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={clearPreview}
-                        className="mt-2 text-xs font-bold text-black hover:underline"
-                      >
-                        Clear selection
-                      </button>
-                    )}
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/30">
+                      <div
+                        className="h-full rounded-full bg-white transition-[width] duration-150"
+                        style={{ width: `${item.progress}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : null}
+              ))}
 
-            <form
-              className="mt-4 flex flex-wrap items-center gap-3"
-              onSubmit={onUploadGallery}
-            >
-              <input
-                type="file"
-                name="gallery"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                required
-                disabled={galleryPending}
-                onChange={(event) =>
-                  onPickGalleryFile(event.target.files?.[0] || null)
-                }
-                className="block w-full text-sm sm:w-auto"
-              />
-              <Button type="submit" variant="outline" disabled={galleryPending}>
-                {galleryPending
-                  ? `Uploading ${uploadProgress}%`
-                  : "Upload photo"}
-              </Button>
-            </form>
+              {gallerySlotsLeft > 0 ? (
+                <button
+                  type="button"
+                  disabled={galleryPending || !professionalId}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex aspect-square flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#bdbdbd] bg-white px-3 text-center transition hover:border-black hover:bg-[#fafafa] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#f3f2f1] text-black">
+                    <ImagePlus className="h-5 w-5" />
+                  </span>
+                  <span className="text-sm font-bold text-black">Add photos</span>
+                  <span className="text-xs font-medium text-muted">
+                    {gallerySlotsLeft} slot{gallerySlotsLeft === 1 ? "" : "s"} left
+                  </span>
+                </button>
+              ) : null}
+            </div>
+
+            {gallery.length === 0 && uploading.length === 0 ? (
+              <p className="mt-3 text-sm font-medium text-muted">
+                No photos yet. Use Add photos to upload your first ones.
+              </p>
+            ) : null}
           </section>
 
           <form className="space-y-6" onSubmit={onSubmit}>
