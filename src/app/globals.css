@@ -147,6 +147,10 @@ dt {
   border-radius: 8px !important;
 }
 
+.field-surface.has-reveal {
+  padding-right: 3.25rem !important;
+}
+
 textarea.field-surface {
   height: auto !important;
   min-height: 11rem !important;
