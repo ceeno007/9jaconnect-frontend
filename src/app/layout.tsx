@@ -30,7 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${roboto.variable} h-full`}>
-      <body className="flex min-h-full flex-col antialiased">
+      <body
+        className="flex min-h-full flex-col antialiased"
+        suppressHydrationWarning
+      >
         <MotionProvider>
           <AuthProvider>
             <ToastProvider>
