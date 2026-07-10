@@ -24,8 +24,19 @@ import {
   loginRequest,
   registerRequest,
 } from "@/lib/api";
-import type { AuthSessionPayload, RegisterRequest, User } from "@/lib/api/types";
+import type {
+  AuthSessionPayload,
+  ProfessionalCreateRequest,
+  RegisterRequest,
+  User,
+  UserType,
+} from "@/lib/api/types";
 import { ApiError } from "@/lib/api/types";
+
+type GoogleAuthOptions = {
+  user_type?: UserType;
+  professional_profile?: ProfessionalCreateRequest | null;
+};
 
 type AuthContextValue = {
   user: User | null;
@@ -33,7 +44,10 @@ type AuthContextValue = {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<User | null>;
   register: (payload: RegisterRequest) => Promise<{ user: User; message?: string }>;
-  loginWithGoogle: (idToken: string) => Promise<User | null>;
+  loginWithGoogle: (
+    idToken: string,
+    options?: GoogleAuthOptions,
+  ) => Promise<User | null>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<User | null>;
 };
@@ -106,15 +120,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return data;
   }, []);
 
-  const loginWithGoogle = useCallback(async (idToken: string) => {
-    const data = await googleOAuthRequest(idToken);
-    const next = applySession(data);
-    if (next) {
-      setUser(next);
-      return next;
-    }
-    return refreshUser();
-  }, [refreshUser]);
+  const loginWithGoogle = useCallback(
+    async (idToken: string, options?: GoogleAuthOptions) => {
+      const data = await googleOAuthRequest(idToken, options);
+      const next = applySession(data);
+      if (next) {
+        setUser(next);
+        return next;
+      }
+      return refreshUser();
+    },
+    [refreshUser],
+  );
 
   const logout = useCallback(async () => {
     const refresh = getRefreshToken();

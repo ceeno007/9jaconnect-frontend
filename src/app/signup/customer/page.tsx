@@ -4,14 +4,16 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { GoogleSignInButton } from "@/components/ui/google-sign-in-button";
 import { Input } from "@/components/ui/input";
 import { PageShell } from "@/components/ui/primitives";
 import { useAuth } from "@/components/providers/auth-provider";
 import { ApiError } from "@/lib/api/types";
+import { promptGoogleIdToken } from "@/lib/google-auth";
 
 export default function CustomerSignupPage() {
   const router = useRouter();
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
@@ -48,9 +50,43 @@ export default function CustomerSignupPage() {
     }
   }
 
+  async function onGoogleClick() {
+    setError("");
+    setPending(true);
+    try {
+      const idToken = await promptGoogleIdToken();
+      const user = await loginWithGoogle(idToken, { user_type: "customer" });
+      if (user?.user_type === "professional") {
+        router.push("/dashboard/professional");
+      } else {
+        router.push("/onboarding/customer");
+      }
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Google sign-up failed. Please try again.",
+      );
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
     <PageShell title="Sign Up as Customer">
       <div className="mx-auto max-w-lg ui-card p-6 sm:p-8">
+        <GoogleSignInButton
+          label="Sign up with Google"
+          onClick={onGoogleClick}
+          disabled={pending}
+        />
+        <div className="my-6 flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
+          <span className="h-px flex-1 bg-[#dadce0]" />
+          or
+          <span className="h-px flex-1 bg-[#dadce0]" />
+        </div>
         <form className="space-y-4" onSubmit={onSubmit}>
           <Input label="Full name" name="fullName" required />
           <Input label="Email" name="email" type="email" required />

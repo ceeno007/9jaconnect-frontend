@@ -1,9 +1,10 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { GoogleSignInButton } from "@/components/ui/google-sign-in-button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { PageShell } from "@/components/ui/primitives";
@@ -14,13 +15,63 @@ import {
   listStates,
   listSubcategories,
 } from "@/lib/api";
-import type { Category, Lga, State, Subcategory } from "@/lib/api/types";
+import type {
+  Category,
+  Lga,
+  ProfessionalCreateRequest,
+  State,
+  Subcategory,
+} from "@/lib/api/types";
 import { ApiError } from "@/lib/api/types";
 import { nairaToKobo } from "@/lib/api/mappers";
+import { promptGoogleIdToken } from "@/lib/google-auth";
+
+function readProfessionalProfile(
+  form: HTMLFormElement,
+): ProfessionalCreateRequest | null {
+  const data = new FormData(form);
+  const business_name = String(data.get("businessName") || "").trim();
+  const service_description = String(data.get("description") || "").trim();
+  const years_of_experience = Number(data.get("years") || 0);
+  const state_id = String(data.get("state") || "");
+  const lga_id = String(data.get("lga") || "");
+  const category_id = String(data.get("category") || "");
+  const subcategory_id = String(data.get("subcategory") || "");
+  const hourly = Number(data.get("hourlyRate") || 0);
+  const daily = Number(data.get("dayRate") || 0);
+
+  if (
+    !business_name ||
+    !service_description ||
+    !state_id ||
+    !lga_id ||
+    !category_id ||
+    !subcategory_id
+  ) {
+    return null;
+  }
+
+  return {
+    business_name,
+    service_description,
+    business_address: String(data.get("address") || "").trim() || null,
+    years_of_experience: Number.isFinite(years_of_experience)
+      ? years_of_experience
+      : 0,
+    state_id,
+    lga_id,
+    category_id,
+    subcategory_id,
+    hourly_rate_kobo: hourly ? nairaToKobo(hourly) : null,
+    daily_rate_kobo: daily ? nairaToKobo(daily) : null,
+    referred_by_code: String(data.get("referralCode") || "").trim() || null,
+  };
+}
 
 export default function ProfessionalSignupPage() {
   const router = useRouter();
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
+  const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [states, setStates] = useState<State[]>([]);
@@ -67,9 +118,11 @@ export default function ProfessionalSignupPage() {
       return;
     }
 
-    const hourly = Number(form.get("hourlyRate") || 0);
-    const daily = Number(form.get("dayRate") || 0);
-    const years = Number(form.get("years") || 0);
+    const profile = readProfessionalProfile(event.currentTarget);
+    if (!profile) {
+      setError("Please complete all required business and location fields.");
+      return;
+    }
 
     setPending(true);
     try {
@@ -80,19 +133,7 @@ export default function ProfessionalSignupPage() {
         whatsapp_number: String(form.get("whatsapp") || "").trim(),
         password,
         user_type: "professional",
-        professional_profile: {
-          business_name: String(form.get("businessName") || "").trim(),
-          service_description: String(form.get("description") || "").trim(),
-          business_address: String(form.get("address") || "").trim(),
-          years_of_experience: years,
-          state_id: String(form.get("state") || ""),
-          lga_id: String(form.get("lga") || ""),
-          category_id: String(form.get("category") || ""),
-          subcategory_id: String(form.get("subcategory") || ""),
-          hourly_rate_kobo: hourly ? nairaToKobo(hourly) : null,
-          daily_rate_kobo: daily ? nairaToKobo(daily) : null,
-          referred_by_code: String(form.get("referralCode") || "").trim() || null,
-        },
+        professional_profile: profile,
       });
       router.push("/signup/professional/check-email");
     } catch (err) {
@@ -106,12 +147,50 @@ export default function ProfessionalSignupPage() {
     }
   }
 
+  async function onGoogleClick() {
+    setError("");
+    const form = formRef.current;
+    if (!form) return;
+
+    const profile = readProfessionalProfile(form);
+    if (!profile) {
+      setError(
+        "Fill in your business and location details first, then sign up with Google.",
+      );
+      return;
+    }
+
+    setPending(true);
+    try {
+      const idToken = await promptGoogleIdToken();
+      await loginWithGoogle(idToken, {
+        user_type: "professional",
+        professional_profile: profile,
+      });
+      router.push("/dashboard/professional");
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Google sign-up failed. Please try again.",
+      );
+    } finally {
+      setPending(false);
+    }
+  }
+
   return (
     <PageShell title="Sign Up as Professional">
       <div className="mx-auto max-w-2xl space-y-6">
         <section className="ui-card p-6 sm:p-8">
           <h2 className="text-2xl text-black">Personal Details</h2>
-          <form className="mt-5 grid gap-4 sm:grid-cols-2" onSubmit={onSubmit}>
+          <form
+            ref={formRef}
+            className="mt-5 grid gap-4 sm:grid-cols-2"
+            onSubmit={onSubmit}
+          >
             <Input label="Full name" name="fullName" required />
             <Input label="Email" name="email" type="email" required />
             <Input label="Phone" name="phone" required />
@@ -230,7 +309,7 @@ export default function ProfessionalSignupPage() {
               </Link>
               .
             </p>
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-2 space-y-4">
               <Button
                 type="submit"
                 className="w-full"
@@ -239,6 +318,20 @@ export default function ProfessionalSignupPage() {
               >
                 {pending ? "Creating account…" : "Create professional account"}
               </Button>
+              <div className="flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
+                <span className="h-px flex-1 bg-[#dadce0]" />
+                or
+                <span className="h-px flex-1 bg-[#dadce0]" />
+              </div>
+              <GoogleSignInButton
+                label="Sign up with Google"
+                onClick={onGoogleClick}
+                disabled={pending}
+              />
+              <p className="text-center text-sm font-medium text-muted">
+                Fill business and location details above, then use Google to
+                skip password setup.
+              </p>
             </div>
           </form>
         </section>

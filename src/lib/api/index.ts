@@ -5,11 +5,13 @@ import type {
   DirectoryProfessional,
   Lga,
   Pagination,
+  ProfessionalCreateRequest,
   ProfessionalDetail,
   RegisterRequest,
   State,
   Subcategory,
   User,
+  UserType,
 } from "@/lib/api/types";
 
 export async function loginRequest(email: string, password: string) {
@@ -47,10 +49,22 @@ export async function verifyEmailRequest(token: string) {
   });
 }
 
-export async function googleOAuthRequest(idToken: string) {
+export async function googleOAuthRequest(
+  idToken: string,
+  options?: {
+    user_type?: UserType;
+    professional_profile?: ProfessionalCreateRequest | null;
+  },
+) {
   return httpRequest<AuthSessionPayload>("/api/v1/auth/oauth/google", {
     method: "POST",
-    body: { id_token: idToken },
+    body: {
+      id_token: idToken,
+      ...(options?.user_type ? { user_type: options.user_type } : {}),
+      ...(options?.professional_profile
+        ? { professional_profile: options.professional_profile }
+        : {}),
+    },
   });
 }
 
