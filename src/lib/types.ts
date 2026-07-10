@@ -2,7 +2,9 @@ export type Professional = {
   id: string;
   name: string;
   tradeName: string;
-  coverImage: string;
+  /** Real cover from API only. Null when the backend has no image. */
+  coverImage: string | null;
+  galleryImages: string[];
   category: string;
   state: string;
   lga: string;

@@ -1,8 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -14,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge, EmptyState } from "@/components/ui/primitives";
 import { ImageLightbox } from "@/components/ui/image-lightbox";
+import { MediaFrame } from "@/components/ui/media-frame";
 import { RatingScore, RatingStars } from "@/components/ui/rating";
 import { ProfessionalProfileSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -100,6 +100,12 @@ export default function ProfessionalProfilePage() {
     }
   }
 
+  const galleryImages = useMemo(() => {
+    if (professional?.galleryImages?.length) return professional.galleryImages;
+    if (professional?.coverImage) return [professional.coverImage];
+    return [] as string[];
+  }, [professional]);
+
   if (loading) {
     return <ProfessionalProfileSkeleton />;
   }
@@ -164,43 +170,50 @@ export default function ProfessionalProfilePage() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-6">
         <div className="space-y-6">
           <section className="overflow-hidden ui-card p-3">
-            <button
-              type="button"
-              onClick={() => setLightboxIndex(0)}
-              className="relative aspect-[21/9] w-full overflow-hidden rounded-[12px] bg-[#e8e6e4] text-left"
-              aria-label="View photo fullscreen"
-            >
-              <Image
-                src={professional.coverImage}
-                alt={`${professional.tradeName} gallery`}
-                fill
-                sizes="(max-width: 1024px) 100vw, 60vw"
-                className="object-cover transition duration-300 hover:scale-[1.02]"
-                priority
-              />
-            </button>
-            <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6">
-              {[0, 1, 2, 3, 4, 5].map((item) => (
+            {galleryImages.length > 0 ? (
+              <>
                 <button
-                  key={item}
                   type="button"
                   onClick={() => setLightboxIndex(0)}
-                  className="relative aspect-square overflow-hidden rounded-[12px] bg-[#e8e6e4]"
+                  className="relative aspect-[21/9] w-full overflow-hidden rounded-[12px] bg-[#e8e6e4] text-left"
                   aria-label="View photo fullscreen"
                 >
-                  <Image
-                    src={professional.coverImage}
-                    alt=""
+                  <MediaFrame
+                    src={galleryImages[0]}
+                    alt={`${professional.tradeName} gallery`}
                     fill
-                    sizes="120px"
-                    className="object-cover transition duration-300 hover:scale-105"
-                    style={{
-                      objectPosition: `${(item % 3) * 40}% ${(item % 2) * 50}%`,
-                    }}
+                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    priority
+                    imageClassName="transition duration-300 hover:scale-[1.02]"
                   />
                 </button>
-              ))}
-            </div>
+                {galleryImages.length > 1 ? (
+                  <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6">
+                    {galleryImages.slice(0, 6).map((src, index) => (
+                      <button
+                        key={`${src}-${index}`}
+                        type="button"
+                        onClick={() => setLightboxIndex(index)}
+                        className="relative aspect-square overflow-hidden rounded-[12px] bg-[#e8e6e4]"
+                        aria-label="View photo fullscreen"
+                      >
+                        <MediaFrame
+                          src={src}
+                          alt=""
+                          fill
+                          sizes="120px"
+                          imageClassName="transition duration-300 hover:scale-105"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <div className="relative aspect-[21/9] w-full overflow-hidden rounded-[12px]">
+                <MediaFrame src={null} alt="" emptyLabel="No photos yet" />
+              </div>
+            )}
           </section>
 
           <section className="ui-card p-7 sm:p-8">
@@ -302,7 +315,7 @@ export default function ProfessionalProfilePage() {
       </div>
 
       <ImageLightbox
-        images={[professional.coverImage]}
+        images={galleryImages}
         index={lightboxIndex}
         alt={`${professional.tradeName} photo`}
         onClose={() => setLightboxIndex(null)}

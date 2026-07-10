@@ -4,6 +4,7 @@ Copy into Notion or Linear. Base API: `https://api.9jaconnet.com`
 
 ## Backend (must fix / add)
 
+- [ ] Include `gallery` / `cover_image_url` on directory list + professional detail responses
 - [ ] `GET /api/v1/professionals?q=` keyword search
 - [ ] Document login / refresh / Google OAuth: `access_token`, `refresh_token`, `user`
 - [ ] Document directory params: `state_id`, `lga_id`, `category_id`, `subcategory_id`, `q`, `page`, `page_size`, optional `is_verified`, `sort`

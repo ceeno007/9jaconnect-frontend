@@ -1,40 +1,31 @@
 import type { DirectoryProfessional, ProfessionalDetail } from "@/lib/api/types";
 import type { Professional } from "@/lib/types";
 
-const FALLBACK_COVERS = [
-  "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80",
-  "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1200&q=80",
-];
-
-function coverFor(id: string, explicit?: string | null) {
-  if (explicit) return explicit;
-  let hash = 0;
-  for (let i = 0; i < id.length; i += 1) hash = (hash + id.charCodeAt(i)) % 997;
-  return FALLBACK_COVERS[hash % FALLBACK_COVERS.length];
-}
-
 function koboToNaira(kobo: number | null | undefined) {
   if (kobo == null || Number.isNaN(kobo)) return 0;
   return Math.round(kobo / 100);
 }
 
+function galleryUrls(pro: DirectoryProfessional | ProfessionalDetail) {
+  if (!("gallery" in pro) || !Array.isArray(pro.gallery)) return [] as string[];
+  return pro.gallery
+    .map((item) => (typeof item === "string" ? item : item?.url))
+    .filter((url): url is string => Boolean(url));
+}
+
+function coverUrl(
+  pro: DirectoryProfessional | ProfessionalDetail,
+  gallery: string[],
+) {
+  const explicit =
+    ("cover_image_url" in pro && pro.cover_image_url) || null;
+  return explicit || gallery[0] || null;
+}
+
 export function mapDirectoryProfessional(
   pro: DirectoryProfessional | ProfessionalDetail,
 ): Professional {
-  const gallery =
-    "gallery" in pro && Array.isArray(pro.gallery)
-      ? pro.gallery
-          .map((g) => (typeof g === "string" ? g : g.url))
-          .filter(Boolean)
-      : [];
-
-  const cover =
-    ("cover_image_url" in pro && pro.cover_image_url) ||
-    gallery[0] ||
-    coverFor(pro.id);
+  const gallery = galleryUrls(pro);
 
   return {
     id: pro.id,
@@ -43,7 +34,8 @@ export function mapDirectoryProfessional(
       pro.business_name.split(/\s+/)[0] ||
       "Professional",
     tradeName: pro.business_name,
-    coverImage: cover,
+    coverImage: coverUrl(pro, gallery),
+    galleryImages: gallery,
     category: pro.category_name,
     state: pro.state_name,
     lga: pro.lga_name,

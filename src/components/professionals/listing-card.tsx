@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { BadgeCheck, MapPin } from "lucide-react";
+import { MediaFrame } from "@/components/ui/media-frame";
 import { RatingScore } from "@/components/ui/rating";
 import type { Professional } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -35,12 +35,12 @@ export function ListingCard({
       )}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8e6e4]">
-        <Image
+        <MediaFrame
           src={professional.coverImage}
           alt={`${professional.tradeName} work`}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover transition duration-300 group-hover:scale-[1.03]"
+          imageClassName="transition duration-300 group-hover:scale-[1.03]"
         />
         <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1.5">
           {professional.verified ? <VerifiedBadge /> : null}
@@ -106,12 +106,11 @@ export function ListingCardCompact({
       className="listing-card flex gap-3 overflow-hidden p-3"
     >
       <div className="relative h-[84px] w-[84px] shrink-0 overflow-hidden rounded-[10px] bg-[#e8e6e4]">
-        <Image
+        <MediaFrame
           src={professional.coverImage}
           alt={`${professional.tradeName} work`}
           fill
           sizes="84px"
-          className="object-cover"
         />
         {professional.verified ? (
           <span className="absolute left-1 top-1 inline-flex items-center gap-0.5 rounded-[5px] bg-[#0f9d58] px-1 py-0.5 text-[10px] font-bold leading-none text-white">
@@ -143,11 +142,7 @@ export function ListingCardCompact({
             )}
           </p>
           <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold tabular-nums text-[#8a8f96]">
-            <svg
-              viewBox="0 0 16 16"
-              aria-hidden
-              className="h-3.5 w-3.5"
-            >
+            <svg viewBox="0 0 16 16" aria-hidden className="h-3.5 w-3.5">
               <path
                 fill="currentColor"
                 d="M8 1.2 9.7 5.4l4.5.4-3.4 2.9 1 4.4L8 11.2l-3.8 2 1-4.4-3.4-2.9 4.5-.4L8 1.2Z"
