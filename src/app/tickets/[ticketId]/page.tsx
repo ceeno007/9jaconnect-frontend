@@ -172,19 +172,19 @@ export default function TicketDetailPage() {
               <div>
                 <dt className="font-semibold text-muted">Summary</dt>
                 <dd className="mt-1 font-bold">
-                  {ticket.issue_summary || "—"}
+                  {ticket.issue_summary || "-"}
                 </dd>
               </div>
               <div>
                 <dt className="font-semibold text-muted">Description</dt>
                 <dd className="mt-1 font-medium text-muted">
-                  {ticket.issue_description || "—"}
+                  {ticket.issue_description || "-"}
                 </dd>
               </div>
               <div>
                 <dt className="font-semibold text-muted">Category</dt>
                 <dd className="mt-1 font-bold">
-                  {ticket.category_name || "—"}
+                  {ticket.category_name || "-"}
                 </dd>
               </div>
               <div>
@@ -192,7 +192,7 @@ export default function TicketDetailPage() {
                 <dd className="mt-1 font-bold">
                   {[ticket.state_name, ticket.lga_name]
                     .filter(Boolean)
-                    .join(", ") || "—"}
+                    .join(", ") || "-"}
                 </dd>
               </div>
               {ticket.quote_amount_kobo ? (

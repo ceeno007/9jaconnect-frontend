@@ -1,4 +1,4 @@
-# 9jaconnect — Front-End Redesign
+# 9jaconnect - Front-End Redesign
 
 Visual redesign scaffold for [9jaconnect](https://9jaconnect.com), based on the July 2026 Redesign Work Pack.
 

@@ -114,7 +114,7 @@ export default function HomePage() {
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-xl">
               <h2 className="text-4xl font-bold leading-tight text-black sm:text-5xl">
-                Ready to hire — or get hired?
+                Ready to hire, or get hired?
               </h2>
               <p className="mt-4 text-lg font-medium text-muted">
                 Create a customer account to request services, or list as a

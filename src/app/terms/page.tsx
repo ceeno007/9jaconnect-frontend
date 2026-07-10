@@ -53,7 +53,7 @@ export default function TermsPage() {
           We do not guarantee that any professional is available, licensed for a
           particular job, insured, or suitable for your needs. “Verified” or
           similar badges mean only that certain identity or document checks were
-          submitted or reviewed under our processes — not that we warrant skill,
+          submitted or reviewed under our processes, not that we warrant skill,
           safety, legality, or outcomes.
         </p>
       </LegalSection>
@@ -319,7 +319,7 @@ export default function TermsPage() {
         <p>
           Before filing a claim, you agree to attempt good-faith resolution by
           contacting {SITE.email}. Users should first try to resolve
-          customer–professional disputes directly; Platform tools may assist but
+          customer-professional disputes directly; Platform tools may assist but
           do not obligate us to mediate or decide commercial outcomes.
         </p>
       </LegalSection>

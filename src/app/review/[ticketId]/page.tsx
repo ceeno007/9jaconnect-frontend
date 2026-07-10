@@ -50,7 +50,7 @@ export default function ReviewPage() {
         <div className="mx-auto max-w-md ui-card p-8 text-center">
           <h2 className="text-2xl text-black">Review submitted</h2>
           <p className="mt-3 text-sm text-muted">
-            Thanks — your review is linked to this completed ticket.
+            Thanks. Your review is linked to this completed ticket.
           </p>
           <Link href="/dashboard/customer" className="mt-6 inline-block">
             <Button>Back to dashboard</Button>
@@ -74,7 +74,7 @@ export default function ReviewPage() {
       return;
     }
 
-    // API currently accepts a single overall rating — average the three.
+    // API currently accepts a single overall rating; average the three.
     const rating = Math.round((price + time + quality) / 3);
 
     setPending(true);
@@ -113,7 +113,7 @@ export default function ReviewPage() {
                 defaultValue=""
               >
                 <option value="" disabled>
-                  Select 1–5
+                  Select 1-5
                 </option>
                 {[1, 2, 3, 4, 5].map((value) => (
                   <option key={value} value={value}>

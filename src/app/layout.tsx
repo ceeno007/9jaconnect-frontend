@@ -15,11 +15,11 @@ const roboto = Roboto({
 
 export const metadata: Metadata = {
   title: {
-    default: "9jaconnect — Hire trusted Nigerian professionals",
+    default: "9jaconnect - Hire trusted Nigerian professionals",
     template: "%s · 9jaconnect",
   },
   description:
-    "Find verified sole-trader professionals across Nigeria. Search by state, LGA, and category — then hire with confidence.",
+    "Find verified sole-trader professionals across Nigeria. Search by state, LGA, and category, then hire with confidence.",
 };
 
 export default function RootLayout({

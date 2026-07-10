@@ -319,7 +319,7 @@ function Rate({ label, value }: { label: string; value: number }) {
         {label}
       </p>
       <p className="mt-2 text-2xl font-black text-foreground">
-        {value ? `₦${value.toLocaleString()}` : "—"}
+        {value ? `₦${value.toLocaleString()}` : "-"}
       </p>
     </div>
   );

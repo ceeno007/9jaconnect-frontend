@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-/** Official multicolor Google "G" — do not recolor */
+/** Official multicolor Google "G" - do not recolor */
 function GoogleGLogo({ className }: { className?: string }) {
   return (
     <svg

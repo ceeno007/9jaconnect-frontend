@@ -23,7 +23,7 @@ Copy into Notion or Linear. Base API: `https://api.9jaconnet.com`
 - [ ] Google OAuth client whitelist
 - [ ] `sort=rating` + premium boost
 
-## Frontend — done
+## Frontend - done
 
 - [x] Auth: login, register, forgot/reset/verify, Google call, resend verification
 - [x] Directory: categories, states/LGAs, list, detail, create ticket
@@ -36,7 +36,7 @@ Copy into Notion or Linear. Base API: `https://api.9jaconnet.com`
 - [x] Customer KYC upload + status
 - [x] Professional profile edit + settings/verification upload
 
-## Frontend — still blocked / later
+## Frontend - still blocked / later
 
 - [ ] Notifications (needs backend)
 - [ ] Editable account profile fields (needs `PATCH /auth/me`)
