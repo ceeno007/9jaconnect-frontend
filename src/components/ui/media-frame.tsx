@@ -58,7 +58,9 @@ export function MediaFrame({
           fill
           sizes={sizes}
           priority={priority}
-          unoptimized={src.includes("api.9jaconnet.com")}
+          unoptimized={
+          src.includes("api.9jaconnet.com") || src.startsWith("/api/upstream/")
+        }
           className={cn("object-cover", imageClassName)}
         />
       );
@@ -71,7 +73,9 @@ export function MediaFrame({
         height={height ?? 120}
         sizes={sizes}
         priority={priority}
-        unoptimized={src.includes("api.9jaconnet.com")}
+        unoptimized={
+          src.includes("api.9jaconnet.com") || src.startsWith("/api/upstream/")
+        }
         className={cn("object-cover", imageClassName)}
       />
     );

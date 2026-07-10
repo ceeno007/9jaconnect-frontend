@@ -1,6 +1,6 @@
 "use client";
 
-import { apiRequest, API_BASE_URL, getAccessToken } from "@/lib/api/client";
+import { apiRequest, getApiBaseUrl, getAccessToken } from "@/lib/api/client";
 import type {
   ChatMessage,
   Conversation,
@@ -293,7 +293,7 @@ export async function uploadProfessionalGalleryImage(
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      `${API_BASE_URL}/api/v1/professionals/${professionalId}/gallery`,
+      `${getApiBaseUrl()}/api/v1/professionals/${professionalId}/gallery`,
     );
     xhr.setRequestHeader("Accept", "application/json");
     if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);

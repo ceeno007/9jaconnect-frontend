@@ -63,9 +63,32 @@ export function Footer() {
         <div>
           <h3 className="text-base font-bold text-black">Contact</h3>
           <ul className="mt-4 space-y-3 text-base font-semibold text-muted">
-            <li>{SITE.email}</li>
-            <li>{SITE.phone}</li>
-            <li>{SITE.address}</li>
+            <li>
+              <a
+                href={`mailto:${SITE.email}`}
+                className="transition hover:text-black hover:underline"
+              >
+                {SITE.email}
+              </a>
+            </li>
+            <li>
+              <a
+                href={`tel:${SITE.phone.replace(/\s+/g, "")}`}
+                className="transition hover:text-black hover:underline"
+              >
+                {SITE.phone}
+              </a>
+            </li>
+            <li>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(SITE.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:text-black hover:underline"
+              >
+                {SITE.address}
+              </a>
+            </li>
           </ul>
           <ul className="mt-6 space-y-3 text-base font-semibold text-muted">
             {legalLinks.map((link) => (

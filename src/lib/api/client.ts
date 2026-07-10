@@ -2,7 +2,7 @@
 
 import { httpRequest } from "@/lib/api/http";
 import { ApiError, type AuthTokens } from "@/lib/api/types";
-import { API_BASE_URL } from "@/lib/api/config";
+import { getApiBaseUrl } from "@/lib/api/config";
 
 const ACCESS_KEY = "9jaconnect.access_token";
 const REFRESH_KEY = "9jaconnect.refresh_token";
@@ -162,4 +162,4 @@ export async function apiRequest<T>(
   }
 }
 
-export { API_BASE_URL };
+export { getApiBaseUrl };

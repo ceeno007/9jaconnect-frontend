@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 import path from "path";
 
+const backendOrigin = (
+  process.env.API_BASE_URL ||
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "https://api.9jaconnet.com"
+).replace(/\/$/, "");
+
 const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
@@ -12,6 +18,20 @@ const nextConfig: NextConfig = {
         hostname: "api.9jaconnet.com",
       },
     ],
+  },
+  async rewrites() {
+    return [
+      // Hide the real API host from the browser Network tab.
+      {
+        source: "/api/v1/:path*",
+        destination: `${backendOrigin}/api/v1/:path*`,
+      },
+      // Proxy media/files returned as absolute backend URLs.
+      {
+        source: "/api/upstream/:path*",
+        destination: `${backendOrigin}/:path*`,
+      },
+    ];
   },
 };
 

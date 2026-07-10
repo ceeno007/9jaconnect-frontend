@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/lib/api/config";
+import { getApiBaseUrl } from "@/lib/api/config";
 import { ApiError, type ApiEnvelope } from "@/lib/api/types";
 
 export type HttpOptions = {
@@ -56,7 +56,7 @@ export async function httpRequest<T>(
     headers.Authorization = `Bearer ${options.token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(`${getApiBaseUrl()}${path}`, {
     method:
       options.method ||
       (options.body || options.formData ? "POST" : "GET"),

@@ -4,7 +4,7 @@ export const SITE = {
   tagline: "Hire faster. Work smarter.",
   email: "hello@9jaconnect.com",
   phone: "+234 800 000 0000",
-  address: "Lagos, Nigeria",
+  address: "Abuja, Nigeria",
   disclaimer:
     "9jaconnect lists sole traders only. Always verify credentials before engaging services.",
 } as const;

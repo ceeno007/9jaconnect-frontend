@@ -3,7 +3,8 @@
 Copy this to your backend engineer. The frontend is wired and ready. These are the gaps blocking a full production launch on `https://api.9jaconnet.com`.
 
 **Frontend repo:** `9ja_connect_frontend`  
-**API base (env):** `NEXT_PUBLIC_API_BASE_URL=https://api.9jaconnet.com`
+**API base (server env only):** `API_BASE_URL=https://api.9jaconnet.com`  
+The browser calls same-origin `/api/v1/...`; Next.js proxies to this host so the backend URL is not exposed in frontend network requests.
 
 All successful API responses should use the envelope the frontend already expects:
 

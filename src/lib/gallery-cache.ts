@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/lib/api/config";
+import { BACKEND_MEDIA_HOSTS } from "@/lib/api/config";
 
 export type CachedGalleryItem = { id: string; url: string };
 
@@ -16,17 +16,38 @@ export function resolveMediaUrl(value: unknown): string | null {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
   if (!trimmed) return null;
+  if (trimmed.startsWith("blob:") || trimmed.startsWith("data:")) {
+    return trimmed;
+  }
+
+  // Already same-origin proxy paths.
   if (
-    trimmed.startsWith("http://") ||
-    trimmed.startsWith("https://") ||
-    trimmed.startsWith("blob:") ||
-    trimmed.startsWith("data:")
+    trimmed.startsWith("/api/v1/") ||
+    trimmed.startsWith("/api/upstream/")
   ) {
     return trimmed;
   }
-  if (trimmed.startsWith("//")) return `https:${trimmed}`;
-  if (trimmed.startsWith("/")) return `${API_BASE_URL}${trimmed}`;
-  return `${API_BASE_URL}/${trimmed}`;
+
+  try {
+    if (
+      trimmed.startsWith("http://") ||
+      trimmed.startsWith("https://") ||
+      trimmed.startsWith("//")
+    ) {
+      const absolute = trimmed.startsWith("//") ? `https:${trimmed}` : trimmed;
+      const url = new URL(absolute);
+      if (BACKEND_MEDIA_HOSTS.has(url.hostname)) {
+        return `/api/upstream${url.pathname}${url.search}`;
+      }
+      return absolute;
+    }
+  } catch {
+    return trimmed;
+  }
+
+  // Relative backend media path → same-origin upstream proxy.
+  if (trimmed.startsWith("/")) return `/api/upstream${trimmed}`;
+  return `/api/upstream/${trimmed}`;
 }
 
 export function isGalleryImageId(id: string) {
