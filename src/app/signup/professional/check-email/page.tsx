@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageShell } from "@/components/ui/primitives";
@@ -9,6 +10,7 @@ import { resendVerification } from "@/lib/api/auth-client";
 import { ApiError } from "@/lib/api/types";
 
 export default function ProfessionalCheckEmailPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
@@ -26,6 +28,11 @@ export default function ProfessionalCheckEmailPage() {
       const data = await resendVerification(email.trim());
       setMessage(data.message || "Verification email sent.");
     } catch (err) {
+      if (err instanceof ApiError && err.code === "auth_already_verified") {
+        setMessage("This email is already verified. Redirecting to login…");
+        window.setTimeout(() => router.push("/login"), 900);
+        return;
+      }
       setError(
         err instanceof ApiError
           ? err.message

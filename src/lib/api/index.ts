@@ -106,10 +106,12 @@ export async function listLgas(stateId: string) {
 }
 
 export type DirectoryQuery = {
+  q?: string;
   state_id?: string;
   lga_id?: string;
   category_id?: string;
   subcategory_id?: string;
+  min_rating?: number;
   page?: number;
   page_size?: number;
 };

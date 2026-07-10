@@ -9,7 +9,12 @@ function koboToNaira(kobo: number | null | undefined) {
 function galleryUrls(pro: DirectoryProfessional | ProfessionalDetail) {
   if (!("gallery" in pro) || !Array.isArray(pro.gallery)) return [] as string[];
   return pro.gallery
-    .map((item) => (typeof item === "string" ? item : item?.url))
+    .map((item) => {
+      if (typeof item === "string") return item;
+      if (!item || typeof item !== "object") return null;
+      const record = item as { url?: string; image_url?: string };
+      return record.url || record.image_url || null;
+    })
     .filter((url): url is string => Boolean(url));
 }
 

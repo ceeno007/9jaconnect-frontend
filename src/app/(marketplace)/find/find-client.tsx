@@ -19,7 +19,7 @@ export default function FindPageClient() {
   const stateId = searchParams.get("state") ?? "";
   const lgaId = searchParams.get("lga") ?? "";
   const categoryId = searchParams.get("category") ?? "";
-  const keyword = (searchParams.get("keyword") ?? "").trim().toLowerCase();
+  const keyword = (searchParams.get("keyword") ?? "").trim();
   const [view, setView] = useState<"grid" | "list">("grid");
   const [results, setResults] = useState<Professional[]>([]);
   const [total, setTotal] = useState(0);
@@ -32,6 +32,7 @@ export default function FindPageClient() {
     setError("");
 
     void listProfessionals({
+      q: keyword || undefined,
       state_id: stateId || undefined,
       lga_id: lgaId || undefined,
       category_id: categoryId || undefined,
@@ -41,15 +42,8 @@ export default function FindPageClient() {
       .then((data) => {
         if (cancelled) return;
         const mapped = data.professionals.map(mapDirectoryProfessional);
-        const filtered = keyword
-          ? mapped.filter((pro) =>
-              `${pro.name} ${pro.tradeName} ${pro.description} ${pro.category}`
-                .toLowerCase()
-                .includes(keyword),
-            )
-          : mapped;
-        setResults(filtered);
-        setTotal(keyword ? filtered.length : data.pagination.total);
+        setResults(mapped);
+        setTotal(data.pagination.total);
       })
       .catch(() => {
         if (cancelled) return;

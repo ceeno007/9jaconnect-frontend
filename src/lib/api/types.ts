@@ -200,6 +200,17 @@ export type Review = {
   [key: string]: unknown;
 };
 
+export type InAppNotification = {
+  id: string;
+  title: string;
+  body: string;
+  type: string;
+  href: string;
+  unread: boolean;
+  created_at?: string | null;
+  raw?: Record<string, unknown>;
+};
+
 export type CustomerOnboardingRequest = {
   date_of_birth: string;
   gender: "male" | "female" | "prefer_not_to_say";

@@ -5,14 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge, EmptyState, PageShell } from "@/components/ui/primitives";
 import { useAuth } from "@/components/providers/auth-provider";
+import { listLgas, listStates } from "@/lib/api";
 import {
   getCustomerVerificationStatus,
   requestAccountDeletion,
+  updateMe,
   uploadProfilePhoto,
 } from "@/lib/api/auth-client";
+import type { Lga, State } from "@/lib/api/types";
 import { ApiError } from "@/lib/api/types";
 
 export default function AccountSettingsPage() {
@@ -22,6 +26,34 @@ export default function AccountSettingsPage() {
   const [success, setSuccess] = useState("");
   const [pending, setPending] = useState(false);
   const [reason, setReason] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [stateId, setStateId] = useState("");
+  const [lgaId, setLgaId] = useState("");
+  const [states, setStates] = useState<State[]>([]);
+  const [lgas, setLgas] = useState<Lga[]>([]);
+
+  useEffect(() => {
+    void listStates().then(setStates);
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    setFullName(user.full_name || "");
+    setPhone(user.phone || "");
+    setWhatsapp(user.whatsapp_number || "");
+    setStateId(user.home_state_id || "");
+    setLgaId(user.home_lga_id || "");
+  }, [user]);
+
+  useEffect(() => {
+    if (!stateId) {
+      setLgas([]);
+      return;
+    }
+    void listLgas(stateId).then(setLgas);
+  }, [stateId]);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -72,6 +104,30 @@ export default function AccountSettingsPage() {
       setSuccess("Profile photo updated.");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Upload failed.");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function onSaveProfile(event: FormEvent) {
+    event.preventDefault();
+    setError("");
+    setSuccess("");
+    setPending(true);
+    try {
+      await updateMe({
+        full_name: fullName.trim(),
+        phone: phone.trim() || null,
+        whatsapp_number: whatsapp.trim() || null,
+        home_state_id: stateId || null,
+        home_lga_id: lgaId || null,
+      });
+      await refreshUser();
+      setSuccess("Profile updated.");
+    } catch (err) {
+      setError(
+        err instanceof ApiError ? err.message : "Could not update profile.",
+      );
     } finally {
       setPending(false);
     }
@@ -133,33 +189,57 @@ export default function AccountSettingsPage() {
 
         <section className="ui-card p-6">
           <h2 className="text-2xl text-black">Personal information</h2>
-          <p className="mt-2 text-sm font-medium text-muted">
-            Profile field edits need backend `PATCH /auth/me`. Showing current
-            account details for now.
-          </p>
-          <form className="mt-4 grid gap-4 sm:grid-cols-2">
+          <form className="mt-4 grid gap-4 sm:grid-cols-2" onSubmit={onSaveProfile}>
             <Input
               label="Full name"
               name="fullName"
-              defaultValue={user?.full_name || ""}
-              readOnly
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
             />
             <Input
               label="Email"
               name="email"
               type="email"
-              defaultValue={user?.email || ""}
+              value={user?.email || ""}
               readOnly
+              hint="Email changes need a separate verification flow."
             />
             <Input
               label="Phone"
               name="phone"
-              defaultValue={user?.phone || ""}
-              readOnly
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <Input
+              label="WhatsApp"
+              name="whatsapp"
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
+            />
+            <Select
+              label="Home state"
+              name="homeState"
+              placeholder="Select state"
+              value={stateId}
+              onChange={(e) => {
+                setStateId(e.target.value);
+                setLgaId("");
+              }}
+              options={states.map((s) => ({ label: s.name, value: s.id }))}
+            />
+            <Select
+              label="Home LGA"
+              name="homeLga"
+              placeholder={stateId ? "Select LGA" : "Select state first"}
+              value={lgaId}
+              onChange={(e) => setLgaId(e.target.value)}
+              disabled={!stateId}
+              options={lgas.map((l) => ({ label: l.name, value: l.id }))}
             />
             <div className="sm:col-span-2">
-              <Button type="button" disabled>
-                Save changes (waiting on API)
+              <Button type="submit" disabled={pending}>
+                {pending ? "Saving…" : "Save changes"}
               </Button>
             </div>
           </form>

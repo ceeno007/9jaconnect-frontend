@@ -25,6 +25,7 @@ import type {
 import { ApiError } from "@/lib/api/types";
 import { nairaToKobo } from "@/lib/api/mappers";
 import { promptGoogleIdToken } from "@/lib/google-auth";
+import { formatMoneyInput, parseMoneyInput } from "@/lib/utils";
 
 function readProfessionalProfile(
   form: HTMLFormElement,
@@ -37,8 +38,8 @@ function readProfessionalProfile(
   const lga_id = String(data.get("lga") || "");
   const category_id = String(data.get("category") || "");
   const subcategory_id = String(data.get("subcategory") || "");
-  const hourly = Number(data.get("hourlyRate") || 0);
-  const daily = Number(data.get("dayRate") || 0);
+  const hourly = Number(parseMoneyInput(String(data.get("hourlyRate") || "")) || 0);
+  const daily = Number(parseMoneyInput(String(data.get("dayRate") || "")) || 0);
 
   if (
     !business_name ||
@@ -80,6 +81,8 @@ export default function ProfessionalSignupPage() {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [stateId, setStateId] = useState("");
   const [categoryId, setCategoryId] = useState("");
+  const [hourlyRate, setHourlyRate] = useState("");
+  const [dayRate, setDayRate] = useState("");
 
   useEffect(() => {
     void Promise.all([listStates(), listCategories()]).then(
@@ -233,10 +236,19 @@ export default function ProfessionalSignupPage() {
             <Input
               label="Hourly rate (₦)"
               name="hourlyRate"
-              type="number"
-              min={0}
+              inputMode="numeric"
+              value={hourlyRate}
+              onChange={(e) => setHourlyRate(formatMoneyInput(e.target.value))}
+              placeholder="e.g. 15,000"
             />
-            <Input label="Day rate (₦)" name="dayRate" type="number" min={0} />
+            <Input
+              label="Day rate (₦)"
+              name="dayRate"
+              inputMode="numeric"
+              value={dayRate}
+              onChange={(e) => setDayRate(formatMoneyInput(e.target.value))}
+              placeholder="e.g. 80,000"
+            />
             <Select
               label="Category"
               name="category"

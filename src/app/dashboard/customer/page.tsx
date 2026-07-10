@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import { EmptyState, PageShell } from "@/components/ui/primitives";
 import { TicketListSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/auth-provider";
-import { listCustomerTickets } from "@/lib/api/auth-client";
+import {
+  listCustomerTickets,
+  listPendingReviews,
+} from "@/lib/api/auth-client";
 import type { ServiceTicket } from "@/lib/api/types";
 
 function ticketTitle(ticket: ServiceTicket) {
@@ -14,13 +17,23 @@ function ticketTitle(ticket: ServiceTicket) {
     ticket.issue_summary ||
     ticket.business_name ||
     ticket.professional_name ||
-    `Ticket ${ticket.id.slice(0, 8)}`
+    `Ticket ${String(ticket.id || "").slice(0, 8)}`
+  );
+}
+
+function ticketId(ticket: ServiceTicket) {
+  return String(
+    ticket.id ||
+      ticket.ticket_id ||
+      ticket.service_ticket_id ||
+      "",
   );
 }
 
 export default function CustomerDashboardPage() {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
   const [tickets, setTickets] = useState<ServiceTicket[]>([]);
+  const [pendingReview, setPendingReview] = useState<ServiceTicket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -33,9 +46,24 @@ export default function CustomerDashboardPage() {
 
     let cancelled = false;
     setLoading(true);
-    void listCustomerTickets(user.id)
-      .then((items) => {
-        if (!cancelled) setTickets(items);
+    void Promise.all([
+      listCustomerTickets(user.id),
+      listPendingReviews().catch(() => [] as ServiceTicket[]),
+    ])
+      .then(([ticketItems, pendingItems]) => {
+        if (cancelled) return;
+        setTickets(ticketItems);
+        setPendingReview(
+          pendingItems.length > 0
+            ? pendingItems
+            : ticketItems.filter(
+                (ticket) =>
+                  String(ticket.status || "").toLowerCase() === "completed" &&
+                  (ticket.review_required === true ||
+                    ticket.has_review === false ||
+                    ticket.reviewed === false),
+              ),
+        );
       })
       .catch(() => {
         if (!cancelled) setError("Could not load tickets.");
@@ -48,14 +76,6 @@ export default function CustomerDashboardPage() {
       cancelled = true;
     };
   }, [authLoading, isAuthenticated, user?.id]);
-
-  const pendingReview = tickets.filter(
-    (ticket) =>
-      String(ticket.status || "").toLowerCase() === "completed" &&
-      (ticket.review_required === true ||
-        ticket.has_review === false ||
-        ticket.reviewed === false),
-  );
 
   if (authLoading || (isAuthenticated && loading)) {
     return (
@@ -109,35 +129,30 @@ export default function CustomerDashboardPage() {
               />
             ) : (
               <div className="space-y-3">
-                {pendingReview.map((ticket) => (
-                  <Link
-                    key={ticket.id}
-                    href={`/review/${ticket.id}`}
-                    className="ui-card block p-5 transition hover:bg-[#fafafa]"
-                  >
-                    <p className="text-lg font-bold text-black">
-                      {ticketTitle(ticket)}
-                    </p>
-                    <p className="mt-1 text-sm font-medium text-muted">
-                      Leave a verified review
-                    </p>
-                  </Link>
-                ))}
+                {pendingReview.map((ticket) => {
+                  const id = ticketId(ticket);
+                  return (
+                    <Link
+                      key={id || ticketTitle(ticket)}
+                      href={`/review/${id}`}
+                      className="ui-card block p-5 transition hover:bg-[#fafafa]"
+                    >
+                      <p className="text-lg font-bold text-black">
+                        {ticketTitle(ticket)}
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-muted">
+                        Leave a verified review
+                      </p>
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>
         </section>
 
         <section>
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-2xl text-black">My service tickets</h2>
-            <Link
-              href="/dashboard/customer/tickets"
-              className="text-sm font-medium text-black hover:underline"
-            >
-              View all
-            </Link>
-          </div>
+          <h2 className="text-2xl text-black">My service tickets</h2>
           <div className="mt-4">
             {error ? (
               <EmptyState title="Something went wrong" description={error} />

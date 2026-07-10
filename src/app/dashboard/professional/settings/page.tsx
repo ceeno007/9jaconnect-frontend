@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 import {
   requestAccountDeletion,
   submitProfessionalVerification,
+  updateMe,
   uploadProfilePhoto,
 } from "@/lib/api/auth-client";
 import { ApiError } from "@/lib/api/types";
@@ -22,6 +23,16 @@ export default function ProfessionalSettingsPage() {
   const [pending, setPending] = useState(false);
   const [reason, setReason] = useState("");
   const [docType, setDocType] = useState("nin");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+
+  useEffect(() => {
+    if (!user) return;
+    setFullName(user.full_name || "");
+    setPhone(user.phone || "");
+    setWhatsapp(user.whatsapp_number || "");
+  }, [user]);
 
   if (!loading && !isAuthenticated) {
     return (
@@ -56,6 +67,28 @@ export default function ProfessionalSettingsPage() {
       setSuccess("Profile photo updated.");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Upload failed.");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function onSaveProfile(event: FormEvent) {
+    event.preventDefault();
+    setError("");
+    setSuccess("");
+    setPending(true);
+    try {
+      await updateMe({
+        full_name: fullName.trim(),
+        phone: phone.trim() || null,
+        whatsapp_number: whatsapp.trim() || null,
+      });
+      await refreshUser();
+      setSuccess("Profile updated.");
+    } catch (err) {
+      setError(
+        err instanceof ApiError ? err.message : "Could not update profile.",
+      );
     } finally {
       setPending(false);
     }
@@ -143,35 +176,39 @@ export default function ProfessionalSettingsPage() {
 
         <section className="ui-card p-6">
           <h2 className="text-2xl text-black">Personal information</h2>
-          <p className="mt-2 text-sm font-medium text-muted">
-            Editable profile fields need backend `PATCH /auth/me`.
-          </p>
-          <form className="mt-4 grid gap-4 sm:grid-cols-2">
+          <form className="mt-4 grid gap-4 sm:grid-cols-2" onSubmit={onSaveProfile}>
             <Input
               label="Full name"
               name="fullName"
-              defaultValue={user?.full_name || ""}
-              readOnly
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
             />
             <Input
               label="Email"
               name="email"
               type="email"
-              defaultValue={user?.email || ""}
+              value={user?.email || ""}
               readOnly
+              hint="Email changes need a separate verification flow."
             />
             <Input
               label="Phone"
               name="phone"
-              defaultValue={user?.phone || ""}
-              readOnly
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
             />
             <Input
               label="WhatsApp"
               name="whatsapp"
-              defaultValue={user?.whatsapp_number || ""}
-              readOnly
+              value={whatsapp}
+              onChange={(e) => setWhatsapp(e.target.value)}
             />
+            <div className="sm:col-span-2">
+              <Button type="submit" disabled={pending}>
+                {pending ? "Saving…" : "Save changes"}
+              </Button>
+            </div>
           </form>
         </section>
 

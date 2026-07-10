@@ -1,12 +1,13 @@
 "use client";
 
-import { apiRequest } from "@/lib/api/client";
+import { apiRequest, API_BASE_URL, getAccessToken } from "@/lib/api/client";
 import type {
   ChatMessage,
   Conversation,
   CustomerOnboardingRequest,
   CustomerPreferencesRequest,
   DirectoryProfessional,
+  InAppNotification,
   ProfessionalCreateRequest,
   RequestDeletionRequest,
   Review,
@@ -14,6 +15,7 @@ import type {
   ServiceTicketCreateRequest,
   User,
 } from "@/lib/api/types";
+import { ApiError } from "@/lib/api/types";
 
 function asList<T>(
   data: unknown,
@@ -45,6 +47,35 @@ export async function getMe() {
     }
     return { user: data as User };
   });
+}
+
+export type UpdateMePayload = {
+  full_name?: string;
+  phone?: string | null;
+  whatsapp_number?: string | null;
+  home_state_id?: string | null;
+  home_lga_id?: string | null;
+};
+
+export async function updateMe(payload: UpdateMePayload) {
+  const data = await apiRequest<{ user?: User } | User>("/api/v1/auth/me", {
+    method: "PATCH",
+    body: payload,
+  });
+  if (data && typeof data === "object" && "user" in data && data.user) {
+    return data.user as User;
+  }
+  return data as User;
+}
+
+export async function listPendingReviews() {
+  const data = await apiRequest<unknown>("/api/v1/reviews/pending");
+  return asList<ServiceTicket>(data, [
+    "items",
+    "tickets",
+    "pending_reviews",
+    "reviews",
+  ]);
 }
 
 export async function logoutRequest(refreshToken: string) {
@@ -244,6 +275,98 @@ export async function getMyProfessional() {
   );
 }
 
+export async function uploadProfessionalGalleryImage(
+  professionalId: string,
+  file: File,
+  onProgress?: (percent: number) => void,
+) {
+  const form = new FormData();
+  form.append("file", file);
+  const token = getAccessToken();
+
+  return new Promise<{
+    id?: string;
+    url?: string;
+    image?: { id?: string; url?: string };
+    gallery_image?: { id?: string; url?: string };
+  }>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(
+      "POST",
+      `${API_BASE_URL}/api/v1/professionals/${professionalId}/gallery`,
+    );
+    xhr.setRequestHeader("Accept", "application/json");
+    if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+
+    xhr.upload.onprogress = (event) => {
+      if (!onProgress || !event.lengthComputable || event.total <= 0) return;
+      onProgress(Math.min(99, Math.round((event.loaded / event.total) * 100)));
+    };
+
+    xhr.onload = () => {
+      let json: {
+        success?: boolean;
+        data?: {
+          id?: string;
+          url?: string;
+          image?: { id?: string; url?: string };
+          gallery_image?: { id?: string; url?: string };
+        } | null;
+        error?: { code?: string; message?: string; details?: unknown };
+      } | null = null;
+
+      try {
+        json = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+      } catch {
+        reject(
+          new ApiError(
+            xhr.status || 500,
+            "invalid_json",
+            "Invalid API response",
+          ),
+        );
+        return;
+      }
+
+      if (xhr.status >= 200 && xhr.status < 300 && json?.success !== false) {
+        onProgress?.(100);
+        resolve((json?.data ?? {}) as {
+          id?: string;
+          url?: string;
+          image?: { id?: string; url?: string };
+          gallery_image?: { id?: string; url?: string };
+        });
+        return;
+      }
+
+      reject(
+        new ApiError(
+          xhr.status || 500,
+          json?.error?.code || `http_${xhr.status}`,
+          json?.error?.message || "Gallery upload failed.",
+          json?.error?.details,
+        ),
+      );
+    };
+
+    xhr.onerror = () => {
+      reject(new ApiError(0, "network_error", "Network error during upload."));
+    };
+
+    xhr.send(form);
+  });
+}
+
+export async function deleteProfessionalGalleryImage(
+  professionalId: string,
+  imageId: string,
+) {
+  return apiRequest<unknown>(
+    `/api/v1/professionals/${professionalId}/gallery/${imageId}`,
+    { method: "DELETE" },
+  );
+}
+
 export async function updateProfessional(
   professionalId: string,
   payload: Partial<ProfessionalCreateRequest>,
@@ -266,4 +389,94 @@ export async function submitProfessionalVerification(
     `/api/v1/professionals/${professionalId}/verify`,
     { method: "POST", formData: form },
   );
+}
+
+function mapNotification(raw: unknown): InAppNotification | null {
+  if (!raw || typeof raw !== "object") return null;
+  const item = raw as Record<string, unknown>;
+  const id = String(item.id || "");
+  if (!id) return null;
+
+  const type = String(item.type || item.notification_type || item.kind || "ticket");
+  const title = String(item.title || item.subject || "Notification");
+  const body = String(
+    item.body || item.message || item.content || item.description || "",
+  );
+  const createdAt = item.created_at
+    ? String(item.created_at)
+    : item.createdAt
+      ? String(item.createdAt)
+      : null;
+
+  const unread = !(
+    item.is_read === true ||
+    item.read === true ||
+    item.read_at ||
+    item.readAt
+  );
+
+  const entityId = String(
+    item.entity_id ||
+      item.ticket_id ||
+      item.review_id ||
+      item.conversation_id ||
+      item.resource_id ||
+      "",
+  );
+
+  let href = String(
+    item.href || item.link || item.action_url || item.url || "",
+  );
+  if (!href) {
+    if (type.includes("review") && entityId) href = `/review/${entityId}`;
+    else if (entityId) href = `/tickets/${entityId}`;
+    else href = "/dashboard/customer";
+  }
+
+  return {
+    id,
+    title,
+    body,
+    type,
+    href,
+    unread,
+    created_at: createdAt,
+    raw: item,
+  };
+}
+
+export async function listNotifications(page = 1, pageSize = 30) {
+  const data = await apiRequest<unknown>(
+    `/api/v1/notifications?page=${page}&page_size=${pageSize}`,
+  );
+  const items = asList<unknown>(data, [
+    "items",
+    "notifications",
+    "results",
+  ]).map(mapNotification).filter((item): item is InAppNotification => Boolean(item));
+  return items;
+}
+
+export async function getUnreadNotificationCount() {
+  const data = await apiRequest<unknown>("/api/v1/notifications/unread-count");
+  if (typeof data === "number") return data;
+  const record = asRecord(data);
+  const count =
+    record.unread_count ??
+    record.count ??
+    record.unread ??
+    record.total_unread;
+  return Number(count || 0);
+}
+
+export async function markNotificationRead(notificationId: string) {
+  return apiRequest<unknown>(`/api/v1/notifications/${notificationId}/read`, {
+    method: "POST",
+  });
+}
+
+export async function markAllNotificationsRead() {
+  return apiRequest<unknown>("/api/v1/notifications/read-all", {
+    method: "POST",
+  });
 }
