@@ -5,6 +5,7 @@ import Link from "next/link";
 import { iconForCategory } from "@/components/home/category-icons";
 import { MarketplaceAds } from "@/components/ads/marketplace-ads";
 import { ListingCard } from "@/components/professionals/listing-card";
+import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { listCategories, listProfessionals } from "@/lib/api";
 import { mapDirectoryProfessional } from "@/lib/api/mappers";
@@ -12,6 +13,7 @@ import type { Category } from "@/lib/api/types";
 import type { Professional } from "@/lib/types";
 
 export default function HomePage() {
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
@@ -30,6 +32,7 @@ export default function HomePage() {
       .finally(() => setProsLoading(false));
   }, []);
 
+  const showSignupCta = !authLoading && !isAuthenticated;
   return (
     <>
       <section className="mx-auto max-w-7xl border-b border-[#e4e2e0] px-4 py-16 lg:px-6">
@@ -115,31 +118,33 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 lg:px-6">
-        <div className="ui-card px-8 py-12 sm:px-12 sm:py-14">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-xl">
-              <h2 className="text-4xl font-bold leading-tight text-black sm:text-5xl">
-                Ready to hire, or get hired?
-              </h2>
-              <p className="mt-4 text-lg font-medium text-muted">
-                Create a customer account to request services, or list as a
-                professional and start receiving tickets.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/signup/customer">
-                <Button size="lg">Sign Up as Customer</Button>
-              </Link>
-              <Link href="/signup/professional">
-                <Button variant="outline" size="lg">
-                  Sign Up as Professional
-                </Button>
-              </Link>
+      {showSignupCta ? (
+        <section className="mx-auto max-w-7xl px-4 py-16 lg:px-6">
+          <div className="ui-card px-8 py-12 sm:px-12 sm:py-14">
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+              <div className="max-w-xl">
+                <h2 className="text-4xl font-bold leading-tight text-black sm:text-5xl">
+                  Ready to hire, or get hired?
+                </h2>
+                <p className="mt-4 text-lg font-medium text-muted">
+                  Create a customer account to request services, or list as a
+                  professional and start receiving tickets.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/signup/customer">
+                  <Button size="lg">Sign Up as Customer</Button>
+                </Link>
+                <Link href="/signup/professional">
+                  <Button variant="outline" size="lg">
+                    Sign Up as Professional
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
     </>
   );
 }
