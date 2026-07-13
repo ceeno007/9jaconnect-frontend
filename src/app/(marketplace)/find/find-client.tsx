@@ -106,7 +106,10 @@ export default function FindPageClient() {
               name="sort"
               value={sort}
               onChange={(e) => setSort(e.target.value as DirectorySort)}
-              className="h-10 rounded-[8px] border border-[#e4e2e0] bg-white px-3 text-sm font-bold text-black outline-none"
+              className="h-10 appearance-none rounded-[8px] border border-[#e4e2e0] bg-white bg-[length:16px_16px] bg-[right_12px_center] bg-no-repeat py-0 pl-3 pr-10 text-sm font-bold text-black outline-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")`,
+              }}
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
