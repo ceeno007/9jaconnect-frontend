@@ -232,6 +232,19 @@ export default function ProfessionalProfilePage() {
 
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-6">
         <div className="space-y-6">
+          <section className="ui-card p-7 sm:p-8">
+            <h2 className="text-2xl font-bold text-ink-black">About</h2>
+            {professional.description?.trim() ? (
+              <p className="mt-4 whitespace-pre-wrap text-[16px] font-normal leading-relaxed text-ink-black/80 sm:text-lg">
+                {professional.description}
+              </p>
+            ) : (
+              <p className="mt-4 text-base font-medium text-muted">
+                No service description yet.
+              </p>
+            )}
+          </section>
+
           <section className="overflow-hidden ui-card p-3">
             {galleryImages.length > 0 ? (
               <>
@@ -277,13 +290,6 @@ export default function ProfessionalProfilePage() {
                 <MediaFrame src={null} alt="" emptyLabel="No photos yet" />
               </div>
             )}
-          </section>
-
-          <section className="ui-card p-7 sm:p-8">
-            <h2 className="text-2xl font-bold">Service description</h2>
-            <p className="mt-4 text-lg font-medium leading-relaxed text-muted">
-              {professional.description}
-            </p>
           </section>
 
           {services.length > 0 ? (

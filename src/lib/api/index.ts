@@ -203,7 +203,48 @@ export async function getProfessional(id: string) {
   }>(`/api/v1/professionals/${id}`, {
     next: { revalidate: 60 },
   });
-  return data.professional;
+  const detail = data.professional;
+
+  // Public detail currently omits bio / experience that the directory list includes.
+  const needsDirectoryFill =
+    !detail?.service_description ||
+    detail.years_of_experience == null ||
+    detail.years_of_experience === undefined;
+
+  if (!needsDirectoryFill) return detail;
+
+  try {
+    const listed = await listProfessionals({
+      category_id: detail.category_id,
+      page_size: 50,
+    });
+    let match = listed.professionals.find((item) => item.id === id);
+    if (!match) {
+      const all = await listProfessionals({ page_size: 50 });
+      match = all.professionals.find((item) => item.id === id);
+    }
+    if (!match) return detail;
+
+    return {
+      ...match,
+      ...detail,
+      service_description:
+        detail.service_description || match.service_description,
+      years_of_experience:
+        detail.years_of_experience ?? match.years_of_experience,
+      services:
+        Array.isArray(detail.services) && detail.services.length
+          ? detail.services
+          : match.services,
+      gallery:
+        Array.isArray(detail.gallery) && detail.gallery.length
+          ? detail.gallery
+          : match.gallery,
+      cover_image_url: detail.cover_image_url || match.cover_image_url,
+    };
+  } catch {
+    return detail;
+  }
 }
 
 export async function listAds() {

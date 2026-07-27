@@ -114,6 +114,8 @@ export type ProfessionalDetail = DirectoryProfessional & {
   referral_code?: string | null;
   business_address?: string | null;
   full_name?: string | null;
+  service_description?: string;
+  years_of_experience?: number;
 };
 
 export type RegisterRequest = {
