@@ -168,10 +168,7 @@ export default function HomePage() {
       <section className="bg-paper-warmth">
         <div className="mx-auto grid max-w-[1200px] gap-6 px-4 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-6 lg:py-20">
           <div className="rounded-[12px] bg-midnight-ink p-8 text-pure-white sm:p-10">
-            <span className="inline-flex rounded-full bg-marigold px-3 py-1 text-[12px] font-medium text-ink-black">
-              How it works
-            </span>
-            <h2 className="mt-5 text-[40px] font-semibold leading-[1.14] tracking-[-0.035em] text-pure-white !text-[#ffffff] sm:text-[48px]">
+            <h2 className="text-[40px] font-semibold leading-[1.14] tracking-[-0.035em] text-pure-white !text-[#ffffff] sm:text-[48px]">
               Hire in three clear steps
             </h2>
             <ul className="mt-8 space-y-5">
@@ -225,8 +222,7 @@ export default function HomePage() {
           <div className="ui-card overflow-hidden px-8 py-12 sm:px-12 sm:py-14">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
               <div className="max-w-xl">
-                <span className="badge-marigold">Get started</span>
-                <h2 className="mt-4 text-[48px] font-semibold leading-[1.04] tracking-[-0.035em] text-ink-black sm:text-[54px]">
+                <h2 className="text-[48px] font-semibold leading-[1.04] tracking-[-0.035em] text-ink-black sm:text-[54px]">
                   Ready to{" "}
                   <span className="rounded-full bg-peach-pill px-4 py-1">
                     hire
