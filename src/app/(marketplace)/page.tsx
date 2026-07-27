@@ -197,17 +197,6 @@ export default function HomePage() {
               <p className="mt-3 text-[16px] font-normal text-ink-black/70">
                 service categories across Nigeria
               </p>
-              <div className="mt-8 flex flex-wrap gap-2">
-                <span className="rounded-full bg-pure-white/80 px-3 py-1 text-[12px] font-medium text-ink-black">
-                  Verified ID
-                </span>
-                <span className="rounded-full bg-pure-white/80 px-3 py-1 text-[12px] font-medium text-ink-black">
-                  State + LGA filters
-                </span>
-                <span className="rounded-full bg-ink-black px-3 py-1 text-[12px] font-medium text-pure-white">
-                  Live tickets
-                </span>
-              </div>
             </div>
             <Link href="/find">
               <Button size="lg" className="w-full sm:w-auto">
