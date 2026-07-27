@@ -73,13 +73,9 @@ export function ListingCard({
           </div>
         </div>
 
-        <p className="hidden line-clamp-2 text-[14px] font-normal leading-relaxed text-fog sm:block">
-          {professional.description}
-        </p>
-
         <p className="mt-auto flex items-center gap-1 pt-0.5 text-[12px] font-normal text-stone sm:pt-1 sm:text-[13px]">
           <MapPin className="h-3.5 w-3.5 shrink-0 text-ink-black/60" />
-          <span className="truncate">
+          <span className="min-w-0 truncate">
             {professional.state}, {professional.lga}
           </span>
           <span className="ml-auto shrink-0 font-medium text-ink-black/60">
