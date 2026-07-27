@@ -3,20 +3,20 @@ import { ButtonHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-buttons)] text-[14px] font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-notion-blue focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.99]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-buttons)] text-[14px] font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lemon focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.99]",
   {
     variants: {
       variant: {
         primary:
-          "bg-notion-blue text-pure-white hover:bg-[#0066c2]",
+          "bg-lemon text-ink-black hover:bg-lemon-deep",
         secondary:
-          "bg-sky-tint text-notion-blue hover:bg-[#d7ecfc]",
+          "bg-lemon-wash text-ink-black hover:bg-[#e8f5b0]",
         outline:
           "bg-transparent text-ink-black/90 border border-black/20 hover:bg-black/[0.03]",
         ghost: "bg-transparent text-ink-black/95 hover:bg-black/[0.04]",
         danger: "bg-vermillion text-pure-white hover:opacity-90",
         dark: "bg-midnight-ink text-pure-white hover:bg-[#04105a]",
-        pill: "rounded-[var(--radius-pill)] bg-notion-blue text-pure-white px-5",
+        pill: "rounded-[var(--radius-pill)] bg-lemon text-ink-black px-5",
       },
       size: {
         sm: "h-9 px-4 text-[13px]",

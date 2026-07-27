@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  /* Notion — warm paper notebook */
-  --color-notion-blue: #0075de;
+  /* Warm paper + lemon-green accents */
+  --color-lemon: #c8e63a;
+  --color-lemon-deep: #a8c92a;
+  --color-lemon-wash: #f2f9c8;
+  --color-notion-blue: var(--color-lemon);
   --color-paper-warmth: #f6f5f4;
   --color-pure-white: #ffffff;
   --color-ink-black: #000000;
@@ -10,7 +13,7 @@
   --color-stone: #757575;
   --color-notion-graphite: #615d59;
   --color-notion-slate: #696969;
-  --color-sky-tint: #e6f3fe;
+  --color-sky-tint: var(--color-lemon-wash);
   --color-marigold: #ffb110;
   --color-coral: #f64932;
   --color-saffron: #e89d01;
@@ -42,7 +45,7 @@
   --card: var(--color-pure-white);
   --border: rgba(0, 0, 0, 0.08);
   --divider: rgba(0, 0, 0, 0.08);
-  --ring: var(--color-notion-blue);
+  --ring: var(--color-lemon);
   --danger: var(--color-vermillion);
   --success: var(--color-verified);
   --surface: var(--color-paper-warmth);
@@ -78,13 +81,16 @@
   --color-success: var(--success);
   --color-surface: var(--surface);
 
-  --color-notion-blue: #0075de;
+  --color-lemon: #c8e63a;
+  --color-lemon-deep: #a8c92a;
+  --color-lemon-wash: #f2f9c8;
+  --color-notion-blue: #c8e63a;
   --color-paper-warmth: #f6f5f4;
   --color-pure-white: #ffffff;
   --color-ink-black: #000000;
   --color-charcoal: #111111;
   --color-stone: #757575;
-  --color-sky-tint: #e6f3fe;
+  --color-sky-tint: #f2f9c8;
   --color-marigold: #ffb110;
   --color-coral: #f64932;
   --color-saffron: #e89d01;
@@ -123,17 +129,17 @@
   --color-neutral-900: #000000;
   --color-neutral-950: #000000;
 
-  --color-green-950: #000000;
-  --color-green-900: #111111;
-  --color-green-800: #333333;
-  --color-green-700: #615d59;
-  --color-green-600: #0075de;
-  --color-green-500: #0075de;
-  --color-green-400: #62aef0;
-  --color-green-300: #e6f3fe;
-  --color-green-200: #ebe9e7;
-  --color-green-100: #f6f5f4;
-  --color-green-50: #f6f5f4;
+  --color-green-950: #1a2e05;
+  --color-green-900: #365314;
+  --color-green-800: #4d7c0f;
+  --color-green-700: #65a30d;
+  --color-green-600: #a8c92a;
+  --color-green-500: #c8e63a;
+  --color-green-400: #d4ef5c;
+  --color-green-300: #e4f58f;
+  --color-green-200: #f2f9c8;
+  --color-green-100: #f7fce0;
+  --color-green-50: #fcfef0;
 
   --font-sans: var(--font-body);
   --font-display: var(--font-body);
@@ -181,7 +187,7 @@ h4 {
 }
 
 ::selection {
-  background: var(--color-sky-tint);
+  background: var(--color-lemon);
   color: var(--color-ink-black);
 }
 
@@ -206,7 +212,7 @@ h4 {
 
 .listing-card:focus-visible,
 .ui-card:focus-visible {
-  outline: 2px solid var(--color-notion-blue) !important;
+  outline: 2px solid var(--color-lemon) !important;
   outline-offset: 2px;
 }
 
@@ -245,8 +251,8 @@ textarea.field-surface {
 
 .field-surface:focus,
 .field-surface:focus-within {
-  border-color: var(--color-notion-blue) !important;
-  box-shadow: 0 0 0 1px var(--color-notion-blue) !important;
+  border-color: var(--color-lemon) !important;
+  box-shadow: 0 0 0 1px var(--color-lemon) !important;
 }
 
 .field-surface::placeholder {
