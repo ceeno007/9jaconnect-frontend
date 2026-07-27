@@ -101,27 +101,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      <PixelArtBanner className="pb-0" />
-
-      <section className="px-4 pt-10 lg:px-6 lg:pt-12">
-        <div className="mx-auto grid max-w-[1200px] gap-4 sm:grid-cols-3">
-          <div className="rounded-[6px] bg-marigold p-6 sm:p-8">
-            <p className="text-[14px] font-medium text-ink-black/60">Find</p>
-            <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em] text-ink-black">
-              Pros by trade and location
-            </p>
-          </div>
-          <div className="rounded-[6px] bg-coral p-6 text-pure-white sm:p-8">
-            <p className="text-[14px] font-medium text-white/70">Verify</p>
-            <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em]">
-              Check ID-verified listings
-            </p>
-          </div>
-          <div className="rounded-[6px] bg-sky-wash p-6 sm:p-8">
-            <p className="text-[14px] font-medium text-ink-black/60">Hire</p>
-            <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em] text-ink-black">
-              Request tickets and chat
-            </p>
+      <section className="relative w-full bg-lemon-wash">
+        <PixelArtBanner />
+        <div className="relative z-10 mx-auto max-w-[1200px] -mt-16 px-4 sm:-mt-20 lg:-mt-24 lg:px-6">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-[6px] bg-marigold p-6 shadow-[0_8px_24px_rgba(0,0,0,0.08)] sm:p-8">
+              <p className="text-[14px] font-medium text-ink-black/60">Find</p>
+              <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em] text-ink-black">
+                Pros by trade and location
+              </p>
+            </div>
+            <div className="rounded-[6px] bg-coral p-6 text-pure-white shadow-[0_8px_24px_rgba(0,0,0,0.08)] sm:p-8">
+              <p className="text-[14px] font-medium text-white/70">Verify</p>
+              <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em]">
+                Check ID-verified listings
+              </p>
+            </div>
+            <div className="rounded-[6px] bg-sky-wash p-6 shadow-[0_8px_24px_rgba(0,0,0,0.08)] sm:p-8">
+              <p className="text-[14px] font-medium text-ink-black/60">Hire</p>
+              <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em] text-ink-black">
+                Request tickets and chat
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -131,7 +132,7 @@ export default function HomePage() {
         className="mx-auto max-w-[1200px] space-y-3 px-4 py-0 lg:px-6"
       />
 
-      <section className="bg-paper-warmth">
+      <section className="bg-lemon-wash">
         <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-10 lg:px-6 lg:pb-20 lg:pt-12">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
