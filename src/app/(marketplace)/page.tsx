@@ -54,7 +54,7 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="mx-auto max-w-[1200px] px-4 py-16 lg:px-6 lg:py-20">
+      <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-6 lg:px-6 lg:py-20">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div className="max-w-2xl">
             <h2 className="display-tight text-[40px] font-semibold tracking-[-0.035em] text-ink-black sm:text-[48px]">
@@ -103,23 +103,23 @@ export default function HomePage() {
 
       <section className="relative w-full bg-lemon-wash">
         <PixelArtBanner />
-        <div className="relative z-10 mx-auto max-w-[1200px] -mt-16 px-4 sm:-mt-20 lg:-mt-24 lg:px-6">
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-[6px] bg-marigold p-6 shadow-[0_8px_24px_rgba(0,0,0,0.08)] sm:p-8">
-              <p className="text-[14px] font-medium text-ink-black/60">Find</p>
-              <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em] text-ink-black">
+        <div className="relative z-10 mx-auto max-w-[1200px] px-5 py-6 sm:px-6 lg:px-6">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-[6px] bg-marigold px-4 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
+              <p className="text-[12px] font-medium text-ink-black/60">Find</p>
+              <p className="mt-1 text-[15px] font-semibold tracking-[-0.01em] text-ink-black">
                 Pros by trade and location
               </p>
             </div>
-            <div className="rounded-[6px] bg-coral p-6 text-pure-white shadow-[0_8px_24px_rgba(0,0,0,0.08)] sm:p-8">
-              <p className="text-[14px] font-medium text-white/70">Verify</p>
-              <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em]">
+            <div className="rounded-[6px] bg-coral px-4 py-3 text-pure-white shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
+              <p className="text-[12px] font-medium text-white/70">Verify</p>
+              <p className="mt-1 text-[15px] font-semibold tracking-[-0.01em]">
                 Check ID-verified listings
               </p>
             </div>
-            <div className="rounded-[6px] bg-sky-wash p-6 shadow-[0_8px_24px_rgba(0,0,0,0.08)] sm:p-8">
-              <p className="text-[14px] font-medium text-ink-black/60">Hire</p>
-              <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em] text-ink-black">
+            <div className="rounded-[6px] bg-sky-wash px-4 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
+              <p className="text-[12px] font-medium text-ink-black/60">Hire</p>
+              <p className="mt-1 text-[15px] font-semibold tracking-[-0.01em] text-ink-black">
                 Request tickets and chat
               </p>
             </div>
@@ -129,11 +129,11 @@ export default function HomePage() {
 
       <MarketplaceAds
         pageContext="home"
-        className="mx-auto max-w-[1200px] space-y-3 px-4 py-0 lg:px-6"
+        className="mx-auto max-w-[1200px] space-y-3 px-5 py-0 sm:px-6 lg:px-6"
       />
 
       <section className="bg-lemon-wash">
-        <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-10 lg:px-6 lg:pb-20 lg:pt-12">
+        <div className="mx-auto max-w-[1200px] px-5 pb-16 pt-10 sm:px-6 lg:pb-20 lg:pt-12">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
               <div className="mb-3">
@@ -156,7 +156,7 @@ export default function HomePage() {
               ? Array.from({ length: 6 }).map((_, index) => (
                   <div
                     key={index}
-                    className="listing-card h-72 animate-pulse bg-paper-warmth"
+                    className="listing-card h-72 animate-pulse bg-paper-warmth sm:h-80"
                   />
                 ))
               : professionals.map((pro) => (
@@ -167,7 +167,7 @@ export default function HomePage() {
       </section>
 
       <section className="bg-paper-warmth">
-        <div className="mx-auto grid max-w-[1200px] gap-6 px-4 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-6 lg:py-20">
+        <div className="mx-auto grid max-w-[1200px] gap-6 px-5 py-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-6 lg:py-20">
           <div className="rounded-[6px] bg-midnight-ink p-8 text-pure-white sm:p-10">
             <h2 className="text-[40px] font-semibold leading-[1.14] tracking-[-0.035em] text-pure-white !text-[#ffffff] sm:text-[48px]">
               Hire in three clear steps
@@ -208,7 +208,7 @@ export default function HomePage() {
       </section>
 
       {showSignupCta ? (
-        <section className="mx-auto max-w-[1200px] px-4 py-16 lg:px-6 lg:py-20">
+        <section className="mx-auto max-w-[1200px] px-5 py-16 sm:px-6 lg:px-6 lg:py-20">
           <div className="ui-card overflow-hidden px-8 py-12 sm:px-12 sm:py-14">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
               <div className="max-w-xl">

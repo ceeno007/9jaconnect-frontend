@@ -86,7 +86,7 @@ export default function FindPageClient() {
       initial={{ opacity: 0.35, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.28, ease: "easeOut" }}
-      className="mx-auto max-w-7xl px-4 py-8 lg:px-6"
+      className="mx-auto max-w-7xl px-6 py-8 sm:px-6 lg:px-8"
     >
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -160,7 +160,7 @@ export default function FindPageClient() {
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="listing-card h-80 animate-pulse bg-paper-warmth"
+              className="listing-card h-72 animate-pulse bg-paper-warmth sm:h-80"
             />
           ))}
         </div>
@@ -181,6 +181,7 @@ export default function FindPageClient() {
                 delay: index * 0.03,
                 ease: "easeOut",
               }}
+              className="min-w-0"
             >
               <ListingCard professional={pro} />
             </motion.div>

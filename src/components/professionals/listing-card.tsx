@@ -30,11 +30,11 @@ export function ListingCard({
     <Link
       href={`/professionals/${professional.id}`}
       className={cn(
-        "listing-card group flex h-full flex-col overflow-hidden",
+        "listing-card group flex h-full max-w-full flex-col overflow-hidden",
         className,
       )}
     >
-      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-[6px] bg-paper-warmth">
+      <div className="relative aspect-[2/1] w-full overflow-hidden rounded-t-[6px] bg-paper-warmth sm:aspect-[16/10]">
         <MediaFrame
           src={professional.coverImage}
           alt={`${professional.tradeName} work`}
@@ -42,13 +42,13 @@ export function ListingCard({
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           imageClassName="transition duration-200 group-hover:scale-[1.03]"
         />
-        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+        <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1.5 sm:left-3 sm:top-3">
           {professional.verified ? <VerifiedBadge /> : null}
           <span className="rounded-[var(--radius-badges)] bg-obsidian/70 px-2 py-0.5 text-[12px] font-medium leading-none text-snow backdrop-blur-sm">
             {professional.years}+ yrs
           </span>
         </div>
-        <div className="absolute bottom-3 right-3 rounded-[var(--radius-badges)] bg-snow px-2 py-1 text-[13px] font-semibold text-obsidian">
+        <div className="absolute bottom-2.5 right-2.5 rounded-[var(--radius-badges)] bg-snow px-2 py-1 text-[12px] font-semibold text-obsidian sm:bottom-3 sm:right-3 sm:text-[13px]">
           {professional.hourlyRate > 0 ? (
             <>
               ₦{professional.hourlyRate.toLocaleString()}
@@ -60,24 +60,24 @@ export function ListingCard({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-6">
+      <div className="flex flex-1 flex-col gap-2 p-4 sm:gap-3 sm:p-6">
         <div>
-          <h3 className="text-[18px] font-semibold leading-snug tracking-[-0.01em] text-ink-black group-hover:opacity-70 sm:text-[20px]">
+          <h3 className="line-clamp-1 text-[16px] font-semibold leading-snug tracking-[-0.01em] text-ink-black group-hover:opacity-70 sm:text-[20px]">
             {professional.tradeName}
           </h3>
-          <p className="mt-1 text-[14px] font-normal text-stone">
+          <p className="mt-0.5 line-clamp-1 text-[13px] font-normal text-stone sm:mt-1 sm:text-[14px]">
             {professional.category} · {professional.name}
           </p>
-          <div className="mt-2">
+          <div className="mt-1.5 sm:mt-2">
             <RatingScore value={professional.rating} size="sm" />
           </div>
         </div>
 
-        <p className="line-clamp-2 text-[14px] font-normal leading-relaxed text-fog">
+        <p className="hidden line-clamp-2 text-[14px] font-normal leading-relaxed text-fog sm:block">
           {professional.description}
         </p>
 
-        <p className="mt-auto flex items-center gap-1 pt-1 text-[13px] font-normal text-stone">
+        <p className="mt-auto flex items-center gap-1 pt-0.5 text-[12px] font-normal text-stone sm:pt-1 sm:text-[13px]">
           <MapPin className="h-3.5 w-3.5 shrink-0 text-ink-black/60" />
           <span className="truncate">
             {professional.state}, {professional.lga}

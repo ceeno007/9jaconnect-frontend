@@ -128,7 +128,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-paper-warmth shadow-[var(--shadow-nav)]">
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-6 px-4 lg:px-6">
+      <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-6 px-5 lg:px-6">
         <Logo compact className="shrink-0" />
 
         <nav className="hidden items-center gap-1 md:flex">
