@@ -170,7 +170,7 @@ export function NotificationsMenu({
       ) : (
         <button
           type="button"
-          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-[#2d2d2d] hover:bg-[#f3f2f1]"
+          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-[#2d2d2d] hover:bg-[#f4f4f5]"
           aria-label="Notifications"
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
@@ -192,13 +192,13 @@ export function NotificationsMenu({
             exit={{ opacity: 0, y: 6, scale: 0.98 }}
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              "z-[70] overflow-hidden rounded-[16px] border border-[#e4e2e0] bg-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]",
+              "z-[70] overflow-hidden rounded-[16px] border border-[#ececee] bg-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]",
               variant === "row"
                 ? "relative mt-2 w-full"
                 : "absolute right-0 top-12 w-[min(92vw,360px)]",
             )}
           >
-            <div className="flex items-center justify-between border-b border-[#e4e2e0] px-4 py-3">
+            <div className="flex items-center justify-between border-b border-[#ececee] px-4 py-3">
               <div>
                 <p className="text-base font-bold text-black">Notifications</p>
                 <p className="text-sm font-medium text-muted">
@@ -213,7 +213,7 @@ export function NotificationsMenu({
                 <button
                   type="button"
                   onClick={() => void markAllRead()}
-                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-bold text-black hover:bg-[#f3f2f1]"
+                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-bold text-black hover:bg-[#f4f4f5]"
                 >
                   <CheckCheck className="h-3.5 w-3.5" />
                   Mark all read
@@ -240,7 +240,7 @@ export function NotificationsMenu({
                   {Array.from({ length: 3 }).map((_, index) => (
                     <div
                       key={index}
-                      className="h-14 animate-pulse rounded-[12px] bg-[#f3f2f1]"
+                      className="h-14 animate-pulse rounded-[12px] bg-[#f4f4f5]"
                     />
                   ))}
                 </div>
@@ -271,7 +271,7 @@ export function NotificationsMenu({
                         "mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
                         item.unread
                           ? "bg-[#0f9d58] text-white"
-                          : "bg-[#f3f2f1] text-black",
+                          : "bg-[#f4f4f5] text-black",
                       )}
                     >
                       <TypeIcon type={item.type} />
@@ -299,7 +299,7 @@ export function NotificationsMenu({
               )}
             </div>
 
-            <div className="border-t border-[#e4e2e0] px-4 py-3">
+            <div className="border-t border-[#ececee] px-4 py-3">
               <Link
                 href={activityHref}
                 onClick={() => setOpen(false)}

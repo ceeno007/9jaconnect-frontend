@@ -22,14 +22,14 @@ export function MarketplaceSearchBar() {
       layout
       transition={morphTransition}
       className={cn(
-        "border-b border-[#e4e2e0] bg-white",
+        "border-b border-black/[0.08] bg-paper-warmth",
         isFind ? "py-4 sm:py-6" : "pb-6 pt-5 sm:pb-12 sm:pt-10",
       )}
     >
       <motion.div
         layout
         transition={morphTransition}
-        className="mx-auto max-w-7xl px-4 lg:px-6"
+        className="mx-auto max-w-[1200px] px-4 lg:px-6"
       >
         <IndeedStyleSearch
           className={cn(isFind ? "max-w-none" : "max-w-5xl")}
@@ -45,8 +45,8 @@ export function MarketplaceSearchBar() {
 
 export function MarketplaceSearchBarFallback() {
   return (
-    <section className="border-b border-[#e4e2e0] bg-white pb-10 pt-8 sm:pb-12 sm:pt-10">
-      <div className="mx-auto max-w-7xl px-4 lg:px-6">
+    <section className="border-b border-black/[0.08] bg-paper-warmth pb-10 pt-8 sm:pb-12 sm:pt-10">
+      <div className="mx-auto max-w-[1200px] px-4 lg:px-6">
         <IndeedStyleSearch className="max-w-5xl" />
       </div>
     </section>

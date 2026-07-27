@@ -90,13 +90,13 @@ export default function FindPageClient() {
     >
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-black sm:text-4xl">
+          <h1 className="text-[32px] font-semibold tracking-normal text-obsidian sm:text-[40px]">
             Find Professionals
           </h1>
           {countLabel ? (
             <p className="mt-2 text-base font-medium text-muted">{countLabel}</p>
           ) : (
-            <div className="mt-2 h-5 w-40 animate-pulse rounded-[8px] bg-[#f3f2f1]" />
+            <div className="mt-2 h-5 w-40 animate-pulse rounded-[8px] bg-[#f4f4f5]" />
           )}
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -106,7 +106,7 @@ export default function FindPageClient() {
               name="sort"
               value={sort}
               onChange={(e) => setSort(e.target.value as DirectorySort)}
-              className="h-10 appearance-none rounded-[8px] border border-[#e4e2e0] bg-white bg-[length:16px_16px] bg-[right_12px_center] bg-no-repeat py-0 pl-3 pr-10 text-sm font-bold text-black outline-none"
+              className="h-10 appearance-none rounded-[8px] border border-[#ececee] bg-white bg-[length:16px_16px] bg-[right_12px_center] bg-no-repeat py-0 pl-3 pr-10 text-sm font-bold text-black outline-none"
               style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E")`,
               }}
@@ -118,14 +118,14 @@ export default function FindPageClient() {
               ))}
             </select>
           </label>
-          <div className="inline-flex overflow-hidden rounded-[8px] border border-[#e4e2e0] bg-white">
+          <div className="inline-flex overflow-hidden rounded-[8px] border border-[#ececee] bg-white">
             <button
               type="button"
               aria-label="Grid view"
               onClick={() => setView("grid")}
               className={cn(
                 "inline-flex h-10 w-10 items-center justify-center",
-                view === "grid" ? "bg-[#f3f2f1] text-black" : "text-muted",
+                view === "grid" ? "bg-[#f4f4f5] text-black" : "text-muted",
               )}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -135,8 +135,8 @@ export default function FindPageClient() {
               aria-label="List view"
               onClick={() => setView("list")}
               className={cn(
-                "inline-flex h-10 w-10 items-center justify-center border-l border-[#e4e2e0]",
-                view === "list" ? "bg-[#f3f2f1] text-black" : "text-muted",
+                "inline-flex h-10 w-10 items-center justify-center border-l border-[#ececee]",
+                view === "list" ? "bg-[#f4f4f5] text-black" : "text-muted",
               )}
             >
               <List className="h-4 w-4" />
@@ -156,11 +156,11 @@ export default function FindPageClient() {
       {error ? (
         <EmptyState title="Something went wrong" description={error} />
       ) : loading ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, index) => (
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="listing-card h-72 animate-pulse bg-[#f3f2f1]"
+              className="listing-card h-80 animate-pulse bg-paper-warmth"
             />
           ))}
         </div>
@@ -170,7 +170,7 @@ export default function FindPageClient() {
           description="Try adjusting the search above or pick another category."
         />
       ) : view === "grid" ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((pro, index) => (
             <motion.div
               key={pro.id}

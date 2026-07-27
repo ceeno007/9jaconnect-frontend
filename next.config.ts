@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "api.9jaconnet.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
   async rewrites() {

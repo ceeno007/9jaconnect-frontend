@@ -13,13 +13,13 @@ export function ratingTone(value: number): RatingTone {
 const toneClass: Record<RatingTone, string> = {
   good: "text-[#0f9d58]",
   bad: "text-[#c62828]",
-  neutral: "text-[#8a8f96]",
+  neutral: "text-[#71717a]",
 };
 
 const fillClass: Record<RatingTone, string> = {
   good: "bg-[#0f9d58]",
   bad: "bg-[#c62828]",
-  neutral: "bg-[#8a8f96]",
+  neutral: "bg-[#71717a]",
 };
 
 function StarMark({
@@ -87,7 +87,7 @@ export function RatingScore({
         ))}
       </span>
       {showReviews && typeof reviews === "number" ? (
-        <span className="font-semibold text-[#8a8f96]">
+        <span className="font-semibold text-[#71717a]">
           · {reviews} {reviews === 1 ? "review" : "reviews"}
         </span>
       ) : null}
@@ -135,7 +135,7 @@ export function RatingMeter({
 
   return (
     <span
-      className={cn("inline-flex h-1.5 w-16 overflow-hidden rounded-sm bg-[#e8e6e4]", className)}
+      className={cn("inline-flex h-1.5 w-16 overflow-hidden rounded-sm bg-[#ececee]", className)}
       aria-hidden
     >
       <span

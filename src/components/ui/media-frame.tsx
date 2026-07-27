@@ -84,7 +84,7 @@ export function MediaFrame({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-1.5 bg-[#e8e6e4] text-[#8a8f96]",
+        "flex flex-col items-center justify-center gap-1.5 bg-[#ececee] text-[#71717a]",
         fill ? "absolute inset-0" : "h-full w-full",
         className,
       )}

@@ -12,9 +12,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const textareaId = id ?? props.name;
 
     return (
-      <label className="flex w-full flex-col gap-2.5 text-base">
+      <label className="flex w-full flex-col gap-2.5 text-[15px]">
         {label ? (
-          <span className="text-lg font-bold text-foreground">
+          <span className="text-[15px] font-medium text-graphite">
             {label}
             {props.required ? <span className="text-danger"> *</span> : null}
           </span>
@@ -23,12 +23,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={textareaId}
           className={cn(
-            "field-surface min-h-44 w-full rounded-[var(--radius-lg)] bg-white px-6 py-5 text-lg font-semibold text-foreground outline-none transition placeholder:font-medium placeholder:text-muted/70 focus:ring-2 focus:ring-black",
+            "field-surface min-h-44 w-full text-[15px] font-normal text-foreground outline-none transition placeholder:font-normal placeholder:text-ash focus:ring-2 focus:ring-obsidian",
             className,
           )}
           {...props}
         />
-        {hint ? <span className="text-base font-medium text-muted">{hint}</span> : null}
+        {hint ? (
+          <span className="text-[13px] font-normal text-fog">{hint}</span>
+        ) : null}
       </label>
     );
   },

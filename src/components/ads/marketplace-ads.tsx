@@ -71,7 +71,7 @@ export function MarketplaceAds({
         return (
           <div
             key={id}
-            className="overflow-hidden rounded-[12px] border border-[#e4e2e0] bg-[#fafafa] px-3 py-4"
+            className="overflow-hidden rounded-[12px] border border-[#ececee] bg-[#fafafa] px-3 py-4"
           >
             <ins
               className="adsbygoogle"

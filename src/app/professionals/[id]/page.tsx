@@ -191,11 +191,11 @@ export default function ProfessionalProfilePage() {
 
   return (
     <div className="bg-white">
-      <div className="border-b border-[#e4e2e0] bg-white">
+      <div className="border-b border-[#ececee] bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
           <Link
             href="/find"
-            className="mb-5 inline-flex h-10 items-center gap-2 rounded-full border border-[#e4e2e0] bg-white px-4 text-sm font-bold text-black transition hover:bg-[#f3f2f1]"
+            className="mb-5 inline-flex h-10 items-center gap-2 rounded-full border border-[#ececee] bg-white px-4 text-sm font-bold text-black transition hover:bg-[#f4f4f5]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
@@ -238,7 +238,7 @@ export default function ProfessionalProfilePage() {
                 <button
                   type="button"
                   onClick={() => setLightboxIndex(0)}
-                  className="relative aspect-[21/9] w-full overflow-hidden rounded-[12px] bg-[#e8e6e4] text-left"
+                  className="relative aspect-[21/9] w-full overflow-hidden rounded-[12px] bg-[#ececee] text-left"
                   aria-label="View photo fullscreen"
                 >
                   <MediaFrame
@@ -257,7 +257,7 @@ export default function ProfessionalProfilePage() {
                         key={`${src}-${index}`}
                         type="button"
                         onClick={() => setLightboxIndex(index)}
-                        className="relative aspect-square overflow-hidden rounded-[12px] bg-[#e8e6e4]"
+                        className="relative aspect-square overflow-hidden rounded-[12px] bg-[#ececee]"
                         aria-label="View photo fullscreen"
                       >
                         <MediaFrame
@@ -364,7 +364,7 @@ export default function ProfessionalProfilePage() {
                 className={`rounded-[8px] px-3 py-2 text-sm font-bold ${
                   requestMode === "one_off"
                     ? "bg-black text-white"
-                    : "bg-[#f3f2f1] text-black"
+                    : "bg-[#f4f4f5] text-black"
                 }`}
               >
                 One-off
@@ -375,7 +375,7 @@ export default function ProfessionalProfilePage() {
                 className={`rounded-[8px] px-3 py-2 text-sm font-bold ${
                   requestMode === "recurring"
                     ? "bg-black text-white"
-                    : "bg-[#f3f2f1] text-black"
+                    : "bg-[#f4f4f5] text-black"
                 }`}
               >
                 Recurring

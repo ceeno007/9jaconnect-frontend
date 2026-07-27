@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Inter, Source_Serif_4 } from "next/font/google";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { AuthProvider } from "@/components/providers/auth-provider";
@@ -7,10 +7,17 @@ import { MotionProvider } from "@/components/providers/motion-provider";
 import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
-const roboto = Roboto({
+const inter = Inter({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["400"],
   display: "swap",
 });
 
@@ -29,7 +36,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roboto.variable} h-full`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${sourceSerif.variable} h-full`}
+    >
       <body
         className="flex min-h-full flex-col antialiased"
         suppressHydrationWarning

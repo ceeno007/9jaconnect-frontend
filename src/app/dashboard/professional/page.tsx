@@ -117,7 +117,7 @@ export default function ProfessionalDashboardPage() {
                       {ticket.customer_name || "Customer request"}
                     </p>
                   </div>
-                  <span className="rounded-full bg-[#f3f2f1] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
+                  <span className="rounded-full bg-[#f4f4f5] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
                     {String(ticket.status || "open").replaceAll("_", " ")}
                   </span>
                 </Link>
@@ -153,7 +153,7 @@ export default function ProfessionalDashboardPage() {
                       {item.customer_name || "Customer arrangement"}
                     </p>
                   </div>
-                  <span className="rounded-full bg-[#f3f2f1] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
+                  <span className="rounded-full bg-[#f4f4f5] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
                     {String(item.status || "active").replaceAll("_", " ")}
                   </span>
                 </div>

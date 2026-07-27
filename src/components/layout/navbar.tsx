@@ -71,7 +71,7 @@ function AccountAvatar({
   const className =
     size === "sm"
       ? "h-5 w-5 rounded-full object-cover"
-      : "h-8 w-8 rounded-full object-cover ring-1 ring-[#e4e2e0]";
+      : "h-8 w-8 rounded-full object-cover ring-1 ring-cloud";
 
   if (photoUrl) {
     return (
@@ -127,8 +127,8 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#e4e2e0] bg-white">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 lg:px-6">
+    <header className="sticky top-0 z-50 bg-paper-warmth shadow-[var(--shadow-nav)]">
+      <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-6 px-4 lg:px-6">
         <Logo compact className="shrink-0" />
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -146,13 +146,13 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "relative px-3 py-5 text-[15px] font-bold text-[#2d2d2d] transition hover:text-black",
-                  active && "text-black",
+                  "relative px-3 py-5 text-[14px] font-normal text-graphite transition hover:text-obsidian",
+                  active && "font-medium text-obsidian",
                 )}
               >
                 {link.label}
                 {active ? (
-                  <span className="absolute inset-x-2 bottom-0 h-[3px] rounded-full bg-black" />
+                  <span className="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-obsidian" />
                 ) : null}
               </Link>
             );
@@ -162,7 +162,7 @@ export function Navbar() {
         <div className="ml-auto hidden items-center gap-1 md:flex">
           <Link
             href={messagesHref}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#2d2d2d] hover:bg-[#f3f2f1]"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-graphite hover:bg-paper"
             aria-label="Messages"
           >
             <MessageSquare className="h-5 w-5" />
@@ -170,19 +170,19 @@ export function Navbar() {
           <NotificationsMenu />
           <Link
             href={accountHref}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#2d2d2d] hover:bg-[#f3f2f1]"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-graphite hover:bg-paper"
             aria-label="Account"
           >
             <AccountAvatar photoUrl={photoUrl} name={user?.full_name} />
           </Link>
 
-          <span className="mx-2 h-6 w-px bg-[#e4e2e0]" />
+          <span className="mx-2 h-6 w-px bg-cloud" />
 
           {isAuthenticated ? (
             <button
               type="button"
               onClick={() => void logout()}
-              className="px-2 text-[15px] font-bold text-[#2d2d2d] hover:underline"
+              className="px-2 text-[14px] font-normal text-graphite hover:underline"
             >
               Log out
             </button>
@@ -190,12 +190,12 @@ export function Navbar() {
             <div className="flex items-center gap-3">
               <Link
                 href="/signup/customer"
-                className="px-2 text-[15px] font-bold text-[#2d2d2d] hover:underline"
+                className="px-2 text-[14px] font-normal text-graphite hover:underline"
               >
                 Sign up
               </Link>
               <Link href="/signup/professional">
-                <Button size="sm" className="rounded-full px-4">
+                <Button size="sm" className="rounded-[var(--radius-pill)] px-5">
                   List as Pro
                 </Button>
               </Link>
@@ -251,7 +251,7 @@ export function Navbar() {
               exit="closed"
               variants={panelVariants}
             >
-              <div className="flex h-16 items-center justify-between border-b border-[#e4e2e0] px-5">
+              <div className="flex h-16 items-center justify-between border-b border-[#ececee] px-5">
                 <Logo compact />
               </div>
 

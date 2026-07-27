@@ -19,7 +19,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <label className="flex w-full flex-col gap-2.5">
         {label ? (
-          <span className="text-lg font-bold text-foreground">
+          <span className="text-[15px] font-medium text-graphite">
             {label}
             {props.required ? <span className="text-danger"> *</span> : null}
           </span>

@@ -91,9 +91,9 @@ export default function LoginPage() {
               disabled={pending}
             />
             <div className="my-8 flex items-center gap-4 text-sm font-bold uppercase tracking-wide text-muted">
-              <span className="h-px flex-1 bg-[#dadce0]" />
+              <span className="h-px flex-1 bg-[#ececee]" />
               or
-              <span className="h-px flex-1 bg-[#dadce0]" />
+              <span className="h-px flex-1 bg-[#ececee]" />
             </div>
           </>
         ) : null}

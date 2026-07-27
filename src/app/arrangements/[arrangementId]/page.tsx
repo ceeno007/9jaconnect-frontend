@@ -201,7 +201,7 @@ export default function ArrangementDetailPage() {
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <section className="ui-card space-y-4 p-6">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-[#f3f2f1] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
+            <span className="rounded-full bg-[#f4f4f5] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
               {String(arrangement.status || "active").replaceAll("_", " ")}
             </span>
             {arrangement.review_interval ? (
@@ -220,7 +220,7 @@ export default function ArrangementDetailPage() {
           ) : null}
 
           {isCustomer && !ended ? (
-            <div className="space-y-4 border-t border-[#e4e2e0] pt-4">
+            <div className="space-y-4 border-t border-[#ececee] pt-4">
               <form className="space-y-3" onSubmit={onUpdateInterval}>
                 <Select
                   label="Review interval"

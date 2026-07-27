@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 export function Skeleton({ className }: { className?: string }) {
   return (
     <div
-      className={cn("animate-pulse rounded-[12px] bg-[#f3f2f1]", className)}
+      className={cn("animate-pulse rounded-[12px] bg-[#f4f4f5]", className)}
       aria-hidden
     />
   );
@@ -65,7 +65,7 @@ export function FormSkeleton() {
 export function ProfessionalProfileSkeleton() {
   return (
     <div className="bg-white" aria-busy="true" aria-label="Loading profile">
-      <div className="border-b border-[#e4e2e0] bg-white">
+      <div className="border-b border-[#ececee] bg-white">
         <div className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
           <Skeleton className="mb-5 h-10 w-24 rounded-full" />
           <div className="mb-3 flex flex-wrap items-center gap-2">

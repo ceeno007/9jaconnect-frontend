@@ -36,14 +36,14 @@ export function Footer() {
   if (hideChrome) return null;
 
   return (
-    <footer className="mt-auto border-t border-[#e4e2e0] bg-white">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-3 lg:px-6">
+    <footer className="mt-auto border-t border-cloud bg-snow">
+      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-3 lg:px-6">
         <div>
-          <h3 className="text-base font-bold text-black">Platform</h3>
-          <ul className="mt-4 space-y-3 text-base font-semibold text-muted">
+          <h3 className="text-[14px] font-semibold text-obsidian">Platform</h3>
+          <ul className="mt-4 space-y-3 text-[14px] font-normal text-steel">
             {platformLinks.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="transition hover:text-black">
+                <Link href={link.href} className="transition hover:text-obsidian">
                   {link.label}
                 </Link>
               </li>
@@ -52,13 +52,13 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-base font-bold text-black">Categories</h3>
-          <ul className="mt-4 space-y-3 text-base font-semibold text-muted">
+          <h3 className="text-[14px] font-semibold text-obsidian">Categories</h3>
+          <ul className="mt-4 space-y-3 text-[14px] font-normal text-steel">
             {categories.map((category) => (
               <li key={category.id}>
                 <Link
                   href={`/find?category=${category.id}`}
-                  className="transition hover:text-black"
+                  className="transition hover:text-obsidian"
                 >
                   {category.name}
                 </Link>
@@ -68,12 +68,12 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-base font-bold text-black">Contact</h3>
-          <ul className="mt-4 space-y-3 text-base font-semibold text-muted">
+          <h3 className="text-[14px] font-semibold text-obsidian">Contact</h3>
+          <ul className="mt-4 space-y-3 text-[14px] font-normal text-steel">
             <li>
               <a
                 href={`mailto:${SITE.email}`}
-                className="transition hover:text-black hover:underline"
+                className="transition hover:text-obsidian hover:underline"
               >
                 {SITE.email}
               </a>
@@ -97,10 +97,10 @@ export function Footer() {
               </a>
             </li>
           </ul>
-          <ul className="mt-6 space-y-3 text-base font-semibold text-muted">
+          <ul className="mt-6 space-y-3 text-[14px] font-normal text-steel">
             {legalLinks.map((link) => (
               <li key={link.label}>
-                <Link href={link.href} className="transition hover:text-black">
+                <Link href={link.href} className="transition hover:text-obsidian">
                   {link.label}
                 </Link>
               </li>
@@ -109,8 +109,8 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-[#e4e2e0] bg-[#fafafa]">
-        <div className="mx-auto max-w-7xl px-4 py-5 text-sm font-semibold text-muted lg:px-6">
+      <div className="border-t border-cloud bg-paper">
+        <div className="mx-auto max-w-[1200px] px-4 py-5 text-[13px] font-normal text-fog lg:px-6">
           <p>© {new Date().getFullYear()} 9jaconnect. All rights reserved.</p>
         </div>
       </div>

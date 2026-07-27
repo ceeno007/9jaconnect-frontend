@@ -20,7 +20,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <label className="flex w-full flex-col gap-2.5">
         {label ? (
-          <span className="text-lg font-bold text-foreground">
+          <span className="text-[15px] font-medium text-graphite">
             {label}
             {props.required ? <span className="text-danger"> *</span> : null}
           </span>
@@ -43,7 +43,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               type="button"
               tabIndex={-1}
               onClick={() => setVisible((value) => !value)}
-              className="absolute inset-y-0 right-0 inline-flex w-12 items-center justify-center text-[#5f6368] transition hover:text-black"
+              className="absolute inset-y-0 right-0 inline-flex w-12 items-center justify-center text-fog transition hover:text-obsidian"
               aria-label={visible ? "Hide password" : "Show password"}
               aria-pressed={visible}
             >

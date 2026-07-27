@@ -599,7 +599,7 @@ export default function ProfessionalProfileEditPage() {
               {gallery.map((item, index) => (
                 <div
                   key={item.id}
-                  className="relative aspect-square overflow-hidden rounded-[12px] bg-[#e8e6e4]"
+                  className="relative aspect-square overflow-hidden rounded-[12px] bg-[#ececee]"
                 >
                   {item.url ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -632,7 +632,7 @@ export default function ProfessionalProfileEditPage() {
               {uploading.map((item) => (
                 <div
                   key={item.id}
-                  className="relative aspect-square overflow-hidden rounded-[12px] bg-[#e8e6e4]"
+                  className="relative aspect-square overflow-hidden rounded-[12px] bg-[#ececee]"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -661,7 +661,7 @@ export default function ProfessionalProfileEditPage() {
                   onClick={() => fileInputRef.current?.click()}
                   className="flex aspect-square flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed border-[#bdbdbd] bg-white px-3 text-center transition hover:border-black hover:bg-[#fafafa] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#f3f2f1] text-black">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#f4f4f5] text-black">
                     <ImagePlus className="h-5 w-5" />
                   </span>
                   <span className="text-sm font-bold text-black">Add photos</span>

@@ -23,7 +23,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[#f7f6f5]">
-      <header className="border-b border-[#e4e2e0] bg-white">
+      <header className="border-b border-[#ececee] bg-white">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 lg:px-6">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-muted">
@@ -53,7 +53,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                   "shrink-0 rounded-[8px] px-3 py-2 text-sm font-bold transition",
                   active
                     ? "bg-black text-white"
-                    : "text-[#2d2d2d] hover:bg-[#f3f2f1]",
+                    : "text-[#2d2d2d] hover:bg-[#f4f4f5]",
                 )}
               >
                 {link.label}

@@ -9,7 +9,7 @@ function VerifiedBadge({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center gap-1 rounded-[6px] bg-[#0f9d58] px-1.5 py-0.5 text-[11px] font-bold leading-none text-white",
+        "inline-flex shrink-0 items-center gap-1 rounded-[var(--radius-badges)] bg-verified px-2 py-0.5 text-[12px] font-medium leading-none text-snow",
         className,
       )}
     >
@@ -34,59 +34,55 @@ export function ListingCard({
         className,
       )}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8e6e4]">
+      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-[12px] bg-paper-warmth">
         <MediaFrame
           src={professional.coverImage}
           alt={`${professional.tradeName} work`}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          imageClassName="transition duration-300 group-hover:scale-[1.03]"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          imageClassName="transition duration-200 group-hover:scale-[1.03]"
         />
-        <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1.5">
+        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {professional.verified ? <VerifiedBadge /> : null}
-          <span className="rounded-[6px] bg-black/55 px-1.5 py-0.5 text-[11px] font-bold leading-none text-white backdrop-blur-sm">
+          <span className="rounded-[var(--radius-badges)] bg-obsidian/70 px-2 py-0.5 text-[12px] font-medium leading-none text-snow backdrop-blur-sm">
             {professional.years}+ yrs
           </span>
         </div>
-        <div className="absolute bottom-2.5 right-2.5 rounded-[6px] bg-white px-2 py-1 text-sm font-black text-black">
+        <div className="absolute bottom-3 right-3 rounded-[var(--radius-badges)] bg-snow px-2 py-1 text-[13px] font-semibold text-obsidian">
           {professional.hourlyRate > 0 ? (
             <>
               ₦{professional.hourlyRate.toLocaleString()}
-              <span className="font-bold text-muted"> /hr</span>
+              <span className="font-normal text-steel"> /hr</span>
             </>
           ) : (
-            <span className="text-xs font-bold">Rate on request</span>
+            <span className="text-[12px] font-medium">Rate on request</span>
           )}
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 p-4">
+      <div className="flex flex-1 flex-col gap-3 p-6">
         <div>
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="text-lg font-bold leading-snug text-black group-hover:opacity-70">
-              {professional.tradeName}
-            </h3>
-            <RatingScore
-              value={professional.rating}
-              size="sm"
-              className="shrink-0"
-            />
-          </div>
-          <p className="mt-1 text-sm font-semibold text-muted">
+          <h3 className="text-[18px] font-semibold leading-snug tracking-[-0.01em] text-ink-black group-hover:opacity-70 sm:text-[20px]">
+            {professional.tradeName}
+          </h3>
+          <p className="mt-1 text-[14px] font-normal text-stone">
             {professional.category} · {professional.name}
           </p>
+          <div className="mt-2">
+            <RatingScore value={professional.rating} size="sm" />
+          </div>
         </div>
 
-        <p className="line-clamp-2 text-sm font-medium leading-relaxed text-[#9aa0a6]">
+        <p className="line-clamp-2 text-[14px] font-normal leading-relaxed text-fog">
           {professional.description}
         </p>
 
-        <p className="mt-auto flex items-center gap-1 pt-1 text-sm font-semibold text-muted">
-          <MapPin className="h-3.5 w-3.5 shrink-0 text-black" />
+        <p className="mt-auto flex items-center gap-1 pt-1 text-[13px] font-normal text-stone">
+          <MapPin className="h-3.5 w-3.5 shrink-0 text-ink-black/60" />
           <span className="truncate">
             {professional.state}, {professional.lga}
           </span>
-          <span className="ml-auto shrink-0 font-bold text-black">
+          <span className="ml-auto shrink-0 font-medium text-ink-black/60">
             {professional.reviews} reviews
           </span>
         </p>
@@ -103,9 +99,9 @@ export function ListingCardCompact({
   return (
     <Link
       href={`/professionals/${professional.id}`}
-      className="listing-card flex gap-3 overflow-hidden p-3"
+      className="listing-card flex gap-3 overflow-hidden p-4"
     >
-      <div className="relative h-[84px] w-[84px] shrink-0 overflow-hidden rounded-[10px] bg-[#e8e6e4]">
+      <div className="relative h-[84px] w-[84px] shrink-0 overflow-hidden rounded-[8px] bg-cloud">
         <MediaFrame
           src={professional.coverImage}
           alt={`${professional.tradeName} work`}
@@ -113,7 +109,7 @@ export function ListingCardCompact({
           sizes="84px"
         />
         {professional.verified ? (
-          <span className="absolute left-1 top-1 inline-flex items-center gap-0.5 rounded-[5px] bg-[#0f9d58] px-1 py-0.5 text-[10px] font-bold leading-none text-white">
+          <span className="absolute left-1.5 top-1.5 inline-flex items-center gap-0.5 rounded-[var(--radius-badges)] bg-verified px-1.5 py-0.5 text-[10px] font-medium leading-none text-snow">
             <BadgeCheck className="h-2.5 w-2.5" />
             Verified
           </span>
@@ -121,27 +117,29 @@ export function ListingCardCompact({
       </div>
 
       <div className="min-w-0 flex-1 space-y-1.5">
-        <h3 className="line-clamp-1 text-[15px] font-bold leading-snug text-black">
+        <h3 className="line-clamp-1 text-[15px] font-semibold leading-snug text-obsidian">
           {professional.tradeName}
         </h3>
-        <p className="line-clamp-1 text-xs font-semibold text-muted">
+        <p className="line-clamp-1 text-[13px] font-normal text-steel">
           {professional.category}
         </p>
-        <p className="line-clamp-1 text-xs font-medium text-muted">
+        <p className="line-clamp-1 text-[13px] font-normal text-fog">
           {professional.state}, {professional.lga}
         </p>
         <div className="flex items-center justify-between gap-2 pt-0.5">
-          <p className="min-w-0 truncate text-sm font-black text-black">
+          <p className="min-w-0 truncate text-[14px] font-semibold text-obsidian">
             {professional.hourlyRate > 0 ? (
               <>
                 ₦{professional.hourlyRate.toLocaleString()}
-                <span className="font-bold text-muted"> /hr</span>
+                <span className="font-normal text-steel"> /hr</span>
               </>
             ) : (
-              <span className="text-xs font-bold text-muted">Rate on request</span>
+              <span className="text-[12px] font-medium text-steel">
+                Rate on request
+              </span>
             )}
           </p>
-          <span className="inline-flex shrink-0 items-center gap-1 text-xs font-bold tabular-nums text-[#8a8f96]">
+          <span className="inline-flex shrink-0 items-center gap-1 text-[12px] font-medium tabular-nums text-fog">
             <svg viewBox="0 0 16 16" aria-hidden className="h-3.5 w-3.5">
               <path
                 fill="currentColor"

@@ -101,11 +101,11 @@ export default function CustomerDashboardPage() {
       <PageShell title="Customer dashboard">
         <div className="space-y-8">
           <section>
-            <div className="mb-4 h-8 w-48 animate-pulse rounded-[8px] bg-[#f3f2f1]" />
+            <div className="mb-4 h-8 w-48 animate-pulse rounded-[8px] bg-[#f4f4f5]" />
             <TicketListSkeleton count={2} />
           </section>
           <section>
-            <div className="mb-4 h-8 w-56 animate-pulse rounded-[8px] bg-[#f3f2f1]" />
+            <div className="mb-4 h-8 w-56 animate-pulse rounded-[8px] bg-[#f4f4f5]" />
             <TicketListSkeleton count={3} />
           </section>
         </div>
@@ -196,7 +196,7 @@ export default function CustomerDashboardPage() {
                         {ticket.category_name || "Service request"}
                       </p>
                     </div>
-                    <span className="rounded-full bg-[#f3f2f1] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
+                    <span className="rounded-full bg-[#f4f4f5] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
                       {String(ticket.status || "open").replaceAll("_", " ")}
                     </span>
                   </Link>
@@ -232,7 +232,7 @@ export default function CustomerDashboardPage() {
                           "Recurring service"}
                       </p>
                     </div>
-                    <span className="rounded-full bg-[#f3f2f1] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
+                    <span className="rounded-full bg-[#f4f4f5] px-3 py-1 text-xs font-bold uppercase tracking-wide text-black">
                       {String(item.status || "active").replaceAll("_", " ")}
                     </span>
                   </Link>

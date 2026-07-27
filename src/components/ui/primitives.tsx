@@ -5,9 +5,7 @@ export function Card({
   className,
   ...props
 }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn("ui-card p-6", className)} {...props} />
-  );
+  return <div className={cn("ui-card p-7", className)} {...props} />;
 }
 
 export function Badge({
@@ -17,7 +15,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full bg-white px-3 py-1 text-sm font-bold text-black",
+        "inline-flex items-center rounded-[var(--radius-badges)] border border-cloud bg-transparent px-2 py-1 text-[13px] font-normal text-graphite",
         className,
       )}
       {...props}
@@ -39,13 +37,13 @@ export function SectionHeading({
   return (
     <div className={cn("max-w-2xl", className)}>
       {eyebrow ? (
-        <p className="mb-2 text-base font-bold text-black">{eyebrow}</p>
+        <p className="mb-2 text-[13px] font-medium text-fog">{eyebrow}</p>
       ) : null}
-      <h2 className="text-4xl font-bold tracking-tight text-black sm:text-5xl">
+      <h2 className="text-[32px] font-semibold leading-[1.28] tracking-normal text-obsidian sm:text-[40px]">
         {title}
       </h2>
       {description ? (
-        <p className="mt-4 text-lg font-medium leading-relaxed text-muted">
+        <p className="mt-4 text-[15px] font-normal leading-[1.45] text-steel">
           {description}
         </p>
       ) : null}
@@ -64,13 +62,15 @@ export function EmptyState({
 }) {
   return (
     <div className="ui-card px-8 py-16 text-center">
-      <h3 className="text-2xl font-bold text-black">{title}</h3>
+      <h3 className="text-[20px] font-semibold text-obsidian">{title}</h3>
       {description ? (
-        <p className="mx-auto mt-3 max-w-md text-base font-medium text-muted">
+        <p className="mx-auto mt-3 max-w-md text-[15px] font-normal text-steel">
           {description}
         </p>
       ) : null}
-      {children ? <div className="mt-6 flex justify-center">{children}</div> : null}
+      {children ? (
+        <div className="mt-6 flex justify-center">{children}</div>
+      ) : null}
     </div>
   );
 }
@@ -87,14 +87,14 @@ export function PageShell({
   actions?: ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-10 flex flex-col gap-5 border-b border-[#e4e2e0] pb-8 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mx-auto w-full max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mb-10 flex flex-col gap-5 border-b border-cloud pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-black sm:text-5xl">
+          <h1 className="text-[32px] font-semibold leading-[1.28] tracking-normal text-obsidian sm:text-[40px]">
             {title}
           </h1>
           {description ? (
-            <p className="mt-3 max-w-2xl text-lg font-medium text-muted">
+            <p className="mt-3 max-w-2xl text-[15px] font-normal text-steel">
               {description}
             </p>
           ) : null}

@@ -10,7 +10,7 @@ export default function MarketplaceLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white">
+    <div className="bg-paper-warmth">
       <Suspense fallback={<MarketplaceSearchBarFallback />}>
         <MarketplaceSearchBar />
       </Suspense>
