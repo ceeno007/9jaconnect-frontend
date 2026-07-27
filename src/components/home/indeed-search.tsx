@@ -98,7 +98,7 @@ export function IndeedStyleSearch({
       transition={morphTransition}
       onSubmit={onSubmit}
       className={cn(
-        "grid w-full overflow-hidden rounded-[14px] border border-cloud bg-snow",
+        "grid w-full overflow-hidden rounded-[8px] border border-cloud bg-snow",
         "grid-cols-2 sm:flex sm:flex-row sm:items-stretch",
         className,
       )}

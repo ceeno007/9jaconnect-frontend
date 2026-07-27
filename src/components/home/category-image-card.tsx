@@ -24,7 +24,7 @@ export function CategoryImageCard({
     <Link
       href={href}
       className={cn(
-        "group relative flex min-h-[220px] flex-col overflow-hidden rounded-[12px] border border-black/[0.08] bg-pure-white transition duration-200",
+        "group relative flex min-h-[220px] flex-col overflow-hidden rounded-[6px] border border-black/[0.08] bg-pure-white transition duration-200",
         className,
       )}
     >

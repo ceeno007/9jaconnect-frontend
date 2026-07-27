@@ -9,7 +9,7 @@ export function PixelArtBanner({
 }) {
   return (
     <section className={cn("px-4 lg:px-6", className)}>
-      <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-[12px] border border-black/[0.08] bg-midnight-ink">
+      <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-[6px] border border-black/[0.08] bg-midnight-ink">
         <div className="relative aspect-[21/9] w-full sm:aspect-[24/9]">
           <Image
             src="/images/pixel-marketplace-banner.png"

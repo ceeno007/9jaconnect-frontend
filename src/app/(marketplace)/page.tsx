@@ -77,7 +77,7 @@ export default function HomePage() {
             ? Array.from({ length: 8 }).map((_, index) => (
                 <div
                   key={index}
-                  className="min-h-[220px] animate-pulse overflow-hidden rounded-[12px] border border-black/[0.08] bg-pure-white"
+                  className="min-h-[220px] animate-pulse overflow-hidden rounded-[6px] border border-black/[0.08] bg-pure-white"
                 >
                   <div className="aspect-[4/3] bg-paper-warmth" />
                   <div className="space-y-3 p-6">
@@ -105,19 +105,19 @@ export default function HomePage() {
 
       <section className="px-4 lg:px-6">
         <div className="mx-auto grid max-w-[1200px] gap-4 sm:grid-cols-3">
-          <div className="rounded-[12px] bg-marigold p-6 sm:p-8">
+          <div className="rounded-[6px] bg-marigold p-6 sm:p-8">
             <p className="text-[14px] font-medium text-ink-black/60">Find</p>
             <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em] text-ink-black">
               Pros by trade and location
             </p>
           </div>
-          <div className="rounded-[12px] bg-coral p-6 text-pure-white sm:p-8">
+          <div className="rounded-[6px] bg-coral p-6 text-pure-white sm:p-8">
             <p className="text-[14px] font-medium text-white/70">Verify</p>
             <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em]">
               Check ID-verified listings
             </p>
           </div>
-          <div className="rounded-[12px] bg-sky-wash p-6 sm:p-8">
+          <div className="rounded-[6px] bg-sky-wash p-6 sm:p-8">
             <p className="text-[14px] font-medium text-ink-black/60">Hire</p>
             <p className="mt-2 text-[22px] font-semibold tracking-[-0.01em] text-ink-black">
               Request tickets and chat
@@ -167,7 +167,7 @@ export default function HomePage() {
 
       <section className="bg-paper-warmth">
         <div className="mx-auto grid max-w-[1200px] gap-6 px-4 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-6 lg:py-20">
-          <div className="rounded-[12px] bg-midnight-ink p-8 text-pure-white sm:p-10">
+          <div className="rounded-[6px] bg-midnight-ink p-8 text-pure-white sm:p-10">
             <h2 className="text-[40px] font-semibold leading-[1.14] tracking-[-0.035em] text-pure-white !text-[#ffffff] sm:text-[48px]">
               Hire in three clear steps
             </h2>
@@ -188,7 +188,7 @@ export default function HomePage() {
             </ul>
           </div>
 
-          <div className="flex flex-col justify-between gap-8 rounded-[12px] bg-marigold p-8 sm:p-10">
+          <div className="flex flex-col justify-between gap-8 rounded-[6px] bg-marigold p-8 sm:p-10">
             <div>
               <p className="display-tighter text-[96px] font-bold leading-[0.9] text-ink-black sm:text-[128px]">
                 11+

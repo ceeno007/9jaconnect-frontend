@@ -34,7 +34,7 @@ export function ListingCard({
         className,
       )}
     >
-      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-[12px] bg-paper-warmth">
+      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-[6px] bg-paper-warmth">
         <MediaFrame
           src={professional.coverImage}
           alt={`${professional.tradeName} work`}
