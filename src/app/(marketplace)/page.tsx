@@ -101,9 +101,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <PixelArtBanner className="pb-4" />
+      <PixelArtBanner className="pb-0" />
 
-      <section className="px-4 lg:px-6">
+      <section className="px-4 pt-10 lg:px-6 lg:pt-12">
         <div className="mx-auto grid max-w-[1200px] gap-4 sm:grid-cols-3">
           <div className="rounded-[6px] bg-marigold p-6 sm:p-8">
             <p className="text-[14px] font-medium text-ink-black/60">Find</p>
@@ -128,11 +128,11 @@ export default function HomePage() {
 
       <MarketplaceAds
         pageContext="home"
-        className="mx-auto max-w-[1200px] space-y-3 px-4 py-8 lg:px-6"
+        className="mx-auto max-w-[1200px] space-y-3 px-4 py-0 lg:px-6"
       />
 
-      <section className="bg-pure-white">
-        <div className="mx-auto max-w-[1200px] px-4 py-16 lg:px-6 lg:py-20">
+      <section className="bg-paper-warmth">
+        <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-10 lg:px-6 lg:pb-20 lg:pt-12">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
               <div className="mb-3">
