@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
-import { CookieBanner } from "@/components/layout/cookie-banner";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
+import { ThirdPartyCookieConsent } from "@/components/layout/third-party-cookie-consent";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { MotionProvider } from "@/components/providers/motion-provider";
 import { ToastProvider } from "@/components/ui/toast";
@@ -79,7 +79,7 @@ export default function RootLayout({
               <Navbar />
               <main className="flex-1">{children}</main>
               <Footer />
-              <CookieBanner />
+              <ThirdPartyCookieConsent />
             </ToastProvider>
           </AuthProvider>
         </MotionProvider>
