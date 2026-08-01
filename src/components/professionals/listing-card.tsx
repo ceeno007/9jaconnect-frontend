@@ -42,12 +42,7 @@ export function ListingCard({
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           imageClassName="transition duration-200 group-hover:scale-[1.03]"
         />
-        <div className="absolute left-2.5 top-2.5 flex flex-wrap gap-1.5 sm:left-3 sm:top-3">
-          {professional.verified ? <VerifiedBadge /> : null}
-          <span className="rounded-[var(--radius-badges)] bg-obsidian/70 px-2 py-0.5 text-[12px] font-medium leading-none text-snow backdrop-blur-sm">
-            {professional.years}+ yrs
-          </span>
-        </div>
+
         <div className="absolute bottom-2.5 right-2.5 rounded-[var(--radius-badges)] bg-snow px-2 py-1 text-[12px] font-semibold text-obsidian sm:bottom-3 sm:right-3 sm:text-[13px]">
           {professional.hourlyRate > 0 ? (
             <>

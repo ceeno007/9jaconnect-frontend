@@ -196,20 +196,21 @@ h4 {
 .ui-card,
 .listing-card,
 .flat-panel {
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: none !important;
+  border: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
   outline: none !important;
   filter: none !important;
   background: var(--color-pure-white) !important;
-  border-radius: var(--radius-cards) !important;
+  border-radius: 12px !important;
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .listing-card:hover,
 .ui-card:hover {
-  border-color: rgba(0, 0, 0, 0.14) !important;
+  border: none !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07) !important;
 }
 
 .listing-card:focus-visible,

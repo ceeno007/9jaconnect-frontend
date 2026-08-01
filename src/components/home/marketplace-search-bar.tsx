@@ -17,22 +17,23 @@ export function MarketplaceSearchBar() {
   const searchParams = useSearchParams();
   const isFind = pathname.startsWith("/find");
 
+  if (!isFind) {
+    return null;
+  }
+
   return (
     <motion.section
       layout
       transition={morphTransition}
-      className={cn(
-        "border-b border-black/[0.08] bg-paper-warmth",
-        isFind ? "py-4 sm:py-6" : "pb-6 pt-5 sm:pb-12 sm:pt-10",
-      )}
+      className="border-b border-black/[0.06] bg-paper-warmth py-4 sm:py-6"
     >
       <motion.div
         layout
         transition={morphTransition}
-        className="mx-auto max-w-[1200px] px-5 sm:px-6 lg:px-6"
+        className="mx-auto max-w-[1200px] px-5 sm:px-6 lg:px-6 space-y-4"
       >
         <IndeedStyleSearch
-          className={cn(isFind ? "max-w-none" : "max-w-5xl")}
+          className="max-w-none"
           initialKeyword={searchParams.get("keyword") ?? ""}
           initialState={searchParams.get("state") ?? ""}
           initialLga={searchParams.get("lga") ?? ""}
@@ -44,11 +45,6 @@ export function MarketplaceSearchBar() {
 }
 
 export function MarketplaceSearchBarFallback() {
-  return (
-    <section className="border-b border-black/[0.08] bg-paper-warmth pb-10 pt-8 sm:pb-12 sm:pt-10">
-      <div className="mx-auto max-w-[1200px] px-5 sm:px-6">
-        <IndeedStyleSearch className="max-w-5xl" />
-      </div>
-    </section>
-  );
+  return null;
 }
+

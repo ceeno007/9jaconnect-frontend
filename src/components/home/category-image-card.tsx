@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { imageForCategory } from "@/lib/category-imagery";
+import { ChevronRight } from "lucide-react";
+import { iconForCategory } from "@/lib/category-icons";
 import { cn } from "@/lib/utils";
 
 export function CategoryImageCard({
@@ -8,7 +9,6 @@ export function CategoryImageCard({
   name,
   slug,
   iconKey,
-  accent,
   className,
 }: {
   href: string;
@@ -18,37 +18,36 @@ export function CategoryImageCard({
   accent?: "marigold" | "coral" | null;
   className?: string;
 }) {
-  const src = imageForCategory(slug, name, iconKey);
+  const icon = iconForCategory(slug, name, iconKey);
 
   return (
     <Link
       href={href}
       className={cn(
-        "group relative flex min-h-[220px] flex-col overflow-hidden rounded-[6px] border border-black/[0.08] bg-pure-white transition duration-200",
+        "group flex items-center gap-4 rounded-xl bg-white p-4 sm:p-5 shadow-xs border-0 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5",
         className,
       )}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-paper-warmth">
+      {/* Colorful illustrated icon container */}
+      <div className="relative h-12 w-12 shrink-0 flex items-center justify-center rounded-lg bg-neutral-100/70 p-1.5 transition-colors group-hover:bg-neutral-100">
         <Image
-          src={src}
+          src={icon}
           alt={name}
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 280px"
-          className="object-cover transition duration-200 group-hover:scale-[1.03]"
+          width={40}
+          height={40}
+          style={{ width: "auto", height: "auto" }}
+          className="max-h-10 max-w-10 object-contain"
+          unoptimized
         />
-        {accent === "marigold" ? (
-          <span className="badge-marigold absolute left-3 top-3">Popular</span>
-        ) : null}
-        {accent === "coral" ? (
-          <span className="badge-coral absolute left-3 top-3">Featured</span>
-        ) : null}
       </div>
-      <div className="flex flex-1 flex-col justify-between gap-3 p-6">
-        <h3 className="text-[20px] font-semibold leading-snug tracking-[-0.01em] text-ink-black sm:text-[22px]">
-          {name}
-        </h3>
-        <span className="badge-tag w-fit">Browse</span>
-      </div>
+
+      {/* Category name */}
+      <span className="flex-1 text-[15px] sm:text-[16px] font-semibold text-neutral-900 leading-snug group-hover:text-black">
+        {name}
+      </span>
+
+      {/* Chevron arrow */}
+      <ChevronRight className="h-5 w-5 shrink-0 text-neutral-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-neutral-800" />
     </Link>
   );
 }

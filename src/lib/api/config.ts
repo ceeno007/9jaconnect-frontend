@@ -24,7 +24,6 @@ export function getBackendOrigin() {
  * - Server: direct backend origin
  */
 export function getApiBaseUrl() {
-  if (typeof window !== "undefined") return "";
   return getBackendOrigin();
 }
 
