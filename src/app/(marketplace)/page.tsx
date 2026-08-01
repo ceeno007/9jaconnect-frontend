@@ -197,31 +197,6 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-
-          {/* Centered Action Button */}
-          {!authLoading && !isCustomer ? (
-            <div className="mt-12 text-center">
-              {isProfessional ? (
-                <Link href="/dashboard/professional">
-                  <Button
-                    size="lg"
-                    className="rounded-lg bg-[#84cc16] hover:bg-[#65a30d] text-white font-bold px-10 py-6 text-[16px] shadow-sm transition-transform active:scale-[0.98]"
-                  >
-                    View job requests
-                  </Button>
-                </Link>
-              ) : (
-                <Link href="/signup/customer">
-                  <Button
-                    size="lg"
-                    className="rounded-lg bg-[#84cc16] hover:bg-[#65a30d] text-white font-bold px-10 py-6 text-[16px] shadow-sm transition-transform active:scale-[0.98]"
-                  >
-                    Post a job
-                  </Button>
-                </Link>
-              )}
-            </div>
-          ) : null}
         </div>
       </section>
 
