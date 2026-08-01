@@ -17,5 +17,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
+    sitemap: "https://9jaconnect.vercel.app/sitemap.xml",
   };
 }
