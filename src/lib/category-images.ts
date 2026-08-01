@@ -8,7 +8,7 @@ const CATEGORY_PHOTO_MAP: Record<string, string> = {
   "cleaning-pest-control":
     "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
   "auto-transport-logistics":
-    "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=800&q=80",
   "construction-carpentry-metal-works":
     "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80",
   "beauty-personal-care":
