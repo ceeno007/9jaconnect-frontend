@@ -19,9 +19,9 @@ export function middleware(request: NextRequest) {
   if (localeMatch) {
     const locale = localeMatch[1].toLowerCase();
     const targetPath = localeMatch[2] || "/";
-    const url = request.nextUrl.clone();
-    url.pathname = targetPath;
-    const response = NextResponse.rewrite(url);
+    const targetUrl = new URL(targetPath, request.url);
+    targetUrl.search = request.nextUrl.search;
+    const response = NextResponse.rewrite(targetUrl);
     response.cookies.set("9jaconnect_locale", locale, { path: "/", maxAge: 31536000 });
     return response;
   }
@@ -63,24 +63,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/ng-en",
-    "/ng-en/:path*",
-    "/gh-en",
-    "/gh-en/:path*",
-    "/ke-en",
-    "/ke-en/:path*",
-    "/za-en",
-    "/za-en/:path*",
-    "/gb-en",
-    "/gb-en/:path*",
-    "/us-en",
-    "/us-en/:path*",
-    "/admin",
-    "/admin/:path*",
-    "/admin-gate",
-    "/admin-gate/:path*",
-    "/:authBase/login",
-    "/:authBase/forgot-password",
-    "/:authBase/reset-password",
+    "/((?!_next/static|_next/image|favicon.ico|icon.png|apple-icon.png).*)",
   ],
 };
