@@ -27,6 +27,12 @@ export default function OpsResetPasswordInner() {
     const password = String(form.get("password") || "");
     const confirm = String(form.get("confirmPassword") || "");
 
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      setPending(false);
+      return;
+    }
+
     if (password !== confirm) {
       setError("Passwords do not match.");
       setPending(false);
