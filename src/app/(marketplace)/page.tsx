@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { listCategories, listProfessionals } from "@/lib/api";
 import { mapDirectoryProfessional } from "@/lib/api/mappers";
 import { IndeedStyleSearch } from "@/components/home/indeed-search";
+import { TrustStatsCarousel } from "@/components/home/trust-stats-carousel";
 import type { Category } from "@/lib/api/types";
 import type { Professional } from "@/lib/types";
 
@@ -94,37 +95,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Trust Stats Strip - RatedPeople style */}
-      <section className="bg-pure-white py-10 sm:py-12">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-6 lg:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <h3 className="text-[20px] sm:text-[22px] font-black text-neutral-950 mb-1 tracking-tight">
-                Over 10,000 rated tradespeople
-              </h3>
-              <p className="text-[14px] sm:text-[15px] font-semibold text-neutral-600">
-                are ready to help you get your job done
-              </p>
-            </div>
-            <div>
-              <h3 className="text-[20px] sm:text-[22px] font-black text-neutral-950 mb-1 tracking-tight">
-                Over 500,000 happy customers
-              </h3>
-              <p className="text-[14px] sm:text-[15px] font-semibold text-neutral-600">
-                have found a quality local tradesperson
-              </p>
-            </div>
-            <div>
-              <h3 className="text-[20px] sm:text-[22px] font-black text-neutral-950 mb-1 tracking-tight">
-                100% ID-verified professionals
-              </h3>
-              <p className="text-[14px] sm:text-[15px] font-semibold text-neutral-600">
-                with real ratings & customer reviews
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Trust Stats Carousel */}
+      <TrustStatsCarousel />
 
       {/* Marketplace Ads */}
       <div className="bg-paper-warmth/30 pt-6">
