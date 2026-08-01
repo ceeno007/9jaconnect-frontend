@@ -32,15 +32,54 @@ export function imageForCategory(
   name?: string | null,
   imageUrl?: string | null,
 ): string {
-  if (imageUrl) return imageUrl;
-  if (slug && CATEGORY_PHOTO_MAP[slug]) return CATEGORY_PHOTO_MAP[slug];
-
-  const normalized = (name || "").toLowerCase();
-  for (const [key, url] of Object.entries(CATEGORY_PHOTO_MAP)) {
-    if (normalized.includes(key.replace(/-/g, " "))) {
-      return url;
-    }
+  // Only return backend imageUrl if it's a valid non-empty HTTP/HTTPS URL
+  if (imageUrl && (imageUrl.startsWith("http://") || imageUrl.startsWith("https://"))) {
+    return imageUrl;
   }
 
-  return "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80";
+  const slugClean = (slug || "").toLowerCase().trim();
+  if (slugClean && CATEGORY_PHOTO_MAP[slugClean]) {
+    return CATEGORY_PHOTO_MAP[slugClean];
+  }
+
+  const nameClean = (name || "").toLowerCase();
+
+  if (nameClean.includes("electrical") || nameClean.includes("solar") || nameClean.includes("generator")) {
+    return CATEGORY_PHOTO_MAP["electrical-solar-generator"];
+  }
+  if (nameClean.includes("plumb") || nameClean.includes("water")) {
+    return CATEGORY_PHOTO_MAP["plumbing-water-systems"];
+  }
+  if (nameClean.includes("repair") || nameClean.includes("handyman")) {
+    return CATEGORY_PHOTO_MAP["home-repairs-handyman"];
+  }
+  if (nameClean.includes("clean") || nameClean.includes("pest")) {
+    return CATEGORY_PHOTO_MAP["cleaning-pest-control"];
+  }
+  if (nameClean.includes("auto") || nameClean.includes("transport") || nameClean.includes("logistics")) {
+    return CATEGORY_PHOTO_MAP["auto-transport-logistics"];
+  }
+  if (nameClean.includes("construction") || nameClean.includes("carpentry") || nameClean.includes("metal")) {
+    return CATEGORY_PHOTO_MAP["construction-carpentry-metal-works"];
+  }
+  if (nameClean.includes("beauty") || nameClean.includes("personal care")) {
+    return CATEGORY_PHOTO_MAP["beauty-personal-care"];
+  }
+  if (nameClean.includes("fashion") || nameClean.includes("tailor")) {
+    return CATEGORY_PHOTO_MAP["fashion-tailoring"];
+  }
+  if (nameClean.includes("event") || nameClean.includes("photo") || nameClean.includes("creative")) {
+    return CATEGORY_PHOTO_MAP["events-photography-creative-services"];
+  }
+  if (nameClean.includes("domestic") || nameClean.includes("caregiving") || nameClean.includes("staff")) {
+    return CATEGORY_PHOTO_MAP["domestic-staff-caregiving"];
+  }
+  if (nameClean.includes("education") || nameClean.includes("training") || nameClean.includes("business")) {
+    return CATEGORY_PHOTO_MAP["education-training-business-services"];
+  }
+  if (nameClean.includes("ac") || nameClean.includes("refrigeration")) {
+    return CATEGORY_PHOTO_MAP["ac-refrigeration"];
+  }
+
+  return CATEGORY_PHOTO_MAP["home-repairs-handyman"];
 }
