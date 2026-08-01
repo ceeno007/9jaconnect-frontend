@@ -16,20 +16,20 @@ import type { Professional } from "@/lib/types";
 const HOW_IT_WORKS = [
   {
     stepLabel: "Step 1",
-    title: "Post your job for free",
-    body: "Our simple form will help you to provide the right detail for accurate, relevant quotes.",
+    title: "Search local pros",
+    body: "Search by state, LGA, and trade category to find top rated professionals in your area.",
     image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
   },
   {
     stepLabel: "Step 2",
-    title: "Get quotes",
-    body: "We'll match you with rated tradespeople who'll get in touch to discuss your needs.",
+    title: "Compare ratings & profiles",
+    body: "Check real customer reviews, work photos, and verified credentials to pick the right expert.",
     image: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=800&q=80",
   },
   {
     stepLabel: "Step 3",
-    title: "Choose a tradesperson",
-    body: "Check out their profile, reviews and gallery to pick the right person for the job.",
+    title: "Connect & hire directly",
+    body: "Contact your chosen tradesperson directly or open a request to get your job done with ease.",
     image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80",
   },
 ];
