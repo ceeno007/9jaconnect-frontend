@@ -158,6 +158,7 @@ export default function HomePage() {
                     name={category.name}
                     slug={category.slug}
                     iconKey={category.icon_key}
+                    imageUrl={category.image_url}
                   />
                 ))}
           </div>

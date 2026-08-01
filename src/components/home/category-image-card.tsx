@@ -1,53 +1,55 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { iconForCategory } from "@/lib/category-icons";
+import { imageForCategory } from "@/lib/category-images";
 import { cn } from "@/lib/utils";
 
 export function CategoryImageCard({
   href,
   name,
   slug,
-  iconKey,
+  imageUrl,
   className,
 }: {
   href: string;
   name: string;
   slug?: string | null;
   iconKey?: string | null;
+  imageUrl?: string | null;
   accent?: "marigold" | "coral" | null;
   className?: string;
 }) {
-  const icon = iconForCategory(slug, name, iconKey);
+  const photoUrl = imageForCategory(slug, name, imageUrl);
 
   return (
     <Link
       href={href}
       className={cn(
-        "group flex items-center gap-4 rounded-xl bg-white p-4 sm:p-5 shadow-xs border-0 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5",
+        "group relative flex h-[76px] sm:h-[84px] items-center justify-between overflow-hidden rounded-xl bg-neutral-900 p-4 sm:p-5 shadow-xs transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5",
         className,
       )}
     >
-      {/* Colorful illustrated icon container */}
-      <div className="relative h-12 w-12 shrink-0 flex items-center justify-center rounded-lg bg-neutral-100/70 p-1.5 transition-colors group-hover:bg-neutral-100">
-        <Image
-          src={icon}
-          alt={name}
-          width={40}
-          height={40}
-          style={{ width: "auto", height: "auto" }}
-          className="max-h-10 max-w-10 object-contain"
-          unoptimized
-        />
-      </div>
+      {/* Background Photo */}
+      <Image
+        src={photoUrl}
+        alt={name}
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        className="object-cover transition-transform duration-300 group-hover:scale-105"
+      />
 
-      {/* Category name */}
-      <span className="flex-1 text-[15px] sm:text-[16px] font-semibold text-neutral-900 leading-snug group-hover:text-black">
+      {/* Sleek Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/30 transition-opacity duration-200 group-hover:from-black/90 group-hover:via-black/70" />
+
+      {/* Category Name */}
+      <span className="relative z-10 flex-1 text-[15px] sm:text-[16px] font-bold text-white leading-tight drop-shadow-xs tracking-tight">
         {name}
       </span>
 
-      {/* Chevron arrow */}
-      <ChevronRight className="h-5 w-5 shrink-0 text-neutral-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-neutral-800" />
+      {/* Chevron Icon Pill */}
+      <div className="relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/15 backdrop-blur-xs transition-all duration-200 group-hover:translate-x-1 group-hover:bg-white/30">
+        <ChevronRight className="h-4 w-4 text-white" />
+      </div>
     </Link>
   );
 }
