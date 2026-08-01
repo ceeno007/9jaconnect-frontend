@@ -111,7 +111,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-[1200px] px-5 sm:px-6 lg:px-6">
           <div className="text-center mb-10">
             <h2 className="text-[28px] sm:text-[36px] font-bold text-neutral-900 tracking-tight">
-              Our most popular jobs
+              Our most popular professionals
             </h2>
           </div>
           
@@ -184,7 +184,7 @@ export default function HomePage() {
               href="/find"
               className="text-[14px] font-medium text-ink-black hover:underline"
             >
-              Browse all →
+              Browse all
             </Link>
           </div>
 
