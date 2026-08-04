@@ -203,8 +203,22 @@ export function Navbar() {
           )}
         </div>
 
-        <div className="ml-auto flex items-center gap-2 md:hidden">
+        <div className="ml-auto flex items-center gap-1.5 md:hidden">
+          <Link
+            href={messagesHref}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-graphite hover:bg-paper"
+            aria-label="Messages"
+          >
+            <MessageSquare className="h-5 w-5" />
+          </Link>
           <NotificationsMenu />
+          <Link
+            href={accountHref}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-graphite hover:bg-paper"
+            aria-label={isAuthenticated ? "Account" : "Login"}
+          >
+            <AccountAvatar photoUrl={photoUrl} name={user?.full_name} />
+          </Link>
           <button
             type="button"
             className="relative z-[60] inline-flex h-10 w-10 items-center justify-center"
@@ -286,17 +300,7 @@ export function Navbar() {
                     );
                   })}
 
-                  {!isAuthenticated ? (
-                    <motion.div variants={itemVariants}>
-                      <Link
-                        href="/signup/customer"
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-3 border-b border-[#f0eeec] py-4 text-[17px] font-bold text-black"
-                      >
-                        Sign up as Customer
-                      </Link>
-                    </motion.div>
-                  ) : (
+                  {isAuthenticated ? (
                     <motion.div variants={itemVariants}>
                       <button
                         type="button"
@@ -309,7 +313,7 @@ export function Navbar() {
                         Log out
                       </button>
                     </motion.div>
-                  )}
+                  ) : null}
                 </nav>
 
                 <motion.div

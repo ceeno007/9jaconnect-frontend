@@ -195,7 +195,7 @@ export function NotificationsMenu({
               "z-[70] overflow-hidden rounded-[16px] border border-[#ececee] bg-white shadow-[0_18px_50px_rgba(0,0,0,0.12)]",
               variant === "row"
                 ? "relative mt-2 w-full"
-                : "absolute right-0 top-12 w-[min(92vw,360px)]",
+                : "fixed left-3 right-3 top-[4.25rem] w-auto max-w-none md:absolute md:left-auto md:right-0 md:top-12 md:w-[min(92vw,360px)]",
             )}
           >
             <div className="flex items-center justify-between border-b border-[#ececee] px-4 py-3">
