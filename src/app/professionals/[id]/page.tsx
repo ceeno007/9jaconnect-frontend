@@ -175,7 +175,7 @@ export default function ProfessionalProfilePage() {
 
   if (missing || !professional) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-16 lg:px-6">
+      <div className="page-x mx-auto max-w-7xl py-16">
         <EmptyState
           title="Professional not found"
           description="This listing may have been removed or the link is invalid."
@@ -192,7 +192,7 @@ export default function ProfessionalProfilePage() {
   return (
     <div className="bg-white">
       <div className="border-b border-[#ececee] bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
+        <div className="page-x mx-auto max-w-7xl py-8">
           <Link
             href="/find"
             className="mb-5 inline-flex h-10 items-center gap-2 rounded-full border border-[#ececee] bg-white px-4 text-sm font-bold text-black transition hover:bg-[#f4f4f5]"
@@ -230,7 +230,7 @@ export default function ProfessionalProfilePage() {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-6">
+      <div className="page-x mx-auto grid max-w-7xl gap-8 py-10 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-6">
           <section className="ui-card p-7 sm:p-8">
             <h2 className="text-2xl font-bold text-ink-black">About</h2>

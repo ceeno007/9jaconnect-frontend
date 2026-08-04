@@ -30,7 +30,7 @@ export function TrustStatsCarousel() {
 
   return (
     <section className="bg-pure-white py-8 sm:py-12">
-      <div className="mx-auto max-w-[1200px] px-5 sm:px-6 lg:px-6">
+      <div className="page-x mx-auto max-w-[1200px]">
         {/* Desktop 3-column Grid (Hidden on Mobile) */}
         <div className="hidden md:grid md:grid-cols-3 gap-8 text-center">
           {TRUST_STATS.map((stat, idx) => (

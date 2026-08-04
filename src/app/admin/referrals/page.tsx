@@ -119,7 +119,7 @@ export default function AdminReferralsPage() {
           {cards.map((card) => (
             <div key={card.label} className="ui-card p-5 text-center">
               <p className="text-2xl font-bold text-black">
-                {card.value == null ? "—" : card.value.toLocaleString()}
+                {card.value == null ? "-" : card.value.toLocaleString()}
               </p>
               <p className="mt-1 text-xs font-semibold text-muted">
                 {card.label}

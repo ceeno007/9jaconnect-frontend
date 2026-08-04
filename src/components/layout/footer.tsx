@@ -37,7 +37,7 @@ export function Footer() {
 
   return (
     <footer className="mt-auto border-t border-cloud bg-snow">
-      <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-3 lg:px-6">
+      <div className="page-x mx-auto grid max-w-[1200px] gap-10 py-14 sm:grid-cols-2 lg:grid-cols-3">
         <div>
           <h3 className="text-[14px] font-semibold text-obsidian">Platform</h3>
           <ul className="mt-4 space-y-3 text-[14px] font-normal text-steel">
@@ -110,7 +110,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-cloud bg-paper">
-        <div className="mx-auto max-w-[1200px] px-4 py-5 text-[13px] font-normal text-fog lg:px-6">
+        <div className="page-x mx-auto max-w-[1200px] py-5 text-[13px] font-normal text-fog">
           <p>© {new Date().getFullYear()} 9jaconnect. All rights reserved.</p>
         </div>
       </div>

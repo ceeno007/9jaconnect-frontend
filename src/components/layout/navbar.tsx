@@ -128,7 +128,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-paper-warmth shadow-[var(--shadow-nav)]">
-      <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-6 px-5 lg:px-6">
+      <div className="page-x mx-auto flex h-16 max-w-[1200px] items-center gap-6">
         <Logo compact className="shrink-0" />
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -251,11 +251,11 @@ export function Navbar() {
               exit="closed"
               variants={panelVariants}
             >
-              <div className="flex h-16 items-center justify-between border-b border-[#ececee] px-5">
+              <div className="page-x flex h-16 items-center justify-between border-b border-[#ececee]">
                 <Logo compact />
               </div>
 
-              <div className="flex flex-1 flex-col overflow-y-auto px-5 pb-6 pt-2">
+              <div className="page-x flex flex-1 flex-col overflow-y-auto pb-6 pt-2">
                 <nav className="flex flex-col">
                   {navLinks.map((link) => {
                     const active =

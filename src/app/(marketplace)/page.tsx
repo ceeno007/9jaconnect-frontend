@@ -84,7 +84,7 @@ export default function HomePage() {
         style={{ backgroundImage: `url(https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80)` }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40" />
-        <div className="relative z-10 mx-auto max-w-[1200px] w-full px-5 pb-10 sm:pb-14 pt-20 sm:pt-0">
+        <div className="page-x relative z-10 mx-auto max-w-[1200px] w-full pb-10 sm:pb-14 pt-20 sm:pt-0">
           <h1 className="text-[32px] sm:text-[46px] font-bold leading-tight tracking-tight mb-3" style={{ color: '#ffffff' }}>
             Find trusted local tradespeople
           </h1>
@@ -102,13 +102,13 @@ export default function HomePage() {
       <div className="bg-paper-warmth/30 pt-6">
         <MarketplaceAds
           pageContext="home"
-          className="mx-auto max-w-[1200px] space-y-3 px-5 sm:px-6 lg:px-6"
+          className="mx-auto max-w-[1200px] space-y-3 page-x"
         />
       </div>
 
       {/* Popular trades */}
       <section className="bg-paper-warmth/30 py-12 sm:py-16">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-6 lg:px-6">
+        <div className="mx-auto max-w-[1200px] page-x">
           <div className="text-center mb-10">
             <h2 className="text-[28px] sm:text-[36px] font-bold text-neutral-900 tracking-tight">
               Our most popular professionals
@@ -139,7 +139,7 @@ export default function HomePage() {
 
       {/* How our service works */}
       <section className="bg-pure-white py-16 sm:py-20">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-6 lg:px-6">
+        <div className="mx-auto max-w-[1200px] page-x">
           {/* Section Heading */}
           <div className="text-center mb-12">
             <h2 className="text-[28px] sm:text-[38px] font-black text-neutral-950 tracking-tight">
@@ -175,7 +175,7 @@ export default function HomePage() {
 
       {/* Top Rated Professionals */}
       <section className="bg-paper-warmth/40 py-16 sm:py-20">
-        <div className="mx-auto max-w-[1200px] px-5 sm:px-6 lg:px-6">
+        <div className="mx-auto max-w-[1200px] page-x">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
             <h2 className="text-[24px] sm:text-[28px] font-semibold text-ink-black">
               Top rated professionals
@@ -206,7 +206,7 @@ export default function HomePage() {
       {/* Bottom Signup CTA */}
       {showSignupCta ? (
         <section className="bg-pure-white py-16 sm:py-20">
-          <div className="mx-auto max-w-[800px] px-5 text-center">
+          <div className="page-x mx-auto max-w-[800px] text-center">
             <h2 className="text-[28px] sm:text-[36px] font-semibold tracking-[-0.02em] text-ink-black mb-4">
               Ready to hire, or list your trade?
             </h2>

@@ -98,20 +98,20 @@ export function IndeedStyleSearch({
       transition={morphTransition}
       onSubmit={onSubmit}
       className={cn(
-        "grid w-full overflow-hidden rounded-[8px] border border-cloud bg-snow",
+        "grid w-full overflow-hidden rounded-[16px] border border-black/[0.06] bg-snow",
         "grid-cols-2 sm:flex sm:flex-row sm:items-stretch",
         className,
       )}
     >
-      <label className="col-span-2 flex h-12 items-center border-b border-cloud px-3 sm:h-auto sm:min-h-[52px] sm:flex-1 sm:border-b-0 sm:px-4">
+      <label className="col-span-2 flex h-12 items-center border-b border-cloud px-3.5 sm:h-auto sm:min-h-[56px] sm:flex-1 sm:border-b-0 sm:px-4">
         <div className="min-w-0 flex-1">
-          <span className="hidden text-[12px] font-medium text-fog sm:block">
+          <span className="hidden text-[11px] font-semibold uppercase tracking-[0.08em] text-fog sm:block">
             What
           </span>
           <input
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="Job title, skill, or keyword"
+            placeholder="Plumber, electrician, cleaner…"
             className="w-full bg-transparent text-[15px] font-normal text-graphite outline-none placeholder:font-normal placeholder:text-ash sm:text-[15px]"
             aria-label="Keyword"
           />
@@ -120,9 +120,9 @@ export function IndeedStyleSearch({
 
       <span className="hidden w-px self-stretch bg-cloud sm:block" />
 
-      <label className="flex h-12 items-center border-b border-r border-cloud px-3 sm:h-auto sm:min-h-[52px] sm:flex-1 sm:border-b-0 sm:border-r-0 sm:px-4">
+      <label className="flex h-12 items-center border-b border-r border-cloud px-3.5 sm:h-auto sm:min-h-[56px] sm:flex-1 sm:border-b-0 sm:border-r-0 sm:px-4">
         <div className="min-w-0 flex-1">
-          <span className="hidden text-[12px] font-medium text-fog sm:block">
+          <span className="hidden text-[11px] font-semibold uppercase tracking-[0.08em] text-fog sm:block">
             State
           </span>
           <select
@@ -145,12 +145,12 @@ export function IndeedStyleSearch({
 
       <label
         className={cn(
-          "flex h-12 items-center gap-2 border-b border-cloud px-3 sm:h-auto sm:min-h-[52px] sm:flex-1 sm:gap-3 sm:border-b-0 sm:px-4",
+          "flex h-12 items-center gap-2 border-b border-cloud px-3.5 sm:h-auto sm:min-h-[56px] sm:flex-1 sm:gap-3 sm:border-b-0 sm:px-4",
           !stateId && "opacity-50",
         )}
       >
         <div className="min-w-0 flex-1">
-          <span className="hidden text-[12px] font-medium text-fog sm:block">
+          <span className="hidden text-[11px] font-semibold uppercase tracking-[0.08em] text-fog sm:block">
             LGA
           </span>
           <select
@@ -177,9 +177,9 @@ export function IndeedStyleSearch({
       {showCategory ? (
         <>
           <span className="hidden w-px self-stretch bg-cloud sm:block" />
-          <label className="col-span-2 flex h-12 items-center gap-2 border-b border-cloud px-3 sm:col-auto sm:h-auto sm:min-h-[52px] sm:flex-1 sm:gap-3 sm:border-b-0 sm:px-4">
+          <label className="col-span-2 flex h-12 items-center gap-2 border-b border-cloud px-3.5 sm:col-auto sm:h-auto sm:min-h-[56px] sm:flex-1 sm:gap-3 sm:border-b-0 sm:px-4">
             <div className="min-w-0 flex-1">
-              <span className="hidden text-[12px] font-medium text-fog sm:block">
+              <span className="hidden text-[11px] font-semibold uppercase tracking-[0.08em] text-fog sm:block">
                 Category
               </span>
               <select
@@ -203,9 +203,9 @@ export function IndeedStyleSearch({
       <div className="col-span-2 p-2 sm:col-auto sm:border-t-0 sm:p-1.5">
         <Button
           type="submit"
-          className="h-11 w-full rounded-[8px] px-6 text-[15px] sm:h-12 sm:w-auto sm:text-[15px]"
+          className="h-11 w-full rounded-[12px] px-6 text-[15px] font-semibold sm:h-[48px] sm:w-auto sm:text-[15px]"
         >
-          Find pros
+          Search
         </Button>
       </div>
     </motion.form>

@@ -24,7 +24,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#f7f6f5]">
       <header className="border-b border-[#ececee] bg-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-4 lg:px-6">
+        <div className="page-x mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 py-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-muted">
               9jaconnect Admin
@@ -41,7 +41,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             Log out
           </button>
         </div>
-        <nav className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 pb-3 lg:px-6">
+        <nav className="page-x mx-auto flex max-w-7xl gap-1 overflow-x-auto pb-3">
           {links.map((link) => {
             const active =
               pathname === link.href || pathname.startsWith(`${link.href}/`);
@@ -62,7 +62,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
       </header>
-      <div className="mx-auto max-w-7xl px-4 py-8 lg:px-6">{children}</div>
+      <div className="page-x mx-auto max-w-7xl py-8">{children}</div>
     </div>
   );
 }

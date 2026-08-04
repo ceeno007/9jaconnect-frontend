@@ -66,7 +66,7 @@ export function ProfessionalProfileSkeleton() {
   return (
     <div className="bg-white" aria-busy="true" aria-label="Loading profile">
       <div className="border-b border-[#ececee] bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-8 lg:px-6">
+        <div className="page-x mx-auto max-w-7xl py-8">
           <Skeleton className="mb-5 h-10 w-24 rounded-full" />
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <Skeleton className="h-7 w-28 rounded-full" />
@@ -78,7 +78,7 @@ export function ProfessionalProfileSkeleton() {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[1.2fr_0.8fr] lg:px-6">
+      <div className="page-x mx-auto grid max-w-7xl gap-8 py-10 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-6">
           <section className="overflow-hidden ui-card p-3">
             <Skeleton className="aspect-[21/9] w-full rounded-[12px]" />

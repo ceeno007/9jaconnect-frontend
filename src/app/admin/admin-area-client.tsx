@@ -22,7 +22,7 @@ function AdminGate({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-16 lg:px-6">
+      <div className="page-x mx-auto max-w-7xl py-16">
         <p className="text-base font-semibold text-muted">Loading…</p>
       </div>
     );

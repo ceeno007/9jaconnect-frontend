@@ -87,7 +87,7 @@ export function PageShell({
   actions?: ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 py-12 sm:px-6 lg:px-8">
+    <div className="page-x mx-auto w-full max-w-[1200px] py-12">
       <div className="mb-10 flex flex-col gap-5 border-b border-cloud pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-[32px] font-semibold leading-[1.28] tracking-normal text-obsidian sm:text-[40px]">

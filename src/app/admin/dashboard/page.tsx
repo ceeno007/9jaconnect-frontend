@@ -135,7 +135,7 @@ export default function AdminDashboardPage() {
                   className="rounded-[12px] bg-[#fafafa] p-4 text-center"
                 >
                   <p className="text-2xl font-bold text-black">
-                    {stat.value == null ? "—" : stat.value.toLocaleString()}
+                    {stat.value == null ? "-" : stat.value.toLocaleString()}
                   </p>
                   <p className="mt-1 text-xs font-semibold text-muted">
                     {stat.label}
