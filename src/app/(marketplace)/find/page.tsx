@@ -22,9 +22,9 @@ function FindSkeletonRow() {
 function FindPageFallback() {
   return (
     <div>
-      <section className="border-b border-black/[0.05]">
+      <section className="border-b border-lemon/30 bg-lemon-wash">
         <div className="page-x mx-auto max-w-[1120px] py-5 sm:py-6">
-          <div className="h-[168px] animate-pulse rounded-[16px] border border-black/[0.06] bg-snow sm:h-[56px]" />
+          <div className="h-[168px] animate-pulse rounded-[16px] border border-lemon/40 bg-snow sm:h-[56px]" />
         </div>
       </section>
 

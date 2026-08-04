@@ -329,7 +329,7 @@ export default function FindPageClient() {
 
   return (
     <div className="relative">
-      <section className="border-b border-black/[0.05]">
+      <section className="border-b border-lemon/30 bg-lemon-wash">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -338,7 +338,7 @@ export default function FindPageClient() {
         >
           <h1 className="sr-only">Find professionals</h1>
           <IndeedStyleSearch
-            className="max-w-none shadow-[0_16px_40px_rgba(0,0,0,0.06)]"
+            className="max-w-none border-lemon/40 shadow-[0_12px_32px_rgba(168,201,42,0.18)]"
             initialKeyword={keyword}
             initialState={stateId}
             initialLga={lgaId}
@@ -384,8 +384,8 @@ export default function FindPageClient() {
                 className={cn(
                   "shrink-0 snap-start rounded-full px-3.5 py-2 text-[13px] font-medium transition",
                   !categoryId
-                    ? "bg-ink-black text-snow"
-                    : "border border-black/[0.08] bg-snow text-ink-black hover:border-black/15",
+                    ? "bg-lemon text-ink-black shadow-[0_1px_2px_rgba(168,201,42,0.35)]"
+                    : "border border-black/[0.08] bg-snow text-ink-black hover:border-lemon/50 hover:bg-lemon-wash",
                 )}
               >
                 All trades
@@ -400,8 +400,8 @@ export default function FindPageClient() {
                     className={cn(
                       "shrink-0 snap-start rounded-full px-3.5 py-2 text-[13px] font-medium transition",
                       active
-                        ? "bg-ink-black text-snow"
-                        : "border border-black/[0.08] bg-snow text-ink-black hover:border-black/15",
+                        ? "bg-lemon text-ink-black shadow-[0_1px_2px_rgba(168,201,42,0.35)]"
+                        : "border border-black/[0.08] bg-snow text-ink-black hover:border-lemon/50 hover:bg-lemon-wash",
                     )}
                   >
                     {item.name}
@@ -426,16 +426,16 @@ export default function FindPageClient() {
                   key={chip.key}
                   type="button"
                   onClick={() => clearFilter(chip.key)}
-                  className="group inline-flex items-center gap-1.5 rounded-full border border-black/[0.06] bg-snow px-3 py-1.5 text-[13px] font-medium text-ink-black shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition hover:border-black/10"
+                  className="group inline-flex items-center gap-1.5 rounded-full border border-lemon/40 bg-lemon-wash px-3 py-1.5 text-[13px] font-medium text-ink-black transition hover:border-lemon/70 hover:bg-lemon/40"
                 >
                   <span className="max-w-[220px] truncate">{chip.label}</span>
-                  <X className="h-3 w-3 text-stone group-hover:text-ink-black" />
+                  <X className="h-3 w-3 text-ink-black/55 group-hover:text-ink-black" />
                 </button>
               ))}
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="text-[13px] font-medium text-stone underline-offset-4 hover:text-ink-black hover:underline"
+                className="text-[13px] font-medium text-fog underline-offset-4 hover:text-ink-black hover:underline"
               >
                 Clear all
               </button>

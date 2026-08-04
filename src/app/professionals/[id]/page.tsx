@@ -31,6 +31,7 @@ import { ApiError } from "@/lib/api/types";
 import type { ProfessionalService, Review } from "@/lib/api/types";
 import { galleryUrlsFromCache } from "@/lib/gallery-cache";
 import type { Professional } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 const REVIEW_INTERVALS = [
   { label: "Weekly", value: "weekly" },
@@ -168,6 +169,15 @@ export default function ProfessionalProfilePage() {
     }
     return merged;
   }, [professional, user?.professional_id, id]);
+
+  const availableRates = useMemo(() => {
+    if (!professional) return [];
+    return [
+      { label: "Hourly", value: professional.hourlyRate },
+      { label: "Day rate", value: professional.dayRate },
+      { label: "Project", value: professional.projectRate },
+    ].filter((rate) => Number(rate.value) > 0);
+  }, [professional]);
 
   if (loading) {
     return <ProfessionalProfileSkeleton />;
@@ -308,14 +318,29 @@ export default function ProfessionalProfilePage() {
             </section>
           ) : null}
 
-          <section className="ui-card p-7 sm:p-8">
-            <h2 className="text-2xl font-bold">Your rates</h2>
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
-              <Rate label="Hourly" value={professional.hourlyRate} />
-              <Rate label="Day rate" value={professional.dayRate} />
-              <Rate label="Project" value={professional.projectRate} />
-            </div>
-          </section>
+          {availableRates.length > 0 ? (
+            <section className="ui-card p-7 sm:p-8">
+              <h2 className="text-2xl font-bold">Your rates</h2>
+              <div
+                className={cn(
+                  "mt-5 grid gap-4",
+                  availableRates.length === 1
+                    ? "sm:grid-cols-1"
+                    : availableRates.length === 2
+                      ? "sm:grid-cols-2"
+                      : "sm:grid-cols-3",
+                )}
+              >
+                {availableRates.map((rate) => (
+                  <Rate
+                    key={rate.label}
+                    label={rate.label}
+                    value={rate.value}
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
 
           <section className="ui-card p-7 sm:p-8">
             <h2 className="text-2xl font-bold">Verified reviews</h2>
@@ -366,8 +391,9 @@ export default function ProfessionalProfilePage() {
             <div className="mt-5 grid grid-cols-2 gap-2">
               <button
                 type="button"
+                disabled={!isAuthenticated}
                 onClick={() => setRequestMode("one_off")}
-                className={`rounded-[8px] px-3 py-2 text-sm font-bold ${
+                className={`rounded-[8px] px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50 ${
                   requestMode === "one_off"
                     ? "bg-black text-white"
                     : "bg-[#f4f4f5] text-black"
@@ -377,8 +403,9 @@ export default function ProfessionalProfilePage() {
               </button>
               <button
                 type="button"
+                disabled={!isAuthenticated}
                 onClick={() => setRequestMode("recurring")}
-                className={`rounded-[8px] px-3 py-2 text-sm font-bold ${
+                className={`rounded-[8px] px-3 py-2 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-50 ${
                   requestMode === "recurring"
                     ? "bg-black text-white"
                     : "bg-[#f4f4f5] text-black"
@@ -387,17 +414,23 @@ export default function ProfessionalProfilePage() {
                 Recurring
               </button>
             </div>
-            <form className="mt-6 space-y-5" onSubmit={onRequestService}>
+            <form
+              className="mt-6 space-y-5"
+              onSubmit={onRequestService}
+              aria-disabled={!isAuthenticated}
+            >
               <Input
                 label="Summary"
                 name="summary"
-                required
+                required={isAuthenticated}
+                disabled={!isAuthenticated}
                 placeholder="e.g. Fix kitchen wiring"
               />
               <Textarea
                 label="Message"
                 name="message"
-                required
+                required={isAuthenticated}
+                disabled={!isAuthenticated}
                 placeholder="Describe what you need..."
               />
               {requestMode === "recurring" ? (
@@ -405,7 +438,8 @@ export default function ProfessionalProfilePage() {
                   <Select
                     label="Review interval"
                     name="reviewInterval"
-                    required
+                    required={isAuthenticated}
+                    disabled={!isAuthenticated}
                     defaultValue="monthly"
                     options={REVIEW_INTERVALS}
                   />
@@ -413,7 +447,8 @@ export default function ProfessionalProfilePage() {
                     label="Start date"
                     name="startDate"
                     type="date"
-                    required
+                    required={isAuthenticated}
+                    disabled={!isAuthenticated}
                     defaultValue={new Date().toISOString().slice(0, 10)}
                   />
                 </>
@@ -461,7 +496,7 @@ function Rate({ label, value }: { label: string; value: number }) {
         {label}
       </p>
       <p className="mt-2 text-2xl font-black text-foreground">
-        {value ? `₦${value.toLocaleString()}` : "-"}
+        ₦{value.toLocaleString()}
       </p>
     </div>
   );

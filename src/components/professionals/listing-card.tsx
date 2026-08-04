@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, BadgeCheck, MapPin } from "lucide-react";
+import { ArrowRight, BadgeCheck, MapPin } from "lucide-react";
 import { MediaFrame } from "@/components/ui/media-frame";
 import { RatingScore } from "@/components/ui/rating";
 import type { Professional } from "@/lib/types";
@@ -170,9 +170,9 @@ export function ListingCardCompact({
 
       <div className="hidden flex-col items-end justify-between py-1 sm:flex">
         <RateLabel rate={professional.hourlyRate} className="text-[15px]" />
-        <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-ink-black transition group-hover:gap-1.5">
+        <span className="inline-flex items-center gap-1 rounded-full bg-lemon-wash px-3 py-1.5 text-[13px] font-semibold text-ink-black transition group-hover:gap-1.5 group-hover:bg-lemon">
           View profile
-          <ArrowUpRight className="h-3.5 w-3.5" />
+          <ArrowRight className="h-3.5 w-3.5" />
         </span>
       </div>
     </Link>

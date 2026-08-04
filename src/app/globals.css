@@ -265,6 +265,12 @@ textarea.field-surface {
   box-shadow: 0 0 0 1px var(--color-lemon) !important;
 }
 
+.field-surface:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.55 !important;
+  background: #f0eeec !important;
+}
+
 .field-surface::placeholder {
   color: var(--color-stone) !important;
   font-weight: 400 !important;
