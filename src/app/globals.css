@@ -65,14 +65,14 @@
   --shadow-md: 0px 4px 12px rgba(0, 0, 0, 0.1);
 
   --page-max-width: 1440px;
-  --page-gutter: 8px;
+  --page-gutter: 16px;
   --section-gap: 80px;
   --card-padding: 24px;
 }
 
 @media (min-width: 640px) {
   :root {
-    --page-gutter: 12px;
+    --page-gutter: 16px;
   }
 }
 
