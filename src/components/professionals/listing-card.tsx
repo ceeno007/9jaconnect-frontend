@@ -37,8 +37,37 @@ function RateLabel({
     );
   }
   return (
-    <p className={cn("text-[13px] font-medium text-stone", className)}>
+    <p className={cn("text-[13px] font-normal text-stone", className)}>
       Rate on request
+    </p>
+  );
+}
+
+function LocationLine({
+  lga,
+  state,
+  trailing,
+}: {
+  lga: string;
+  state: string;
+  trailing?: string;
+}) {
+  return (
+    <p className="flex items-center gap-1 text-[10px] font-light leading-snug tracking-[0.01em] text-black/35 sm:text-[11px]">
+      <MapPin
+        className="h-2.5 w-2.5 shrink-0 stroke-[1.5] text-black/30"
+        aria-hidden
+      />
+      <span className="min-w-0 truncate font-light">
+        {lga}
+        {lga && state ? ", " : ""}
+        {state}
+      </span>
+      {trailing ? (
+        <span className="ml-auto shrink-0 font-light text-black/30">
+          {trailing}
+        </span>
+      ) : null}
     </p>
   );
 }
@@ -79,28 +108,26 @@ export function ListingCard({
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2.5 p-5">
-        <div>
+      <div className="flex flex-1 flex-col gap-3 p-5">
+        <div className="space-y-1">
           <h3 className="line-clamp-1 text-[17px] font-semibold leading-snug tracking-[-0.02em] text-ink-black transition group-hover:opacity-70 sm:text-[18px]">
             {professional.tradeName}
           </h3>
-          <p className="mt-1 line-clamp-1 text-[13px] text-stone sm:text-[14px]">
-            {professional.category} · {professional.name}
+          <p className="line-clamp-1 text-[12px] font-normal text-stone sm:text-[13px]">
+            {professional.name}
+            <span className="text-black/25"> · </span>
+            {professional.category}
           </p>
-          <div className="mt-2">
-            <RatingScore value={professional.rating} size="sm" />
-          </div>
         </div>
 
-        <p className="mt-auto flex items-center gap-1.5 pt-1 text-[13px] text-stone">
-          <MapPin className="h-3.5 w-3.5 shrink-0 text-ink-black/45" />
-          <span className="min-w-0 truncate">
-            {professional.state}, {professional.lga}
-          </span>
-          <span className="ml-auto shrink-0 font-medium text-ink-black/50">
-            {professional.reviews} reviews
-          </span>
-        </p>
+        <div className="mt-auto space-y-2">
+          <RatingScore value={professional.rating} size="sm" />
+          <LocationLine
+            lga={professional.lga}
+            state={professional.state}
+            trailing={`${professional.reviews} reviews`}
+          />
+        </div>
       </div>
     </Link>
   );
@@ -132,7 +159,7 @@ export function ListingCardCompact({
         ) : null}
       </div>
 
-      <div className="min-w-0 flex flex-col justify-center py-0.5">
+      <div className="flex min-w-0 flex-col justify-center gap-1 py-0.5">
         <div className="flex flex-wrap items-center gap-2">
           <h3 className="line-clamp-1 text-[16px] font-semibold leading-snug tracking-[-0.015em] text-ink-black transition group-hover:opacity-70 sm:text-[20px]">
             {professional.tradeName}
@@ -142,28 +169,23 @@ export function ListingCardCompact({
           ) : null}
         </div>
 
-        <p className="mt-1 line-clamp-1 text-[13px] text-stone sm:text-[14px]">
-          {professional.category}
-          <span className="text-ash"> · </span>
+        <p className="line-clamp-1 text-[12px] font-normal text-stone sm:text-[13px]">
           {professional.name}
+          <span className="text-black/25"> · </span>
+          {professional.category}
         </p>
 
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-1">
           <RatingScore value={professional.rating} size="sm" />
-          <span className="text-[12px] font-medium text-fog sm:text-[13px]">
+          <span className="text-[11px] font-normal text-black/40">
             {professional.reviews}{" "}
             {professional.reviews === 1 ? "review" : "reviews"}
           </span>
         </div>
 
-        <p className="mt-2 flex items-center gap-1.5 text-[13px] text-stone">
-          <MapPin className="h-3.5 w-3.5 shrink-0 text-ink-black/45" />
-          <span className="truncate">
-            {professional.lga}, {professional.state}
-          </span>
-        </p>
+        <LocationLine lga={professional.lga} state={professional.state} />
 
-        <div className="mt-2 sm:hidden">
+        <div className="mt-1 sm:hidden">
           <RateLabel rate={professional.hourlyRate} className="text-[14px]" />
         </div>
       </div>

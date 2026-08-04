@@ -232,8 +232,8 @@ export default function ProfessionalProfilePage() {
             <p className="mt-3 text-lg font-semibold text-muted">
               {professional.name} · {professional.category}
             </p>
-            <p className="mt-2 inline-flex items-center gap-2 text-base font-bold text-muted">
-              <MapPin className="h-5 w-5 text-black" />
+            <p className="mt-2 inline-flex items-center gap-1.5 text-sm font-normal text-muted">
+              <MapPin className="h-4 w-4 stroke-[1.5] text-muted" />
               {professional.state}, {professional.lga}
             </p>
           </div>
