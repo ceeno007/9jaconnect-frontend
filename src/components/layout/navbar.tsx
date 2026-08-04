@@ -203,32 +203,35 @@ export function Navbar() {
           )}
         </div>
 
-        <button
-          type="button"
-          className="relative z-[60] ml-auto inline-flex h-10 w-10 items-center justify-center md:hidden"
-          onClick={() => setOpen((value) => !value)}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-        >
-          <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
-          <span className="relative block h-3.5 w-5">
-            <motion.span
-              className="absolute left-0 top-0 block h-[2px] w-5 origin-center bg-black"
-              animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            />
-            <motion.span
-              className="absolute left-0 top-[6px] block h-[2px] w-5 bg-black"
-              animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-              transition={{ duration: 0.16 }}
-            />
-            <motion.span
-              className="absolute left-0 top-[12px] block h-[2px] w-5 origin-center bg-black"
-              animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            />
-          </span>
-        </button>
+        <div className="ml-auto flex items-center gap-2 md:hidden">
+          <NotificationsMenu />
+          <button
+            type="button"
+            className="relative z-[60] inline-flex h-10 w-10 items-center justify-center"
+            onClick={() => setOpen((value) => !value)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+          >
+            <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
+            <span className="relative block h-3.5 w-5">
+              <motion.span
+                className="absolute left-0 top-0 block h-[2px] w-5 origin-center bg-black"
+                animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              />
+              <motion.span
+                className="absolute left-0 top-[6px] block h-[2px] w-5 bg-black"
+                animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+                transition={{ duration: 0.16 }}
+              />
+              <motion.span
+                className="absolute left-0 top-[12px] block h-[2px] w-5 origin-center bg-black"
+                animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              />
+            </span>
+          </button>
+        </div>
       </div>
 
       <AnimatePresence initial={false}>
@@ -283,20 +286,6 @@ export function Navbar() {
                     );
                   })}
 
-                  <motion.div variants={itemVariants}>
-                    <Link
-                      href={accountHref}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-3 border-b border-[#f0eeec] py-4 text-[17px] font-bold text-black"
-                    >
-                      <AccountAvatar
-                        photoUrl={photoUrl}
-                        name={user?.full_name}
-                        size="sm"
-                      />
-                      {isAuthenticated ? "Account" : "Login"}
-                    </Link>
-                  </motion.div>
                   {!isAuthenticated ? (
                     <motion.div variants={itemVariants}>
                       <Link
@@ -321,31 +310,17 @@ export function Navbar() {
                       </button>
                     </motion.div>
                   )}
-
-                  <motion.div variants={itemVariants}>
-                    <Link
-                      href={messagesHref}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-3 border-b border-[#f0eeec] py-4 text-[17px] font-bold text-black"
-                    >
-                      <MessageSquare className="h-5 w-5" />
-                      Messages
-                    </Link>
-                  </motion.div>
-
-                  <motion.div variants={itemVariants}>
-                    <NotificationsMenu variant="row" />
-                  </motion.div>
                 </nav>
 
                 <motion.div
                   variants={itemVariants}
-                  className="mt-auto space-y-3 pt-6"
+                  className="mt-auto space-y-4 pt-6"
                 >
                   {!isAuthenticated ? (
                     <Link
                       href="/signup/customer"
                       onClick={() => setOpen(false)}
+                      className="block"
                     >
                       <Button variant="outline" className="w-full" size="lg">
                         Sign up as Customer
@@ -355,6 +330,7 @@ export function Navbar() {
                   <Link
                     href="/signup/professional"
                     onClick={() => setOpen(false)}
+                    className="block"
                   >
                     <Button className="w-full" size="lg">
                       List as Pro
